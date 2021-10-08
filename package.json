@@ -6,7 +6,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "serve": "vite preview",
-    "lint": "eslint --ext src/**/*.{ts,tsx}",
+    "lint": "eslint --ext .ts,.tsx",
     "prettier:fix": "prettier --write",
     "prettier:check": "prettier --check ."
   },
@@ -37,7 +37,7 @@
     "vite": "^2.6.4"
   },
   "lint-staged": {
-    "src/*.{ts,tsx}": [
+    "src/**/*.{ts,tsx}": [
       "yarn prettier:fix",
       "yarn lint"
     ]
