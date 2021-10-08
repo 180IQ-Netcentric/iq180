@@ -45,7 +45,7 @@ const BaseModal = (props: Props) => {
               Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
             </Typography>
             <Button onClick={() => {
-              console.log(window.localStorage.getItem('isDarkTheme') === 'false' );
+              console.log(window.localStorage.getItem('isDarkTheme') === 'false' )
               window.localStorage.setItem('isDarkTheme', (window.localStorage.getItem('isDarkTheme') === 'false' ).toString())
             }}>toggle theme</Button>
           </Box>
