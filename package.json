@@ -6,7 +6,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "serve": "vite preview",
-    "lint": "eslint --ext .ts,.tsx",
+    "lint": "eslint src",
     "prettier:fix": "prettier --write",
     "prettier:check": "prettier --check ."
   },
