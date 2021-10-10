@@ -1,0 +1,33 @@
+.paper-container{
+  margin: 0 auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.game-container {
+  width: 900px;
+  max-width: 90vw;
+  min-height: 100px;
+  /* height: 600px; */
+  margin: 0 auto;
+  border: none;
+  background-color: white;
+  padding: 16px;
+}
+.main-layer {
+  display: flex;
+  position: relative;
+  border-radius: 15px !important;
+  top: 0px;
+  z-index: 2;
+}
+.highlight-layer {
+  display: flex;
+  height: 100% !important;
+  background-color: orange !important;
+  border-radius: 15px !important;
+  position: relative;
+  bottom: 80px;
+  height: inherit;
+}
