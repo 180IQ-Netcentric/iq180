@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import './App.css'
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 import Game from '@/pages/game'
@@ -7,8 +7,10 @@ import Page404 from '@/pages/common/Page404'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
+import { ThemeContext } from './contexts/themeContext'
 
 function App() {
+  const { theme: appTheme } = useContext(ThemeContext)
   const prefersDarkMode =
     localStorage.getItem('isDarkTheme') === 'true' ??
     useMediaQuery('(prefers-color-scheme: dark)')
@@ -17,7 +19,7 @@ function App() {
     () =>
       createTheme({
         palette: {
-          mode: prefersDarkMode ? 'dark' : 'light',
+          mode: prefersDarkMode && appTheme === 'dark' ? 'dark' : 'light',
         },
       }),
     [prefersDarkMode]

@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Button, Box, Modal, Fade, Typography, Backdrop } from '@mui/material'
+import { Theme, ThemeContext } from '@/contexts/themeContext'
 
 const style = {
   position: 'absolute',
@@ -11,46 +12,49 @@ const style = {
   bgcolor: 'background.paper',
   boxShadow: 16,
   p: 4,
-  borderRadius: '12px'
+  borderRadius: '12px',
 }
 
 interface Props {
   open: boolean
-  handleOpen: (value: boolean) => void,
-  handleClose: (value: boolean) => void,
+  handleOpen: (value: boolean) => void
+  handleClose: (value: boolean) => void
 }
 const BaseModal = (props: Props) => {
-  const {open, handleOpen, handleClose} = props
+  const { open, handleOpen, handleClose } = props
+  const { theme, setAppTheme } = useContext(ThemeContext)
 
-  
   return (
     <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        open={open}
-        onClose={handleClose}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
-      >
-        <Fade in={open}>
-          {/* @ts-ignore */}
-          <Box sx={style}>
-            <Typography id="transition-modal-title" variant="h6" component="h2">
-              Text in a modal
-            </Typography>
-            <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-              Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-            </Typography>
-            <Button onClick={() => {
-              console.log(window.localStorage.getItem('isDarkTheme') === 'false' )
-              window.localStorage.setItem('isDarkTheme', (window.localStorage.getItem('isDarkTheme') === 'false' ).toString())
-            }}>toggle theme</Button>
-          </Box>
-        </Fade>
-      </Modal>
+      aria-labelledby='transition-modal-title'
+      aria-describedby='transition-modal-description'
+      open={open}
+      onClose={handleClose}
+      closeAfterTransition
+      BackdropComponent={Backdrop}
+      BackdropProps={{
+        timeout: 500,
+      }}
+    >
+      <Fade in={open}>
+        {/* @ts-ignore */}
+        <Box sx={style}>
+          <Typography id='transition-modal-title' variant='h6' component='h2'>
+            Text in a modal, {theme}
+          </Typography>
+          <Typography id='transition-modal-description' sx={{ mt: 2 }}>
+            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+          </Typography>
+          <Button
+            onClick={() => {
+              setAppTheme(theme === 'light' ? Theme.DARK : Theme.LIGHT)
+            }}
+          >
+            toggle theme
+          </Button>
+        </Box>
+      </Fade>
+    </Modal>
   )
 }
 
