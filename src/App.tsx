@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import './App.css'
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 import Game from '@/pages/game'
@@ -9,7 +9,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeContext } from './contexts/themeContext'
 import MenuAppBar from './components/common/NavBar'
-import { red } from '@mui/material/colors'
+import GameSettingsContextProvider from './contexts/gameSettingsContext'
 
 function App() {
   const { theme: appTheme } = useContext(ThemeContext)
@@ -27,15 +27,15 @@ function App() {
             contrastText: '#fff',
           },
           secondary: {
-            main: red[900],
+            main: '#F3C18E',
           },
         },
         breakpoints: {
           values: {
             xs: 0,
             sm: 600,
-            md: 900,
-            lg: 1200,
+            md: 1000,
+            lg: 1100,
             xl: 1536,
           },
         },
@@ -43,23 +43,43 @@ function App() {
     [prefersDarkMode]
   )
 
+  useEffect(() => {
+    // save default values to localstorage if they are not available
+    if (!window.localStorage.getItem('musicOn'))
+      window.localStorage.setItem('musicOn', 'true')
+    if (!window.localStorage.getItem('soundEffectOn'))
+      window.localStorage.setItem('soundEffectOn', 'true')
+    if (!window.localStorage.getItem('musicTrack'))
+      window.localStorage.setItem('musicTrack', '0')
+    if (!window.localStorage.getItem('background'))
+      window.localStorage.setItem('background', '0')
+    if (!window.localStorage.getItem('language'))
+      window.localStorage.setItem('language', '0')
+
+    document.body.classList.add(
+      `page-background-${window.localStorage.getItem('background')}`
+    )
+  }, [])
+
   return (
-    <div className='page-background'>
-      <BrowserRouter>
-        <ThemeProvider theme={theme}>
+    <BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <GameSettingsContextProvider>
           <CssBaseline />
           <MenuAppBar />
-          <div>
-            <Switch>
-              <Route path='/' component={Home} exact />
-              <Route path='/game' component={Game} exact />
-              <Route path='/404' component={Page404} />
-              <Redirect from='*' to='/404' />
-            </Switch>
+          <div style={{ marginTop: '90px' }}>
+            <div className='page-background'>
+              <Switch>
+                <Route path='/' component={Home} exact />
+                <Route path='/game' component={Game} exact />
+                <Route path='/404' component={Page404} />
+                <Redirect from='*' to='/404' />
+              </Switch>
+            </div>
           </div>
-        </ThemeProvider>
-      </BrowserRouter>
-    </div>
+        </GameSettingsContextProvider>
+      </ThemeProvider>
+    </BrowserRouter>
   )
 }
 

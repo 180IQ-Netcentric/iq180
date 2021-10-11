@@ -1,0 +1,97 @@
+.home-content-container {
+  position:relative;
+  width: 100%;
+}
+
+.game-description {
+  margin-left: 32px;
+  margin-top: 16px;
+  position: absolute;
+  top: 0;
+  max-width: 320px;
+  grid-area: info;
+}
+
+.game-cover {
+  padding-top: 100px;
+  position: relative;
+  top: 0;
+  display: flex;
+  justify-content: right;
+  justify-items: right;
+  grid-area: img;
+}
+
+.game-cover img {
+  display: flex;
+  float: right;
+  min-width: 80%;
+  max-width: 70%;
+}
+
+.scoreboard-container {
+  grid-area: scoreboard;
+  color: #000;
+  height: 300px;
+  width: 100%;
+  background-color: #ffe2b8;
+  border-radius: 15px;
+  padding: 0 12px;
+}
+
+.tutorial-container {
+  grid-area: tutorial;
+  color: #000;
+  height: 300px;
+  width: 100%;
+  background-color: #F3F3F3;
+  border-radius: 15px;
+  padding: 0 12px;
+}
+
+.home-options-container {
+  display: grid;
+    grid-template-columns: 4fr 6fr;
+    column-gap: 12px;
+    grid-template-rows: auto;
+    grid-template-areas: 
+      "scoreboard tutorial"
+}
+
+
+@media only screen and (max-width: 600px)  {
+  .home-content-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    grid-template-areas: 
+      "info"
+      "img";
+  }
+
+  .game-description {
+    position:static;
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .game-cover {
+    width: 100%;
+    padding-top: 0;
+  }
+
+  .game-cover img {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .home-options-container {
+    display: grid;
+      grid-template-columns: 1fr;
+      row-gap: 12px;
+      grid-template-rows: auto;
+      grid-template-areas: 
+        "scoreboard"
+        "tutorial";
+  }
+}

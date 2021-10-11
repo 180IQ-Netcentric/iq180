@@ -1,7 +1,7 @@
 import { Paper } from '@mui/material'
 import React from 'react'
 
-const GameContainer = ({ children }: any) => {
+const SettingsContainer = ({ children }: any) => {
   return (
     <div className='paper-container'>
       <Paper elevation={0} className='game-container main-layer'>
@@ -12,4 +12,4 @@ const GameContainer = ({ children }: any) => {
   )
 }
 
-export default GameContainer
+export default SettingsContainer
