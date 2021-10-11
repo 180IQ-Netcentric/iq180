@@ -1,19 +1,28 @@
-import React from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import AppBar from '@mui/material/AppBar'
+
 import Box from '@mui/material/Box'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
-import AccountCircle from '@mui/icons-material/AccountCircle'
 import Container from '@mui/material/Container'
 import MenuItem from '@mui/material/MenuItem'
 import Menu from '@mui/material/Menu'
+
+import AccountCircle from '@mui/icons-material/AccountCircle'
 import SchoolIcon from '@mui/icons-material/School'
+import SettingsIcon from '@mui/icons-material/Settings'
+import { GameSettingsContext } from '@/contexts/gameSettingsContext'
+import { Backdrop, Fade, Modal } from '@mui/material'
+import GameContainer from '../containers/GameContainer'
+import GameSettings from '@/pages/gameSettings'
+import GearImg from '../../assets/images/gear.png'
 
 export default function MenuAppBar() {
-  const [auth, setAuth] = React.useState(true)
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
-
+  const [auth, setAuth] = useState(true)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const { showSettings, setShowSettings } = useContext(GameSettingsContext)
+  const [elevation, setElevation] = useState(0)
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
   }
@@ -27,57 +36,104 @@ export default function MenuAppBar() {
     handleClose()
   }
 
+  const handleSettings = () => {
+    setShowSettings(!showSettings)
+  }
+
+  useEffect(() => {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 0) {
+        setElevation(4)
+      } else {
+        setElevation(0)
+      }
+    })
+  }, [])
+
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position='static' className='MuiToolbar-center'>
-        <Container maxWidth='lg'>
-          <Toolbar>
-            <IconButton
-              size='large'
-              edge='start'
-              color='inherit'
-              aria-label='menu'
-              sx={{ mr: 2 }}
-            >
-              <SchoolIcon />
-            </IconButton>
-            <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
-              IQ180
-            </Typography>
-            {auth && (
-              <div>
-                <IconButton
-                  size='large'
-                  aria-label='account of current user'
-                  aria-controls='menu-appbar'
-                  aria-haspopup='true'
-                  onClick={handleMenu}
-                  color='inherit'
-                >
-                  <AccountCircle />
-                </IconButton>
-                <Menu
-                  id='menu-appbar'
-                  anchorEl={anchorEl}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={Boolean(anchorEl)}
-                  onClose={handleClose}
-                >
-                  <MenuItem onClick={handleSignOut}>Signout</MenuItem>
-                </Menu>
-              </div>
-            )}
-          </Toolbar>
-        </Container>
-      </AppBar>
-    </Box>
+    <>
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar className='MuiToolbar-center' elevation={elevation}>
+          <Container maxWidth='lg'>
+            <Toolbar>
+              <IconButton
+                size='large'
+                edge='start'
+                color='inherit'
+                aria-label='menu'
+                sx={{ mr: 2 }}
+              >
+                <SchoolIcon />
+              </IconButton>
+              <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
+                IQ180
+              </Typography>
+              {auth && (
+                <div>
+                  <IconButton
+                    size='large'
+                    aria-label='account of current user'
+                    aria-controls='menu-appbar'
+                    aria-haspopup='true'
+                    onClick={handleSettings}
+                    color='inherit'
+                  >
+                    <SettingsIcon />
+                  </IconButton>
+                  <IconButton
+                    size='large'
+                    aria-label='account of current user'
+                    aria-controls='menu-appbar'
+                    aria-haspopup='true'
+                    onClick={handleMenu}
+                    color='inherit'
+                    id='asdf'
+                  >
+                    <AccountCircle />
+                  </IconButton>
+                  <Menu
+                    id='menu-appbar'
+                    anchorEl={anchorEl}
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                  >
+                    <MenuItem onClick={handleSignOut}>Signout</MenuItem>
+                  </Menu>
+                </div>
+              )}
+            </Toolbar>
+          </Container>
+        </AppBar>
+      </Box>
+      <Modal
+        aria-labelledby='transition-modal-title'
+        aria-describedby='transition-modal-description'
+        open={showSettings}
+        onClose={() => setShowSettings(false)}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={showSettings}>
+          <Box sx={{ marginTop: '90px' }}>
+            <GameContainer>
+              <img className='gear-background' src={GearImg} alt='Settings' />
+              <GameSettings />
+            </GameContainer>
+          </Box>
+        </Fade>
+      </Modal>
+    </>
   )
 }

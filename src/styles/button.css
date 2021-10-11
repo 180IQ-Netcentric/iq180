@@ -1,0 +1,12 @@
+.MuiToggleButton-root:hover {
+  filter: brightness(85%);
+}
+
+.Mui-selected.MuiToggleButton-secondary {
+  background-color: #F56F54 !important;
+  color: black !important;
+}
+
+.toggle-buttons-gap {
+  justify-content: space-between;
+}
