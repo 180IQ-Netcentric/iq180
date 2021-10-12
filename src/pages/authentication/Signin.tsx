@@ -1,9 +1,13 @@
 import React from 'react'
+import bcrypt from 'bcryptjs'
 import GameContainer from '@/components/containers/GameContainer'
 import RoundedTextField from '@/components/common/RoundedTextField'
 import { Controller, useForm } from 'react-hook-form'
 import { Button } from '@mui/material'
 import { SignInInfo } from '@/dto/Authentication.dto'
+
+import AuthenImage from '../../assets/images/authen.jpg'
+import { Link } from 'react-router-dom'
 
 const SignIn = () => {
   const {
@@ -14,7 +18,7 @@ const SignIn = () => {
 
   const fields = {
     username: {
-      name: 'Username',
+      name: 'username',
       rules: {
         required: { value: true, message: 'This field is required' },
         minLength: { value: 2, message: 'Username is too short' },
@@ -22,7 +26,7 @@ const SignIn = () => {
       message: 'Invalid Username',
     },
     password: {
-      name: 'Password',
+      name: 'password',
       rules: {
         required: { value: true, message: 'This field is required' },
         minLength: { value: 6, message: 'Password is too short' },
@@ -31,8 +35,13 @@ const SignIn = () => {
     },
   }
 
-  const onSubmit = (data: any) => {
-    console.log(data)
+  const onSubmit = (data: SignInInfo) => {
+    const salt = bcrypt.genSaltSync(10)
+    data = {
+      ...data,
+      password: bcrypt.hashSync(data.password, salt),
+    }
+    // Post to backend
   }
 
   return (
@@ -96,11 +105,19 @@ const SignIn = () => {
               sx={{ width: '100%', height: '50px', borderRadius: '15px' }}
               type='submit'
             >
-              Submit
+              Sign In
             </Button>
           </form>
+          <p>
+            No account? &nbsp;
+            <Link to='/signup' className='signup-text'>
+              Sign up now!
+            </Link>
+          </p>
         </div>
-        <div className='form-img'></div>
+        <div className='form-img'>
+          <img src={AuthenImage} alt='authentication' />
+        </div>
       </div>
     </GameContainer>
   )
