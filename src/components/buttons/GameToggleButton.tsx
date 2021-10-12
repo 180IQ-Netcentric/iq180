@@ -1,7 +1,8 @@
+import React from 'react'
 import { useStyles } from '@/styles/useStyles'
 import { ToggleButton } from '@mui/material'
-import React from 'react'
-
+import useSound from 'use-sound'
+import clickSfx from '../../assets/audio/click.mp3'
 interface Props {
   item: any
   matcher: any
@@ -11,6 +12,7 @@ interface Props {
 
 const GameToggleButton = (props: Props) => {
   const classes = useStyles()
+  const [play] = useSound(clickSfx)
 
   return (
     <ToggleButton
@@ -20,6 +22,7 @@ const GameToggleButton = (props: Props) => {
       selected={props.matcher === props.item}
       onChange={() => {
         props.toggleCallback(props.item)
+        play()
       }}
       color='secondary'
       sx={{

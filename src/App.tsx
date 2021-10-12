@@ -9,10 +9,14 @@ import { createTheme, ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeContext } from './contexts/themeContext'
 import MenuAppBar from './components/common/NavBar'
-import GameSettingsContextProvider from './contexts/gameSettingsContext'
+import GameSettingsContextProvider, {
+  GameSettingsContext,
+} from './contexts/gameSettingsContext'
+import Music from './components/audio/Music'
 
 function App() {
   const { theme: appTheme } = useContext(ThemeContext)
+  const { musicTrack } = useContext(GameSettingsContext)
   const prefersDarkMode =
     localStorage.getItem('isDarkTheme') === 'true' ??
     useMediaQuery('(prefers-color-scheme: dark)')
@@ -50,7 +54,7 @@ function App() {
     if (!window.localStorage.getItem('soundEffectOn'))
       window.localStorage.setItem('soundEffectOn', 'true')
     if (!window.localStorage.getItem('musicTrack'))
-      window.localStorage.setItem('musicTrack', '0')
+      window.localStorage.setItem('musicTrack', '1')
     if (!window.localStorage.getItem('background'))
       window.localStorage.setItem('background', '0')
     if (!window.localStorage.getItem('language'))
@@ -67,6 +71,7 @@ function App() {
         <GameSettingsContextProvider>
           <CssBaseline />
           <MenuAppBar />
+          <Music />
           <div style={{ marginTop: '90px' }}>
             <div className='page-background'>
               <Switch>

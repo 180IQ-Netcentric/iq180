@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import GameToggleButton from '@/components/buttons/GameToggleButton'
 import RoundedSecondaryButton from '@/components/common/RoundedSecondaryButton'
 import RoundedTextField from '@/components/common/RoundedTextField'
@@ -6,10 +6,10 @@ import { GameSettingsContext } from '@/contexts/gameSettingsContext'
 import { Theme, ThemeContext } from '@/contexts/themeContext'
 import { IconButton, Switch } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
+import { musicTrackNames } from '@/dto/SoundTrack'
 
-const GameSettings = () => {
+const GameSettings = ({ onClose }: any) => {
   const {
-    setShowSettings,
     musicOn,
     toggleMusic,
     soundEffectOn,
@@ -46,7 +46,7 @@ const GameSettings = () => {
           color='inherit'
           aria-label='menu'
           sx={{ height: '48px', width: '48px', alignSelf: 'center' }}
-          onClick={() => setShowSettings(false)}
+          onClick={onClose}
         >
           <CloseIcon />
         </IconButton>
@@ -97,7 +97,7 @@ const GameSettings = () => {
               matcher={musicTrack}
               toggleCallback={(track) => toggleMusicTrack(track)}
             >
-              {track + 1}
+              <p style={{ fontSize: '10px' }}>{musicTrackNames[track]}</p>
             </GameToggleButton>
           ))}
         </div>
