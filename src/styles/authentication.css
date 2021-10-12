@@ -30,6 +30,16 @@
   cursor: pointer;
 }
 
+.user-avatar {
+  height: 28px;
+  width: 28px;
+  background: rgba(120, 120, 120, 0.3);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
 @media only screen and (max-width: 600px)  {
   .authentication-container {
     column-gap: 0px;

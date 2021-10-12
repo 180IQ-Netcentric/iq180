@@ -60,7 +60,6 @@ const GameSettings = ({ onClose }: any) => {
           label='Required'
           defaultValue='the username'
           sx={{ width: '100%', maxWidth: '300px', margin: '0 15px 15px 0' }}
-          onChange={() => console.log('changed')}
         />
         <RoundedSecondaryButton
           onClick={() => {
