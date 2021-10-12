@@ -4,7 +4,7 @@ import { musicTracks } from '@/dto/SoundTrack'
 import ReactAudioPlayer from 'react-audio-player'
 
 type Props = {
-  track: string
+  track?: string
 }
 
 const Music = ({ track }: Props) => {
