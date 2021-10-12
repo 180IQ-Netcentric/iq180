@@ -15,7 +15,7 @@ const Music = ({ track }: Props) => {
       {shouldEnableMusic() && (
         <ReactAudioPlayer
           style={{ display: 'none' }}
-          src={musicTracks[musicTrack]?.toString()}
+          src={track ?? musicTracks[musicTrack]?.toString()}
           volume={0.2}
           autoPlay
           controls
