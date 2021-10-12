@@ -1,13 +1,16 @@
-import React from 'react'
-import bcrypt from 'bcryptjs'
+import React, { useContext, useEffect } from 'react'
+import { useHistory } from 'react-router'
 import GameContainer from '@/components/containers/GameContainer'
 import RoundedTextField from '@/components/common/RoundedTextField'
 import { Controller, useForm } from 'react-hook-form'
 import { Button } from '@mui/material'
-import { SignInInfo } from '@/dto/Authentication.dto'
+import { SignInInfo, SignUpResponse } from '@/dto/Authentication.dto'
 
 import AuthenImage from '../../assets/images/authen.jpg'
 import { Link } from 'react-router-dom'
+import { client } from '@/config/axiosConfig'
+import { setCookie } from '@/utils/cookie'
+import { AuthContext } from '@/contexts/authContext'
 
 const SignUp = () => {
   const {
@@ -17,6 +20,8 @@ const SignUp = () => {
     watch,
   } = useForm()
 
+  const { isUser, setToken } = useContext(AuthContext)
+  const history = useHistory()
   const watchFields = watch('password')
 
   const fields = {
@@ -48,14 +53,25 @@ const SignUp = () => {
     },
   }
 
-  const onSubmit = (data: SignInInfo) => {
-    const salt = bcrypt.genSaltSync(10)
-    data = {
-      ...data,
-      password: bcrypt.hashSync(data.password, salt),
-    }
+  const onSubmit = (info: any) => {
     // Post to backend
+    client
+      .post('/register', { ...info })
+      .then(({ data }) => {
+        const user: SignUpResponse = data
+        setToken(user.jwt)
+        setCookie('token', user.jwt, 7)
+        setUser(user)
+        history.replace('/')
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }
+
+  useEffect(() => {
+    if (isUser) history.push('/')
+  }, [isUser])
 
   return (
     <GameContainer>

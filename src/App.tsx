@@ -15,10 +15,12 @@ import GameSettingsContextProvider, {
 import Music from './components/audio/Music'
 import SignIn from './pages/authentication/Signin'
 import SignUp from './pages/authentication/Signup'
+import UserContextProvider from './contexts/userContext'
+import AuthProvider from './contexts/authContext'
+import { client } from './config/axiosConfig'
 
 function App() {
   const { theme: appTheme } = useContext(ThemeContext)
-  const { musicTrack } = useContext(GameSettingsContext)
   const prefersDarkMode =
     localStorage.getItem('isDarkTheme') === 'true' ??
     useMediaQuery('(prefers-color-scheme: dark)')
@@ -69,25 +71,29 @@ function App() {
 
   return (
     <BrowserRouter>
-      <ThemeProvider theme={theme}>
-        <GameSettingsContextProvider>
-          <CssBaseline />
-          <MenuAppBar />
-          <Music />
-          <div style={{ marginTop: '90px' }}>
-            <div className='page-background'>
-              <Switch>
-                <Route path='/' component={Home} exact />
-                <Route path='/signin' component={SignIn} exact />
-                <Route path='/signup' component={SignUp} exact />
-                <Route path='/game' component={Game} exact />
-                <Route path='/404' component={Page404} />
-                <Redirect from='*' to='/404' />
-              </Switch>
-            </div>
-          </div>
-        </GameSettingsContextProvider>
-      </ThemeProvider>
+      <UserContextProvider>
+        <AuthProvider>
+          <ThemeProvider theme={theme}>
+            <GameSettingsContextProvider>
+              <CssBaseline />
+              <MenuAppBar />
+              <Music />
+              <div style={{ marginTop: '90px' }}>
+                <div className='page-background'>
+                  <Switch>
+                    <Route path='/' component={Home} exact />
+                    <Route path='/signin' component={SignIn} exact />
+                    <Route path='/signup' component={SignUp} exact />
+                    <Route path='/game' component={Game} exact />
+                    <Route path='/404' component={Page404} />
+                    <Redirect from='*' to='/404' />
+                  </Switch>
+                </div>
+              </div>
+            </GameSettingsContextProvider>
+          </ThemeProvider>
+        </AuthProvider>
+      </UserContextProvider>
     </BrowserRouter>
   )
 }
