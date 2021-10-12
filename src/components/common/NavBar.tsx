@@ -21,8 +21,9 @@ import GearImg from '../../assets/images/gear.png'
 export default function MenuAppBar() {
   const [auth, setAuth] = useState(true)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const { showSettings, setShowSettings } = useContext(GameSettingsContext)
+  const { showSettings } = useContext(GameSettingsContext)
   const [elevation, setElevation] = useState(0)
+  const [openSettings, setOpenSettings] = useState(showSettings)
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
   }
@@ -34,10 +35,6 @@ export default function MenuAppBar() {
   const handleSignOut = () => {
     setAuth(false)
     handleClose()
-  }
-
-  const handleSettings = () => {
-    setShowSettings(!showSettings)
   }
 
   useEffect(() => {
@@ -75,7 +72,7 @@ export default function MenuAppBar() {
                     aria-label='account of current user'
                     aria-controls='menu-appbar'
                     aria-haspopup='true'
-                    onClick={handleSettings}
+                    onClick={() => setOpenSettings(true)}
                     color='inherit'
                   >
                     <SettingsIcon />
@@ -117,19 +114,19 @@ export default function MenuAppBar() {
       <Modal
         aria-labelledby='transition-modal-title'
         aria-describedby='transition-modal-description'
-        open={showSettings}
-        onClose={() => setShowSettings(false)}
+        open={openSettings}
+        onClose={() => setOpenSettings(false)}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
           timeout: 500,
         }}
       >
-        <Fade in={showSettings}>
+        <Fade in={openSettings}>
           <Box sx={{ marginTop: '90px' }}>
             <GameContainer>
               <img className='gear-background' src={GearImg} alt='Settings' />
-              <GameSettings />
+              <GameSettings onClose={() => setOpenSettings(false)} />
             </GameContainer>
           </Box>
         </Fade>
