@@ -9,13 +9,13 @@ type Props = {
 
 const Music = ({ track }: Props) => {
   const { musicOn, musicTrack } = useContext(GameSettingsContext)
-
+  const shouldEnableMusic = () => musicOn && musicTrack !== 0
   return (
     <>
-      {musicOn && (
+      {shouldEnableMusic() && (
         <ReactAudioPlayer
           style={{ display: 'none' }}
-          src={track ?? musicTracks[musicTrack]?.toString()}
+          src={musicTracks[musicTrack]?.toString()}
           volume={0.2}
           autoPlay
           controls
