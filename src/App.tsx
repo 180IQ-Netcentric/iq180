@@ -13,6 +13,8 @@ import GameSettingsContextProvider, {
   GameSettingsContext,
 } from './contexts/gameSettingsContext'
 import Music from './components/audio/Music'
+import SignIn from './pages/authentication/Signin'
+import SignUp from './pages/authentication/Signup'
 
 function App() {
   const { theme: appTheme } = useContext(ThemeContext)
@@ -76,6 +78,8 @@ function App() {
             <div className='page-background'>
               <Switch>
                 <Route path='/' component={Home} exact />
+                <Route path='/signin' component={SignIn} exact />
+                <Route path='/signup' component={SignUp} exact />
                 <Route path='/game' component={Game} exact />
                 <Route path='/404' component={Page404} />
                 <Redirect from='*' to='/404' />
