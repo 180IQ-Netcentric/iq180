@@ -11,9 +11,7 @@ import TableRow from '@mui/material/TableRow'
 import TableSortLabel from '@mui/material/TableSortLabel'
 import Paper from '@mui/material/Paper'
 import { visuallyHidden } from '@mui/utils'
-import { client } from '@/config/axiosConfig'
-import { create } from 'domain'
-
+import { client } from '../../config/axiosConfig'
 interface Data {
   rank: number
   player: string
