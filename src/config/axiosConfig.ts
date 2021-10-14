@@ -1,4 +1,4 @@
-import { getCookie } from '@/utils/cookie'
+import { getCookie } from '../utils/cookie'
 import Axios from 'axios'
 
 type UrlType = string | undefined

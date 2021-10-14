@@ -1,12 +1,12 @@
-import React, { useContext, useState } from 'react'
-import GameToggleButton from '@/components/buttons/GameToggleButton'
-import RoundedSecondaryButton from '@/components/common/RoundedSecondaryButton'
-import RoundedTextField from '@/components/common/RoundedTextField'
-import { GameSettingsContext } from '@/contexts/gameSettingsContext'
-import { Theme, ThemeContext } from '@/contexts/themeContext'
+import React, { useContext } from 'react'
+import GameToggleButton from '../../components/buttons/GameToggleButton'
+import RoundedSecondaryButton from '../../components/common/RoundedSecondaryButton'
+import RoundedTextField from '../../components/common/RoundedTextField'
+import { GameSettingsContext } from '../../contexts/gameSettingsContext'
+import { Theme, ThemeContext } from '../../contexts/themeContext'
 import { IconButton, Switch } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
-import { musicTrackNames } from '@/dto/SoundTrack'
+import { musicTrackNames } from '../../dto/SoundTrack'
 
 const GameSettings = ({ onClose }: any) => {
   const {
