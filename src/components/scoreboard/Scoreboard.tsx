@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { client } from '@/config/axiosConfig'
+import { client } from '../../config/axiosConfig'
 
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
