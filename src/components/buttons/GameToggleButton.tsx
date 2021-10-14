@@ -1,9 +1,9 @@
 import React, { useContext } from 'react'
-import { useStyles } from '@/styles/useStyles'
+import { useStyles } from '../../styles/useStyles'
 import { ToggleButton } from '@mui/material'
 import useSound from 'use-sound'
 import clickSfx from '../../assets/audio/click.mp3'
-import { GameSettingsContext } from '@/contexts/gameSettingsContext'
+import { GameSettingsContext } from '../../contexts/gameSettingsContext'
 interface Props {
   item: any
   matcher: any
