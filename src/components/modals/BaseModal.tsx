@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { Button, Box, Modal, Fade, Typography, Backdrop } from '@mui/material'
-import { Theme, ThemeContext } from '@/contexts/themeContext'
+import { Theme, ThemeContext } from '../../contexts/themeContext'
 
 const style = {
   position: 'absolute',
