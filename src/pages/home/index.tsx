@@ -3,7 +3,7 @@ import { Button } from '@mui/material'
 import GameContainer from '@/components/containers/GameContainer'
 
 import CoverImg from '../../assets/images/coverImg.png'
-import BouncingArrow from '@/components/common/BouncingArrow'
+import BouncingArrow from '../../components/common/BouncingArrow'
 
 const Home = () => {
   return (
