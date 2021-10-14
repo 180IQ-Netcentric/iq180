@@ -5,12 +5,11 @@ type UrlType = string | undefined
 
 export const client = Axios.create({
   baseURL:
-    (import.meta.env.VITE_APP_API_URL as UrlType) ||
-    'http://localhost:4000/api',
+    (import.meta.env.VITE_APP_API_URL as UrlType) || 'http://localhost:3001',
 })
 client.interceptors.request.use(
   (req) => {
-    if (req.headers && !req.headers.Authorization) {
+    if (req.headers && !req.headers['x-access-token']) {
       const token = getCookie('token')
       // to be checked
       // req.headers.Authorization = `Bearer ${token}`

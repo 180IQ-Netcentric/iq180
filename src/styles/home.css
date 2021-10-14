@@ -33,11 +33,11 @@
 .scoreboard-container {
   grid-area: scoreboard;
   color: #000;
-  height: 300px;
+  /* height: 330px; */
   width: 100%;
   background-color: #ffe2b8;
   border-radius: 15px;
-  padding: 0 12px;
+  padding: 0px;
 }
 
 .tutorial-container {
