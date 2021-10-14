@@ -9,15 +9,12 @@ import { createTheme, ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeContext } from './contexts/themeContext'
 import MenuAppBar from './components/common/NavBar'
-import GameSettingsContextProvider, {
-  GameSettingsContext,
-} from './contexts/gameSettingsContext'
+import GameSettingsContextProvider from './contexts/gameSettingsContext'
 import Music from './components/audio/Music'
 import SignIn from './pages/authentication/Signin'
 import SignUp from './pages/authentication/Signup'
 import UserContextProvider from './contexts/userContext'
 import AuthProvider from './contexts/authContext'
-import { client } from './config/axiosConfig'
 
 function App() {
   const { theme: appTheme } = useContext(ThemeContext)
@@ -29,7 +26,7 @@ function App() {
     () =>
       createTheme({
         palette: {
-          mode: prefersDarkMode && appTheme === 'dark' ? 'dark' : 'light',
+          mode: appTheme === 'dark' ? 'dark' : 'light',
           primary: {
             main: '#F56F54',
             contrastText: '#fff',
@@ -54,15 +51,17 @@ function App() {
   useEffect(() => {
     // save default values to localstorage if they are not available
     if (!window.localStorage.getItem('musicOn'))
-      window.localStorage.setItem('musicOn', 'true')
+      window.localStorage.setItem('musicOn', 'false')
     if (!window.localStorage.getItem('soundEffectOn'))
-      window.localStorage.setItem('soundEffectOn', 'true')
+      window.localStorage.setItem('soundEffectOn', 'false')
     if (!window.localStorage.getItem('musicTrack'))
       window.localStorage.setItem('musicTrack', '1')
     if (!window.localStorage.getItem('background'))
       window.localStorage.setItem('background', '0')
     if (!window.localStorage.getItem('language'))
       window.localStorage.setItem('language', '0')
+    if (!window.localStorage.getItem('isDarkTheme'))
+      window.localStorage.setItem('isDarkTheme', 'false')
 
     document.body.classList.add(
       `page-background-${window.localStorage.getItem('background')}`

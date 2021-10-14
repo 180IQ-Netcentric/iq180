@@ -4,6 +4,7 @@ import GameContainer from '../../components/containers/GameContainer'
 
 import CoverImg from '../../assets/images/coverImg.png'
 import BouncingArrow from '../../components/common/BouncingArrow'
+import Scoreboard2 from '../../components/scoreboard/Scoreboard2'
 
 const Home = () => {
   return (
@@ -29,9 +30,7 @@ const Home = () => {
         </div>
         <BouncingArrow />
         <div className='home-options-container'>
-          <div className='scoreboard-container scoreboard-home'>
-            <h2>Scoreboard</h2>
-          </div>
+          <Scoreboard2 />
           <div className='tutorial-container'>
             <h2>Tips</h2>
           </div>

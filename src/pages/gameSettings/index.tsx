@@ -128,6 +128,7 @@ const GameSettings = ({ onClose }: any) => {
             }
             inputProps={{ 'aria-label': 'controlled' }}
           />
+          <p>{theme.toString()}</p>
         </div>
       </div>
       <hr />
