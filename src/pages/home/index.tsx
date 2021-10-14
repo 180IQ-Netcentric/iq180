@@ -1,9 +1,10 @@
 import React from 'react'
 import { Button } from '@mui/material'
-import GameContainer from '@/components/containers/GameContainer'
+import GameContainer from '../../components/containers/GameContainer'
 
 import CoverImg from '../../assets/images/coverImg.png'
-import BouncingArrow from '@/components/common/BouncingArrow'
+import BouncingArrow from '../../components/common/BouncingArrow'
+import Scoreboard from '../../components/scoreboard/Scoreboard'
 
 const Home = () => {
   return (
@@ -29,9 +30,7 @@ const Home = () => {
         </div>
         <BouncingArrow />
         <div className='home-options-container'>
-          <div className='scoreboard-container scoreboard-home'>
-            <h2>Scoreboard</h2>
-          </div>
+          <Scoreboard />
           <div className='tutorial-container'>
             <h2>Tips</h2>
           </div>

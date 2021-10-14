@@ -1,0 +1,376 @@
+import React, { useEffect, useState } from 'react'
+import Box from '@mui/material/Box'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import TablePagination from '@mui/material/TablePagination'
+import TableRow from '@mui/material/TableRow'
+import TableSortLabel from '@mui/material/TableSortLabel'
+import Paper from '@mui/material/Paper'
+import { visuallyHidden } from '@mui/utils'
+import { client } from '../../config/axiosConfig'
+interface Data {
+  rank: number
+  username: string
+  win: number
+  lose: number
+  score: number
+}
+
+function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1
+  }
+  return 0
+}
+
+type Order = 'asc' | 'desc'
+
+function getComparator<Key extends keyof any>(
+  order: Order,
+  orderBy: Key
+): (
+  a: { [key in Key]: number | string },
+  b: { [key in Key]: number | string }
+) => number {
+  return order === 'desc'
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy)
+}
+
+// This method is created for cross-browser compatibility, if you don't
+// need to support IE11, you can use Array.prototype.sort() directly
+function stableSort<T>(
+  array: readonly T[],
+  comparator: (a: T, b: T) => number
+) {
+  const stabilizedThis = array.map((el, index) => [el, index] as [T, number])
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0])
+    if (order !== 0) {
+      return order
+    }
+    return a[1] - b[1]
+  })
+  return stabilizedThis.map((el) => el[0])
+}
+
+interface HeadCell {
+  disablePadding: boolean
+  id: keyof Data
+  label: string
+  numeric: boolean
+}
+
+const headCells: readonly HeadCell[] = [
+  {
+    id: 'rank',
+    numeric: true,
+    disablePadding: true,
+    label: 'Rank',
+  },
+  {
+    id: 'username',
+    numeric: false,
+    disablePadding: false,
+    label: 'Username',
+  },
+  {
+    id: 'win',
+    numeric: true,
+    disablePadding: false,
+    label: 'W',
+  },
+  {
+    id: 'lose',
+    numeric: true,
+    disablePadding: false,
+    label: 'Lose',
+  },
+  {
+    id: 'score',
+    numeric: true,
+    disablePadding: false,
+    label: 'Score',
+  },
+]
+
+interface EnhancedTableProps {
+  numSelected: number
+  onRequestSort: (
+    event: React.MouseEvent<unknown>,
+    property: keyof Data
+  ) => void
+  onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void
+  order: Order
+  orderBy: string
+  rowCount: number
+}
+
+function EnhancedTableHead(props: EnhancedTableProps) {
+  const { order, orderBy, onRequestSort } = props
+  const createSortHandler =
+    (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
+      onRequestSort(event, property)
+    }
+
+  return (
+    <TableHead>
+      <TableRow>
+        {headCells.map((headCell) => (
+          <TableCell
+            key={headCell.id}
+            align={
+              headCell.id === 'username' || headCell.id === 'rank'
+                ? 'left'
+                : 'center'
+            }
+            sortDirection={orderBy === headCell.id ? order : false}
+          >
+            <TableSortLabel
+              active={orderBy === headCell.id}
+              direction={orderBy === headCell.id ? order : 'asc'}
+              onClick={createSortHandler(headCell.id)}
+              sx={{
+                textAlign: 'center',
+                justifyContent: 'center',
+                display: 'flex',
+              }}
+            >
+              {headCell.label}
+              <Box component='span' sx={visuallyHidden}>
+                {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+              </Box>
+            </TableSortLabel>
+          </TableCell>
+        ))}
+      </TableRow>
+    </TableHead>
+  )
+}
+
+export default function Scoreboard() {
+  const [order, setOrder] = React.useState<Order>('asc')
+  const [orderBy, setOrderBy] = React.useState<keyof Data>('score')
+  const [selected, setSelected] = React.useState<readonly string[]>([])
+  const [page, setPage] = React.useState(0)
+  const [dense] = React.useState(true)
+  const [rowsPerPage, setRowsPerPage] = React.useState(5)
+
+  function createData(
+    username: string,
+    rank: number,
+    win: number,
+    lose: number,
+    score: number
+  ): Data {
+    return {
+      rank,
+      username,
+      win,
+      lose,
+      score,
+    }
+  }
+
+  const [rows, setRows] = useState<Data[]>([])
+
+  const handleRequestSort = (
+    event: React.MouseEvent<unknown>,
+    property: keyof Data
+  ) => {
+    const isAsc = orderBy === property && order === 'asc'
+    setOrder(isAsc ? 'desc' : 'asc')
+    setOrderBy(property)
+  }
+
+  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+      const newSelecteds = rows.map((n) => n.username)
+      setSelected(newSelecteds)
+      return
+    }
+    setSelected([])
+  }
+
+  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
+    const selectedIndex = selected.indexOf(name)
+    let newSelected: readonly string[] = []
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, name)
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1))
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1))
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      )
+    }
+
+    setSelected(newSelected)
+  }
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage)
+  }
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10))
+    setPage(0)
+  }
+
+  const isSelected = (name: string) => selected.indexOf(name) !== -1
+
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0
+
+  const getScoreboard = () => {
+    client
+      .get('/scoreboard')
+      .then((res) => {
+        const scores: Data[] = res.data
+        const formattedScore = scores.map((info) => {
+          return createData(
+            info.username,
+            info.rank,
+            info.win,
+            info.lose,
+            info.score
+          )
+        })
+        setRows(formattedScore)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+  useEffect(() => {
+    getScoreboard()
+  }, [])
+
+  return (
+    <div className='scoreboard-container scoreboard-home'>
+      <h2 className='section-title'>Scoreboard 🏆</h2>
+      {rows.length < 1 && (
+        <div className='no-score'>Please sign in to view the scoreboard</div>
+      )}
+      {rows.length > 0 && (
+        <Box>
+          <Paper elevation={0} sx={{ backgroundColor: 'transparent' }}>
+            <TableContainer sx={{ backgroundColor: 'transparent' }}>
+              <Table
+                sx={{ backgroundColor: 'transparent', maxWidth: '100%' }}
+                aria-labelledby='tableTitle'
+                size={dense ? 'small' : 'medium'}
+              >
+                <EnhancedTableHead
+                  numSelected={selected.length}
+                  order={order}
+                  orderBy={orderBy}
+                  onSelectAllClick={handleSelectAllClick}
+                  onRequestSort={handleRequestSort}
+                  rowCount={rows.length}
+                />
+                <TableBody>
+                  {/* if you don't need to support IE11, you can replace the `stableSort` call with:
+                  rows.slice().sort(getComparator(order, orderBy)) */}
+                  {rows.length > 0 &&
+                    stableSort(rows, getComparator(order, orderBy))
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .map((row, index) => {
+                        const isItemSelected = isSelected(row.username)
+                        const labelId = `enhanced-table-checkbox-${index}`
+
+                        return (
+                          <TableRow
+                            hover
+                            onClick={(event) =>
+                              handleClick(event, row.username)
+                            }
+                            role='checkbox'
+                            aria-checked={isItemSelected}
+                            tabIndex={-1}
+                            key={row.username}
+                            selected={isItemSelected}
+                          >
+                            <TableCell
+                              component='th'
+                              id={labelId}
+                              scope='row'
+                              align='left'
+                              sx={{ borderBottom: 'transparent' }}
+                            >
+                              {index + 1}
+                            </TableCell>
+                            <TableCell
+                              align='left'
+                              sx={{
+                                maxWidth: '40px',
+                                borderBottom: 'transparent',
+                              }}
+                            >
+                              {row.username}
+                            </TableCell>
+                            <TableCell
+                              align='center'
+                              sx={{ borderBottom: 'transparent' }}
+                            >
+                              {row.win}
+                            </TableCell>
+                            <TableCell
+                              align='center'
+                              sx={{ borderBottom: 'transparent' }}
+                            >
+                              {row.lose}
+                            </TableCell>
+                            <TableCell
+                              align='center'
+                              sx={{ borderBottom: 'transparent' }}
+                            >
+                              {row.score}
+                            </TableCell>
+                          </TableRow>
+                        )
+                      })}
+                  {emptyRows > 0 && (
+                    <TableRow
+                      style={{
+                        height: (dense ? 33 : 53) * emptyRows,
+                      }}
+                    >
+                      <TableCell colSpan={6} />
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component='div'
+              count={rows.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Paper>
+        </Box>
+      )}
+    </div>
+  )
+}

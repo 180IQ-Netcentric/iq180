@@ -1,17 +1,17 @@
 import React, { useContext, useEffect } from 'react'
 import { useHistory } from 'react-router'
-import GameContainer from '@/components/containers/GameContainer'
-import RoundedTextField from '@/components/common/RoundedTextField'
+import GameContainer from '../../components/containers/GameContainer'
+import RoundedTextField from '../../components/common/RoundedTextField'
 import { Controller, useForm } from 'react-hook-form'
 import { Button } from '@mui/material'
-import { SignUpResponse } from '@/dto/Authentication.dto'
+import { SignUpResponse } from '../../dto/Authentication.dto'
 
 import AuthenImage from '../../assets/images/authen.jpg'
 import { Link } from 'react-router-dom'
-import { client } from '@/config/axiosConfig'
-import { setCookie } from '@/utils/cookie'
-import { UserContext } from '@/contexts/userContext'
-import { AuthContext } from '@/contexts/authContext'
+import { client } from '../../config/axiosConfig'
+import { setCookie } from '../../utils/cookie'
+import { UserContext } from '../../contexts/userContext'
+import { AuthContext } from '../../contexts/authContext'
 
 const SignIn = () => {
   const {
