@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect, useRef } from 'react'
 import AppBar from '@mui/material/AppBar'
-
 import Box from '@mui/material/Box'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
@@ -8,19 +7,19 @@ import IconButton from '@mui/material/IconButton'
 import Container from '@mui/material/Container'
 import MenuItem from '@mui/material/MenuItem'
 import Menu from '@mui/material/Menu'
-
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import LoginIcon from '@mui/icons-material/Login'
 import SchoolIcon from '@mui/icons-material/School'
 import SettingsIcon from '@mui/icons-material/Settings'
-import { GameSettingsContext } from '@/contexts/gameSettingsContext'
+
+import { GameSettingsContext } from '../../contexts/gameSettingsContext'
 import { Backdrop, Fade, Modal } from '@mui/material'
 import GameContainer from '../containers/GameContainer'
-import GameSettings from '@/pages/gameSettings'
+import GameSettings from '../../pages/gameSettings'
 import GearImg from '../../assets/images/gear.png'
-import { setCookie } from '@/utils/cookie'
-import { UserContext } from '@/contexts/userContext'
-import { AuthContext } from '@/contexts/authContext'
+import { setCookie } from '../..//utils/cookie'
+import { UserContext } from '../../contexts/userContext'
+import { AuthContext } from '../../contexts/authContext'
 import { useHistory } from 'react-router'
 
 export default function MenuAppBar() {

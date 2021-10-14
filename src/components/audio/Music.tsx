@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
-import { GameSettingsContext } from '@/contexts/gameSettingsContext'
-import { musicTracks } from '@/dto/SoundTrack'
+import { GameSettingsContext } from '../../contexts/gameSettingsContext'
+import { musicTracks } from '../../dto/SoundTrack'
 import ReactAudioPlayer from 'react-audio-player'
 
 type Props = {
