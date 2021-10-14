@@ -5,15 +5,11 @@ import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import Container from '@mui/material/Container'
-import MenuItem from '@mui/material/MenuItem'
-import Menu from '@mui/material/Menu'
-import AccountCircle from '@mui/icons-material/AccountCircle'
-import LoginIcon from '@mui/icons-material/Login'
 import SchoolIcon from '@mui/icons-material/School'
 import SettingsIcon from '@mui/icons-material/Settings'
 
 import { GameSettingsContext } from '../../contexts/gameSettingsContext'
-import { Backdrop, Fade, Modal } from '@mui/material'
+import { Backdrop, Button, Fade, Modal } from '@mui/material'
 import GameContainer from '../containers/GameContainer'
 import GameSettings from '../../pages/gameSettings'
 import GearImg from '../../assets/images/gear.png'
@@ -28,35 +24,17 @@ export default function MenuAppBar() {
   const { isUser, setToken } = useContext(AuthContext)
   const history = useHistory()
   const anchor = useRef(null)
-
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [elevation, setElevation] = useState(0)
   const [openSettings, setOpenSettings] = useState(showSettings)
-  const [showMenu, setShowMenu] = useState(false)
-
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget)
-    setShowMenu(true)
-  }
-
-  const handleClose = () => {
-    setAnchorEl(null)
-  }
 
   const handleSignOut = () => {
-    setShowMenu(false)
     setToken('')
     setCookie('token', null, 0)
     clearUser()
   }
 
   const handleSignIn = () => {
-    setShowMenu(false)
     history.push('/signin')
-  }
-
-  const shouldShowSignIn = () => {
-    return !isUser
   }
 
   useEffect(() => {
@@ -100,42 +78,19 @@ export default function MenuAppBar() {
                 >
                   <SettingsIcon />
                 </IconButton>
-                <IconButton
-                  size='large'
+                <Button
+                  variant='contained'
+                  disableElevation
                   aria-label='account of current user'
                   aria-controls='menu-appbar'
                   aria-haspopup='true'
-                  onClick={handleMenu}
-                  color='inherit'
-                  id='asdf'
+                  onClick={isUser ? handleSignOut : handleSignIn}
+                  color='primary'
+                  id='authentication-button'
                   ref={anchor}
                 >
-                  {/* {isUser ? <UserAvatar text={user?.username ?? ':)'} />: <AccountCircle />} */}
-                  {isUser ? <AccountCircle /> : <LoginIcon />}
-                </IconButton>
-                <Menu
-                  id='menu-appbar'
-                  anchorEl={anchorEl}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  sx={{ marginTop: '48px' }}
-                  open={Boolean(anchorEl) && showMenu}
-                  onClose={handleClose}
-                >
-                  {shouldShowSignIn() && (
-                    <MenuItem onClick={handleSignIn}>Sign In</MenuItem>
-                  )}
-                  {!shouldShowSignIn() && (
-                    <MenuItem onClick={handleSignOut}>Sign out</MenuItem>
-                  )}
-                </Menu>
+                  {isUser ? 'Sign Out' : 'Sign In'}
+                </Button>
               </div>
             </Toolbar>
           </Container>
