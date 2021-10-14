@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import './App.css'
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 import Game from './pages/game/index'
@@ -15,20 +15,20 @@ import SignUp from './pages/authentication/Signup'
 import UserContextProvider from './contexts/userContext'
 import AuthProvider from './contexts/authContext'
 import Wrapper from './components/Wrapper'
+import { ThemeContext } from './contexts/themeContext'
 
 function App() {
   const prefersDarkMode =
     localStorage.getItem('isDarkTheme') === 'true' ??
     useMediaQuery('(prefers-color-scheme: dark)')
 
+  const { theme: appTheme } = useContext(ThemeContext)
+
   const theme = React.useMemo(
     () =>
       createTheme({
         palette: {
-          mode:
-            prefersDarkMode || localStorage.getItem('isDarkTheme') === 'dark'
-              ? 'dark'
-              : 'light',
+          mode: prefersDarkMode && appTheme === 'dark' ? 'dark' : 'light',
           primary: {
             main: '#F56F54',
             contrastText: '#fff',
@@ -47,7 +47,7 @@ function App() {
           },
         },
       }),
-    []
+    [prefersDarkMode]
   )
 
   return (
