@@ -1,24 +1,16 @@
 import React, { createContext, useState } from 'react'
-
-export interface User {
-  isUser: boolean
-  jwt: string
-  lose: number
-  score: number
-  username: string
-  win: number
-}
+import { User, UserInfo } from '../dto/Authentication.dto'
 
 export interface UserConstruct {
-  user: User | undefined
-  setUser: (value: User) => void
+  user: User | UserInfo | undefined
+  setUser: (value: User | UserInfo | undefined) => void
   clearUser: () => void
 }
 
 export const UserContext = createContext({} as UserConstruct)
 
 const UserContextProvider = ({ ...props }) => {
-  const [user, setUser] = useState<User>()
+  const [user, setUser] = useState<User | UserInfo | undefined>()
 
   const clearUser = () => {
     setUser(undefined)
