@@ -63,3 +63,15 @@ hr {
   -webkit-user-select: none;
   user-select: none;
 }
+
+.single-line-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1; /* number of lines to show */
+  -webkit-box-orient: vertical;
+}
+
+.css-dsuxgy-MuiTableCell-root {
+  border-bottom: transparent !important;
+}

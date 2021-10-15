@@ -125,20 +125,21 @@ function EnhancedTableHead(props: EnhancedTableProps) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={
-              headCell.id === 'username' || headCell.id === 'rank'
-                ? 'left'
-                : 'center'
-            }
+            align='left'
             sortDirection={orderBy === headCell.id ? order : false}
+            sx={{
+              borderBottom: 'transparent',
+              maxWidth: `${headCell.id === 'rank' ? '60px' : 'inherit'}`,
+            }}
           >
             <TableSortLabel
-              active={orderBy === headCell.id}
+              active={orderBy === headCell.id && headCell.id !== 'rank'}
               direction={orderBy === headCell.id ? order : 'asc'}
               onClick={createSortHandler(headCell.id)}
+              hideSortIcon={headCell.id === 'rank'}
               sx={{
-                textAlign: 'center',
-                justifyContent: 'center',
+                textAlign: 'left',
+                justifyContent: 'left',
                 display: 'flex',
               }}
             >
@@ -269,9 +270,11 @@ export default function Scoreboard() {
       {rows.length > 0 && (
         <Box>
           <Paper elevation={0} sx={{ backgroundColor: 'transparent' }}>
-            <TableContainer sx={{ backgroundColor: 'transparent' }}>
+            <TableContainer
+              sx={{ backgroundColor: 'transparent', height: '200px' }}
+            >
               <Table
-                sx={{ backgroundColor: 'transparent', maxWidth: '100%' }}
+                sx={{ backgroundColor: 'transparent' }}
                 aria-labelledby='tableTitle'
                 size={dense ? 'small' : 'medium'}
               >
@@ -313,33 +316,38 @@ export default function Scoreboard() {
                               id={labelId}
                               scope='row'
                               align='left'
-                              sx={{ borderBottom: 'transparent' }}
+                              sx={{
+                                borderBottom: 'transparent',
+                                maxWidth: '30px',
+                              }}
                             >
                               {index + 1}
                             </TableCell>
                             <TableCell
                               align='left'
                               sx={{
-                                maxWidth: '40px',
+                                maxWidth: '60px',
                                 borderBottom: 'transparent',
                               }}
                             >
-                              {row.username}
+                              <div className='single-line-text'>
+                                {row.username}
+                              </div>
                             </TableCell>
                             <TableCell
-                              align='center'
+                              align='left'
                               sx={{ borderBottom: 'transparent' }}
                             >
                               {row.win}
                             </TableCell>
                             <TableCell
-                              align='center'
+                              align='left'
                               sx={{ borderBottom: 'transparent' }}
                             >
                               {row.lose}
                             </TableCell>
                             <TableCell
-                              align='center'
+                              align='left'
                               sx={{ borderBottom: 'transparent' }}
                             >
                               {row.score}
@@ -360,7 +368,7 @@ export default function Scoreboard() {
               </Table>
             </TableContainer>
             <TablePagination
-              rowsPerPageOptions={[5, 10, 25]}
+              rowsPerPageOptions={[5]}
               component='div'
               count={rows.length}
               rowsPerPage={rowsPerPage}

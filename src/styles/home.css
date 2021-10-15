@@ -26,15 +26,16 @@
 .game-cover img {
   display: flex;
   float: right;
-  min-width: 80%;
+  min-width: 80px;
   max-width: 70%;
+  /* width:auto;
+  height:auto; */
 }
 
 .scoreboard-container {
   grid-area: scoreboard;
   color: #000;
-  /* height: 330px; */
-  width: 100%;
+  max-width: inherit;
   background-color: #ffe2b8;
   border-radius: 15px;
   padding: 0px;
@@ -43,7 +44,7 @@
 .tutorial-container {
   grid-area: tutorial;
   color: #000;
-  height: 300px;
+  height: 328px;
   width: 100%;
   background-color: #F3F3F3;
   border-radius: 15px;
@@ -52,11 +53,26 @@
 
 .home-options-container {
   display: grid;
-    grid-template-columns: 4fr 6fr;
+    grid-template-columns: 1fr 1fr;
     column-gap: 12px;
     grid-template-rows: auto;
     grid-template-areas: 
       "scoreboard tutorial"
+}
+
+@media only screen and (max-width: 900px)  {
+  .game-cover {
+    padding-top: 200px;
+  }
+  .home-options-container {
+    display: grid;
+      grid-template-columns: 100%;
+      row-gap: 12px;
+      grid-template-rows: auto;
+      grid-template-areas: 
+        "scoreboard"
+        "tutorial";
+  }
 }
 
 
@@ -86,13 +102,23 @@
     max-width: 100%;
   }
 
+  .scoreboard-container {
+    max-width: calc(100vw - 84px);
+  }
+
   .home-options-container {
     display: grid;
-      grid-template-columns: 1fr;
+      grid-template-columns: 100%;
       row-gap: 12px;
       grid-template-rows: auto;
       grid-template-areas: 
         "scoreboard"
         "tutorial";
+  }
+}
+
+@media only screen and (max-width: 500px)  {
+  .scoreboard-container {
+    max-width: calc(100vw - 70px);
   }
 }
