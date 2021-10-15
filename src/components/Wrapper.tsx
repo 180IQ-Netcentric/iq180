@@ -1,6 +1,9 @@
 import React, { useContext, useEffect } from 'react'
+import { client } from '../config/axiosConfig'
 import { GameSettingsContext } from '../contexts/gameSettingsContext'
 import { Theme, ThemeContext } from '../contexts/themeContext'
+import { UserContext } from '../contexts/userContext'
+import { UserInfo } from '../dto/Authentication.dto'
 
 const Wrapper = ({ children }: any) => {
   const {
@@ -11,6 +14,14 @@ const Wrapper = ({ children }: any) => {
     toggleLanguage,
   } = useContext(GameSettingsContext)
   const { setAppTheme } = useContext(ThemeContext)
+  const { setUser } = useContext(UserContext)
+
+  useEffect(() => {
+    client.get('/userinfo').then((res) => {
+      const user: UserInfo = res.data
+      setUser(user)
+    })
+  }, [])
 
   useEffect(() => {
     // save default values to localstorage if they are not available

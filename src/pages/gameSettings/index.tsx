@@ -7,6 +7,8 @@ import { Theme, ThemeContext } from '../../contexts/themeContext'
 import { IconButton, Switch } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import { musicTrackNames } from '../../dto/SoundTrack'
+import { UserContext } from '../../contexts/userContext'
+import { client } from '../../config/axiosConfig'
 
 const GameSettings = ({ onClose }: any) => {
   const {
@@ -22,10 +24,16 @@ const GameSettings = ({ onClose }: any) => {
     toggleLanguage,
   } = useContext(GameSettingsContext)
   const { theme, setAppTheme } = useContext(ThemeContext)
+  const { user: player, setUser } = useContext(UserContext)
 
   const musicTracks = [0, 1, 2, 3, 4]
   const backgrounds = [0, 1, 2, 3, 4]
   const languages = ['en', 'th']
+
+  const onUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (player)
+      setUser({ ...player, username: e?.target?.value ?? player.username })
+  }
 
   const changeBackground = (value: number) => {
     document.body.classList.forEach((className) => {
@@ -34,6 +42,17 @@ const GameSettings = ({ onClose }: any) => {
       }
     })
     document.body.classList.add(`page-background-${value}`)
+  }
+
+  const updateUserName = () => {
+    client
+      .put('/username', { username: player?.username })
+      .then(() => {
+        alert('Username has been changed successfullly.')
+      })
+      .catch(() => {
+        alert('Cannot change username, please try again.')
+      })
   }
 
   return (
@@ -58,14 +77,11 @@ const GameSettings = ({ onClose }: any) => {
           required
           id='outlined-required'
           label='Required'
-          defaultValue='the username'
+          defaultValue={player?.username ?? ''}
+          onChange={onUsernameChange}
           sx={{ width: '100%', maxWidth: '300px', margin: '0 15px 15px 0' }}
         />
-        <RoundedSecondaryButton
-          onClick={() => {
-            console.log('save username')
-          }}
-        >
+        <RoundedSecondaryButton onClick={updateUserName}>
           Save
         </RoundedSecondaryButton>
       </div>
