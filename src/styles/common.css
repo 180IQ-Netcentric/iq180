@@ -75,3 +75,7 @@ hr {
 .css-dsuxgy-MuiTableCell-root {
   border-bottom: transparent !important;
 }
+
+.dark-text {
+  color: #000;
+}

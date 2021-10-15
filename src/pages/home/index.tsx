@@ -1,12 +1,15 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Button } from '@mui/material'
 import GameContainer from '../../components/containers/GameContainer'
 
 import CoverImg from '../../assets/images/coverImg.png'
 import BouncingArrow from '../../components/common/BouncingArrow'
 import Scoreboard from '../../components/scoreboard/Scoreboard'
+import { Theme, ThemeContext } from '../../contexts/themeContext'
 
 const Home = () => {
+  const { theme: appTheme } = useContext(ThemeContext)
+
   return (
     <div>
       <GameContainer>
@@ -31,7 +34,11 @@ const Home = () => {
         <BouncingArrow />
         <div className='home-options-container'>
           <Scoreboard />
-          <div className='tutorial-container'>
+          <div
+            className={`tutorial-container${
+              appTheme === Theme.DARK ? '-dark' : ''
+            }`}
+          >
             <h2>Tips</h2>
           </div>
         </div>

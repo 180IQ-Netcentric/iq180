@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Box from '@mui/material/Box'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -11,6 +11,7 @@ import TableSortLabel from '@mui/material/TableSortLabel'
 import Paper from '@mui/material/Paper'
 import { visuallyHidden } from '@mui/utils'
 import { client } from '../../config/axiosConfig'
+import { Theme, ThemeContext } from '../../contexts/themeContext'
 interface Data {
   rank: number
   username: string
@@ -143,7 +144,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
                 display: 'flex',
               }}
             >
-              {headCell.label}
+              <div>{headCell.label}</div>
               <Box component='span' sx={visuallyHidden}>
                 {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
               </Box>
@@ -162,6 +163,7 @@ export default function Scoreboard() {
   const [page, setPage] = React.useState(0)
   const [dense] = React.useState(true)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
+  const { theme: appTheme } = useContext(ThemeContext)
 
   function createData(
     username: string,
@@ -262,7 +264,11 @@ export default function Scoreboard() {
   }, [])
 
   return (
-    <div className='scoreboard-container scoreboard-home'>
+    <div
+      className={`scoreboard-container${
+        appTheme === Theme.DARK ? '-dark' : ''
+      } scoreboard-home`}
+    >
       <h2 className='section-title'>Scoreboard 🏆</h2>
       {rows.length < 1 && (
         <div className='no-score'>Please sign in to view the scoreboard</div>
@@ -321,7 +327,7 @@ export default function Scoreboard() {
                                 maxWidth: '30px',
                               }}
                             >
-                              {index + 1}
+                              <div>{index + 1}</div>
                             </TableCell>
                             <TableCell
                               align='left'
@@ -331,26 +337,26 @@ export default function Scoreboard() {
                               }}
                             >
                               <div className='single-line-text'>
-                                {row.username}
+                                <div>{row.username}</div>
                               </div>
                             </TableCell>
                             <TableCell
                               align='left'
                               sx={{ borderBottom: 'transparent' }}
                             >
-                              {row.win}
+                              <div>{row.win}</div>
                             </TableCell>
                             <TableCell
                               align='left'
                               sx={{ borderBottom: 'transparent' }}
                             >
-                              {row.lose}
+                              <div>{row.lose}</div>
                             </TableCell>
                             <TableCell
                               align='left'
                               sx={{ borderBottom: 'transparent' }}
                             >
-                              {row.score}
+                              <div>{row.score}</div>
                             </TableCell>
                           </TableRow>
                         )
