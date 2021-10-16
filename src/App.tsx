@@ -16,6 +16,7 @@ import UserContextProvider from './contexts/userContext'
 import AuthProvider from './contexts/authContext'
 import Wrapper from './components/Wrapper'
 import { ThemeContext } from './contexts/themeContext'
+import Lobby from './pages/lobby'
 
 function App() {
   const prefersDarkMode =
@@ -67,6 +68,7 @@ function App() {
                       <Route path='/signin' component={SignIn} exact />
                       <Route path='/signup' component={SignUp} exact />
                       <Route path='/game' component={Game} exact />
+                      <Route path='/lobby' component={Lobby} exact />
                       <Route path='/404' component={Page404} />
                       <Redirect from='*' to='/404' />
                     </Switch>
