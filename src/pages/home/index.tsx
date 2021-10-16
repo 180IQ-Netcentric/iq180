@@ -6,9 +6,11 @@ import CoverImg from '../../assets/images/coverImg.png'
 import BouncingArrow from '../../components/common/BouncingArrow'
 import Scoreboard from '../../components/scoreboard/Scoreboard'
 import { Theme, ThemeContext } from '../../contexts/themeContext'
+import { useHistory } from 'react-router'
 
 const Home = () => {
   const { theme: appTheme } = useContext(ThemeContext)
+  const history = useHistory()
 
   return (
     <div>
@@ -27,6 +29,7 @@ const Home = () => {
             variant='contained'
             size='large'
             sx={{ width: '100%', borderRadius: '15px' }}
+            onClick={() => history.push('/lobby')}
           >
             Play
           </Button>
