@@ -79,3 +79,7 @@ hr {
 .dark-text {
   color: #000;
 }
+
+.empty-space {
+  height: 24px;
+}
