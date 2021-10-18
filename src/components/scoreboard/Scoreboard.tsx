@@ -12,6 +12,9 @@ import Paper from '@mui/material/Paper'
 import { visuallyHidden } from '@mui/utils'
 import { client } from '../../config/axiosConfig'
 import { Theme, ThemeContext } from '../../contexts/themeContext'
+import { AuthenticationErrorMessage, scoreboardError } from '../../utils/errors'
+import ErrorAlert from '../alerts/ErrorAlert'
+import { UserContext } from '../../contexts/userContext'
 interface Data {
   rank: number
   username: string
@@ -157,12 +160,14 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 }
 
 export default function Scoreboard() {
-  const [order, setOrder] = React.useState<Order>('asc')
-  const [orderBy, setOrderBy] = React.useState<keyof Data>('score')
-  const [selected, setSelected] = React.useState<readonly string[]>([])
-  const [page, setPage] = React.useState(0)
-  const [dense] = React.useState(true)
-  const [rowsPerPage, setRowsPerPage] = React.useState(5)
+  const [order, setOrder] = useState<Order>('asc')
+  const [orderBy, setOrderBy] = useState<keyof Data>('score')
+  const [selected, setSelected] = useState<readonly string[]>([])
+  const [page, setPage] = useState(0)
+  const [dense] = useState(true)
+  const [rowsPerPage, setRowsPerPage] = useState(5)
+  const [error, setError] = useState<AuthenticationErrorMessage>()
+  const [showError, setShowError] = useState(false)
   const { theme: appTheme } = useContext(ThemeContext)
 
   function createData(
@@ -180,7 +185,7 @@ export default function Scoreboard() {
       score,
     }
   }
-
+  const { user } = useContext(UserContext)
   const [rows, setRows] = useState<Data[]>([])
 
   const handleRequestSort = (
@@ -255,7 +260,8 @@ export default function Scoreboard() {
         setRows(formattedScore)
       })
       .catch((err) => {
-        console.log(err)
+        setError(err.response.data)
+        setShowError(true)
       })
   }
 
@@ -269,6 +275,15 @@ export default function Scoreboard() {
         appTheme === Theme.DARK ? '-dark' : ''
       } scoreboard-home`}
     >
+      {user && error && (
+        <ErrorAlert
+          open={showError}
+          setOpen={setShowError}
+          title={scoreboardError(error.reason).title}
+          description={scoreboardError(error.reason).description}
+          primaryAction={() => setShowError(false)}
+        />
+      )}
       <h2 className='section-title'>Scoreboard 🏆</h2>
       {rows.length < 1 && (
         <div className='no-score'>Please sign in to view the scoreboard</div>
