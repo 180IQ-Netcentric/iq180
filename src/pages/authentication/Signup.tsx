@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
 import GameContainer from '../../components/containers/GameContainer'
 import RoundedTextField from '../../components/common/RoundedTextField'
@@ -12,6 +12,8 @@ import { client } from '../../config/axiosConfig'
 import { setCookie } from '../../utils/cookie'
 import { AuthContext } from '../../contexts/authContext'
 import { UserContext } from '../../contexts/userContext'
+import ErrorAlert from '../../components/alerts/ErrorAlert'
+import { AuthenticationErrorMessage, signUpError } from '../../utils/errors'
 
 const SignUp = () => {
   const {
@@ -20,11 +22,12 @@ const SignUp = () => {
     formState: { errors },
     watch,
   } = useForm()
-
   const { isUser, setToken } = useContext(AuthContext)
   const { setUser } = useContext(UserContext)
   const history = useHistory()
   const watchFields = watch('password')
+  const [showAuthenticationError, setShowAuthenticationError] = useState(false)
+  const [error, setError] = useState<AuthenticationErrorMessage>()
 
   const fields = {
     username: {
@@ -67,7 +70,8 @@ const SignUp = () => {
         history.replace('/')
       })
       .catch((err) => {
-        console.log(err)
+        setError(err.response.data)
+        setShowAuthenticationError(true)
       })
   }
 
@@ -76,106 +80,117 @@ const SignUp = () => {
   }, [isUser])
 
   return (
-    <GameContainer>
-      <div className='authentication-container'>
-        <div className='form-container'>
-          <h1>Sign Up</h1>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className='form-text-field'>
-              <Controller
-                render={({ field: { name, value, onChange } }) => (
-                  <RoundedTextField
-                    name={name}
-                    value={value}
-                    required
-                    onChange={onChange}
-                    label='Username'
-                    error={Boolean(errors[fields.username.name])}
-                    helperText={
-                      errors[fields.username.name]
-                        ? errors[fields.username.name].message
-                        : ''
-                    }
-                    sx={{ width: '100%', margin: '0 0 24px 0' }}
-                  />
-                )}
-                control={control}
-                name={fields.username.name}
-                defaultValue=''
-                rules={fields.username.rules}
-              />
-            </div>
-            <div className='form-text-field'>
-              <Controller
-                render={({ field: { name, value, onChange } }) => (
-                  <RoundedTextField
-                    name={name}
-                    value={value}
-                    type='password'
-                    required
-                    onChange={onChange}
-                    label='Password'
-                    error={Boolean(errors[fields.password.name])}
-                    helperText={
-                      errors[fields.password.name]
-                        ? errors[fields.password.name].message
-                        : ''
-                    }
-                    sx={{ width: '100%', margin: '0 0 24px 0' }}
-                  />
-                )}
-                control={control}
-                name={fields.password.name}
-                defaultValue=''
-                rules={fields.password.rules}
-              />
-            </div>
-            <div className='form-text-field'>
-              <Controller
-                render={({ field: { name, value, onChange } }) => (
-                  <RoundedTextField
-                    name={name}
-                    value={value}
-                    type='password'
-                    required
-                    onChange={onChange}
-                    label='Repeat Password'
-                    error={Boolean(errors[fields.repeatPassword.name])}
-                    helperText={
-                      errors[fields.repeatPassword.name]
-                        ? errors[fields.repeatPassword.name].message
-                        : ''
-                    }
-                    sx={{ width: '100%', margin: '0 0 24px 0' }}
-                  />
-                )}
-                control={control}
-                name={fields.repeatPassword.name}
-                defaultValue=''
-                rules={fields.repeatPassword.rules}
-              />
-            </div>
-            <Button
-              variant='contained'
-              size='large'
-              sx={{ width: '100%', height: '50px', borderRadius: '15px' }}
-              type='submit'
-            >
-              Sign Up
-            </Button>
-          </form>
-          <p>
-            Already have an account? &nbsp;
-            <Link to='/signin' className='signup-text'>
-              Sign in now!
-            </Link>
-          </p>
+    <>
+      {error && (
+        <ErrorAlert
+          open={showAuthenticationError}
+          setOpen={setShowAuthenticationError}
+          title={signUpError(error.reason).title}
+          description={signUpError(error.reason).description}
+          primaryAction={() => setShowAuthenticationError(false)}
+        />
+      )}
+      <GameContainer>
+        <div className='authentication-container'>
+          <div className='form-container'>
+            <h1>Sign Up</h1>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className='form-text-field'>
+                <Controller
+                  render={({ field: { name, value, onChange } }) => (
+                    <RoundedTextField
+                      name={name}
+                      value={value}
+                      required
+                      onChange={onChange}
+                      label='Username'
+                      error={Boolean(errors[fields.username.name])}
+                      helperText={
+                        errors[fields.username.name]
+                          ? errors[fields.username.name].message
+                          : ''
+                      }
+                      sx={{ width: '100%', margin: '0 0 24px 0' }}
+                    />
+                  )}
+                  control={control}
+                  name={fields.username.name}
+                  defaultValue=''
+                  rules={fields.username.rules}
+                />
+              </div>
+              <div className='form-text-field'>
+                <Controller
+                  render={({ field: { name, value, onChange } }) => (
+                    <RoundedTextField
+                      name={name}
+                      value={value}
+                      type='password'
+                      required
+                      onChange={onChange}
+                      label='Password'
+                      error={Boolean(errors[fields.password.name])}
+                      helperText={
+                        errors[fields.password.name]
+                          ? errors[fields.password.name].message
+                          : ''
+                      }
+                      sx={{ width: '100%', margin: '0 0 24px 0' }}
+                    />
+                  )}
+                  control={control}
+                  name={fields.password.name}
+                  defaultValue=''
+                  rules={fields.password.rules}
+                />
+              </div>
+              <div className='form-text-field'>
+                <Controller
+                  render={({ field: { name, value, onChange } }) => (
+                    <RoundedTextField
+                      name={name}
+                      value={value}
+                      type='password'
+                      required
+                      onChange={onChange}
+                      label='Repeat Password'
+                      error={Boolean(errors[fields.repeatPassword.name])}
+                      helperText={
+                        errors[fields.repeatPassword.name]
+                          ? errors[fields.repeatPassword.name].message
+                          : ''
+                      }
+                      sx={{ width: '100%', margin: '0 0 24px 0' }}
+                    />
+                  )}
+                  control={control}
+                  name={fields.repeatPassword.name}
+                  defaultValue=''
+                  rules={fields.repeatPassword.rules}
+                />
+              </div>
+              <Button
+                variant='contained'
+                size='large'
+                sx={{ width: '100%', height: '50px', borderRadius: '15px' }}
+                type='submit'
+              >
+                Sign Up
+              </Button>
+            </form>
+            <p>
+              Already have an account? &nbsp;
+              <Link to='/signin' className='signup-text'>
+                Sign in now!
+              </Link>
+            </p>
+          </div>
+          <div className='form-img'>
+            <img src={AuthenImage} alt='authentication' />
+          </div>
         </div>
-        <div className='form-img'>
-          <img src={AuthenImage} alt='authentication' />
-        </div>
-      </div>
-    </GameContainer>
+      </GameContainer>
+    </>
   )
 }
 
