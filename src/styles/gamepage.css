@@ -1,13 +1,127 @@
 .game-page-container {
-    display: flex;
-    flex-direction: column;
-    /* display: grid;
-    grid-template-columns: 1fr 1fr; */
-    /* row-gap: 12px;
+  display: flex;
+  flex-direction: column;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  column-gap: 12px;
+  grid-template-rows: auto;
+  grid-template-areas: 
+    "scoreboard play-area";
+}
+
+.scoreboard {
+  grid-area: scoreboard;
+  width : 300px;
+  
+  margin-top: -20px;
+  /* padding-top: 20px; */
+  position: relative;
+}
+
+.scoreboard-container-small {
+  max-width: 100% !important;
+  width: 100% !important;
+  height: 560px !important;
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.scoreboard-container-small::-webkit-scrollbar {
+  max-width: 320px;
+  display: none;  /* Safari and Chrome */
+}
+
+.css-p0t0kz-MuiTableContainer-root {
+  height: 420px !important;
+}
+
+.play-area {
+  grid-area: play-area;
+  background-color: #EFEFEF;
+  border-radius: 16px;
+  height: 560px;
+}
+.display{
+    background-color: white;
+    border-radius: 16px;
+    height: 320px;
+    margin: 20px;
+    /* margin */
+}
+
+.game-buttons-container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 12px;
+  row-gap: 12px;
+  grid-template-rows: auto;
+  grid-template-areas: 
+    "operations-container controls-container"    
+}
+
+.operations-container {
+  grid-area: operations-container;
+  max-width: calc(100vw - 108px);
+}
+
+.controls-container {
+  grid-template-areas: controls-container;
+  max-width: calc(100vw - 108px);
+}
+
+@media screen and (max-width: 900px) {
+  .game-page-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 12px;
     grid-template-rows: auto;
     grid-template-areas: 
-      "scoreboard game-panel"; */
+      "play-area"
+      "scoreboard";
   }
-.scoreboard{
-    max-width : 400px;
+
+  .play-area {
+    max-width: calc(100vw - 64px) !important;
+  }
+
+  .scoreboard {
+    width: 100% !important;
+  }
+  .scoreboard-container-small {
+    /* max-width: 100% !important; */
+    /* width: 100% !important; */
+    height: 100% !important;
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+      scrollbar-width: none;  /* Firefox */
+  }
+
+  .css-p0t0kz-MuiTableContainer-root {
+    height: 100% !important;
+    max-width: calc(100vw - 88px) !important;
+  }
+
+  .game-buttons-container {
+    max-width: 400px;
+    padding: 20px;
+    margin: 0 auto;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr;
+    column-gap: 12px;
+    row-gap: 12px;
+    grid-template-rows: auto;
+    grid-template-areas: 
+      "operations-container"
+      " controls-container";    
+  }
+
+  .play-area {
+    height: 700px;
+  }
+
 }

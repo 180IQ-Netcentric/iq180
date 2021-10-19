@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { Button } from '@mui/material'
 
 interface Props {
@@ -6,20 +6,21 @@ interface Props {
   children: any
 }
 
-const OperationButton = (props: Props) => {
+const RigidButton = (props: Props) => {
   const { toggleCallback } = props
   return (
     <Button
       disableElevation
       variant='contained'
-      color='primary'
-      className='operation-button'
+      color='secondary'
+      className='rigid-button'
+      size='small'
       onClick={() => toggleCallback}
-      sx={{ minWidth: '48px', width: '60px' }}
+      sx={{ height: '48px', minWidth: '20px !important', width: '48px' }}
     >
       {props.children}
     </Button>
   )
 }
 
-export default OperationButton
+export default RigidButton
