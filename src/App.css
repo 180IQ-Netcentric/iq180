@@ -4,8 +4,9 @@
 @import './styles/home.css';
 @import './styles/arrow.css';
 @import './styles/settings.css';
+@import './styles/gamesetting.css';
+@import './styles/gamepage.css';
 @import './styles/button.css';
 @import './styles/form.css';
 @import './styles/authentication.css';
 @import './styles/table.css';
-@import './styles/game.css';

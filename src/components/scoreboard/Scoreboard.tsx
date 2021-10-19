@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react'
-import Box from '@mui/material/Box'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -148,9 +147,6 @@ function EnhancedTableHead(props: EnhancedTableProps) {
               }}
             >
               <div>{headCell.label}</div>
-              <Box component='span' sx={visuallyHidden}>
-                {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-              </Box>
             </TableSortLabel>
           </TableCell>
         ))}
@@ -289,116 +285,109 @@ export default function Scoreboard() {
         <div className='no-score'>Please sign in to view the scoreboard</div>
       )}
       {rows.length > 0 && (
-        <Box>
-          <Paper elevation={0} sx={{ backgroundColor: 'transparent' }}>
-            <TableContainer
-              sx={{ backgroundColor: 'transparent', height: '200px' }}
+        <Paper elevation={0} sx={{ backgroundColor: 'transparent' }}>
+          <TableContainer
+            sx={{ backgroundColor: 'transparent', height: '200px' }}
+          >
+            <Table
+              sx={{ backgroundColor: 'transparent' }}
+              aria-labelledby='tableTitle'
+              size={dense ? 'small' : 'medium'}
             >
-              <Table
-                sx={{ backgroundColor: 'transparent' }}
-                aria-labelledby='tableTitle'
-                size={dense ? 'small' : 'medium'}
-              >
-                <EnhancedTableHead
-                  numSelected={selected.length}
-                  order={order}
-                  orderBy={orderBy}
-                  onSelectAllClick={handleSelectAllClick}
-                  onRequestSort={handleRequestSort}
-                  rowCount={rows.length}
-                />
-                <TableBody>
-                  {/* if you don't need to support IE11, you can replace the `stableSort` call with:
+              <EnhancedTableHead
+                numSelected={selected.length}
+                order={order}
+                orderBy={orderBy}
+                onSelectAllClick={handleSelectAllClick}
+                onRequestSort={handleRequestSort}
+                rowCount={rows.length}
+              />
+              <TableBody>
+                {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                   rows.slice().sort(getComparator(order, orderBy)) */}
-                  {rows.length > 0 &&
-                    stableSort(rows, getComparator(order, orderBy))
-                      .slice(
-                        page * rowsPerPage,
-                        page * rowsPerPage + rowsPerPage
-                      )
-                      .map((row, index) => {
-                        const isItemSelected = isSelected(row.username)
-                        const labelId = `enhanced-table-checkbox-${index}`
+                {rows.length > 0 &&
+                  stableSort(rows, getComparator(order, orderBy))
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row, index) => {
+                      const isItemSelected = isSelected(row.username)
+                      const labelId = `enhanced-table-checkbox-${index}`
 
-                        return (
-                          <TableRow
-                            hover
-                            onClick={(event) =>
-                              handleClick(event, row.username)
-                            }
-                            role='checkbox'
-                            aria-checked={isItemSelected}
-                            tabIndex={-1}
-                            key={row.username}
-                            selected={isItemSelected}
+                      return (
+                        <TableRow
+                          hover
+                          onClick={(event) => handleClick(event, row.username)}
+                          role='checkbox'
+                          aria-checked={isItemSelected}
+                          tabIndex={-1}
+                          key={row.username}
+                          selected={isItemSelected}
+                        >
+                          <TableCell
+                            component='th'
+                            id={labelId}
+                            scope='row'
+                            align='left'
+                            sx={{
+                              borderBottom: 'transparent',
+                              maxWidth: '30px',
+                            }}
                           >
-                            <TableCell
-                              component='th'
-                              id={labelId}
-                              scope='row'
-                              align='left'
-                              sx={{
-                                borderBottom: 'transparent',
-                                maxWidth: '30px',
-                              }}
-                            >
-                              <div>{index + 1}</div>
-                            </TableCell>
-                            <TableCell
-                              align='left'
-                              sx={{
-                                maxWidth: '60px',
-                                borderBottom: 'transparent',
-                              }}
-                            >
-                              <div className='single-line-text'>
-                                <div>{row.username}</div>
-                              </div>
-                            </TableCell>
-                            <TableCell
-                              align='left'
-                              sx={{ borderBottom: 'transparent' }}
-                            >
-                              <div>{row.win}</div>
-                            </TableCell>
-                            <TableCell
-                              align='left'
-                              sx={{ borderBottom: 'transparent' }}
-                            >
-                              <div>{row.lose}</div>
-                            </TableCell>
-                            <TableCell
-                              align='left'
-                              sx={{ borderBottom: 'transparent' }}
-                            >
-                              <div>{row.score}</div>
-                            </TableCell>
-                          </TableRow>
-                        )
-                      })}
-                  {emptyRows > 0 && (
-                    <TableRow
-                      style={{
-                        height: (dense ? 33 : 53) * emptyRows,
-                      }}
-                    >
-                      <TableCell colSpan={6} />
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <TablePagination
-              rowsPerPageOptions={[5]}
-              component='div'
-              count={rows.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </Paper>
-        </Box>
+                            <div>{index + 1}</div>
+                          </TableCell>
+                          <TableCell
+                            align='left'
+                            sx={{
+                              maxWidth: '60px',
+                              borderBottom: 'transparent',
+                            }}
+                          >
+                            <div className='single-line-text'>
+                              <div>{row.username}</div>
+                            </div>
+                          </TableCell>
+                          <TableCell
+                            align='left'
+                            sx={{ borderBottom: 'transparent' }}
+                          >
+                            <div>{row.win}</div>
+                          </TableCell>
+                          <TableCell
+                            align='left'
+                            sx={{ borderBottom: 'transparent' }}
+                          >
+                            <div>{row.lose}</div>
+                          </TableCell>
+                          <TableCell
+                            align='left'
+                            sx={{ borderBottom: 'transparent' }}
+                          >
+                            <div>{row.score}</div>
+                          </TableCell>
+                        </TableRow>
+                      )
+                    })}
+                {emptyRows > 0 && (
+                  <TableRow
+                    style={{
+                      height: (dense ? 33 : 53) * emptyRows,
+                    }}
+                  >
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5]}
+            component='div'
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Paper>
       )}
     </div>
   )
