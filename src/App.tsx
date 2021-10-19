@@ -17,6 +17,8 @@ import AuthProvider from './contexts/authContext'
 import Wrapper from './components/Wrapper'
 import { ThemeContext } from './contexts/themeContext'
 import Lobby from './pages/lobby'
+import { I18nextProvider } from 'react-i18next'
+import i18n from './locales/i18n'
 
 function App() {
   const prefersDarkMode =
@@ -57,24 +59,26 @@ function App() {
         <AuthProvider>
           <ThemeProvider theme={theme}>
             <GameSettingsContextProvider>
-              <Wrapper>
-                <CssBaseline />
-                <MenuAppBar />
-                <Music />
-                <div style={{ marginTop: '90px' }}>
-                  <div className='page-background'>
-                    <Switch>
-                      <Route path='/' component={Home} exact />
-                      <Route path='/signin' component={SignIn} exact />
-                      <Route path='/signup' component={SignUp} exact />
-                      <Route path='/game' component={Game} exact />
-                      <Route path='/lobby' component={Lobby} exact />
-                      <Route path='/404' component={Page404} />
-                      <Redirect from='*' to='/404' />
-                    </Switch>
+              <I18nextProvider i18n={i18n}>
+                <Wrapper>
+                  <CssBaseline />
+                  <MenuAppBar />
+                  <Music />
+                  <div style={{ marginTop: '90px' }}>
+                    <div className='page-background'>
+                      <Switch>
+                        <Route path='/' component={Home} exact />
+                        <Route path='/signin' component={SignIn} exact />
+                        <Route path='/signup' component={SignUp} exact />
+                        <Route path='/game' component={Game} exact />
+                        <Route path='/lobby' component={Lobby} exact />
+                        <Route path='/404' component={Page404} />
+                        <Redirect from='*' to='/404' />
+                      </Switch>
+                    </div>
                   </div>
-                </div>
-              </Wrapper>
+                </Wrapper>
+              </I18nextProvider>
             </GameSettingsContextProvider>
           </ThemeProvider>
         </AuthProvider>

@@ -11,6 +11,8 @@ import { UserContext } from '../../contexts/userContext'
 import { client } from '../../config/axiosConfig'
 import { AuthenticationErrorMessage, usernameError } from '../../utils/errors'
 import ErrorAlert from '../../components/alerts/ErrorAlert'
+import { useTranslation } from 'react-i18next'
+import { Language, useLanguage } from '../../locales/i18n'
 
 const GameSettings = ({ onClose }: any) => {
   const {
@@ -22,11 +24,13 @@ const GameSettings = ({ onClose }: any) => {
     toggleMusicTrack,
     background: appBackground,
     toggleBackground,
-    language: appLanguage,
     toggleLanguage,
   } = useContext(GameSettingsContext)
   const { theme, setAppTheme } = useContext(ThemeContext)
   const { user: player, setUser } = useContext(UserContext)
+  const { t } = useTranslation()
+  const { changeLanguage } = useLanguage()
+  const { language: appLanguage } = useLanguage()
   const [showError, setShowError] = useState(false)
   const [error, setError] = useState<AuthenticationErrorMessage>()
 
@@ -58,6 +62,11 @@ const GameSettings = ({ onClose }: any) => {
         setError(err.response.data)
         setShowError(true)
       })
+  }
+
+  const switchLanguage = (lang: Language) => {
+    changeLanguage(lang)
+    toggleLanguage(lang)
   }
 
   return (
@@ -163,14 +172,15 @@ const GameSettings = ({ onClose }: any) => {
         </div>
         <hr />
         <div>
-          <h4>Langauge</h4>
+          <h4>Langauge {t('0')}</h4>
+
           <div className='settings-toggle-language'>
             {languages.map((language) => (
               <div key={language} style={{ marginRight: '20px' }}>
                 <GameToggleButton
                   item={language}
                   matcher={appLanguage}
-                  toggleCallback={(language) => toggleLanguage(language)}
+                  toggleCallback={(language) => switchLanguage(language)}
                 >
                   {language}
                 </GameToggleButton>

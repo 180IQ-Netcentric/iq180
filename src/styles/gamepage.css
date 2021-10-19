@@ -1,0 +1,13 @@
+.game-page-container {
+    display: flex;
+    flex-direction: column;
+    /* display: grid;
+    grid-template-columns: 1fr 1fr; */
+    /* row-gap: 12px;
+    grid-template-rows: auto;
+    grid-template-areas: 
+      "scoreboard game-panel"; */
+  }
+.scoreboard{
+    max-width : 400px;
+}
