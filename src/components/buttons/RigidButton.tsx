@@ -2,12 +2,12 @@ import React from 'react'
 import { Button } from '@mui/material'
 
 interface Props {
-  toggleCallback?: (value?: any) => void
+  onClick?: (value?: any) => void
   children: any
 }
 
 const RigidButton = (props: Props) => {
-  const { toggleCallback } = props
+  const { onClick } = props
   return (
     <Button
       disableElevation
@@ -15,7 +15,7 @@ const RigidButton = (props: Props) => {
       color='secondary'
       className='rigid-button'
       size='small'
-      onClick={() => toggleCallback}
+      onClick={onClick}
       sx={{ height: '48px', minWidth: '20px !important', width: '48px' }}
     >
       {props.children}

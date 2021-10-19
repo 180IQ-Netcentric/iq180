@@ -15,7 +15,7 @@ const OperationButton = (props: Props) => {
       color='primary'
       className='operation-button'
       onClick={() => toggleCallback}
-      sx={{ minWidth: '48px', width: '60px' }}
+      sx={{ minWidth: '60px', width: '60px' }}
     >
       {props.children}
     </Button>

@@ -29,3 +29,7 @@
   border-radius: 8px !important;
   justify-content: space-between;
 }
+
+.css-jibmk2-MuiStack-root {
+  overflow-x: scroll;
+}

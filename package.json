@@ -28,6 +28,7 @@
     "prettier": "^2.4.1",
     "react": "^17.0.0",
     "react-audio-player": "^0.17.0",
+    "react-countdown-circle-timer": "^2.5.4",
     "react-dom": "^17.0.0",
     "react-hook-form": "^7.17.2",
     "react-i18next": "^11.12.0",
