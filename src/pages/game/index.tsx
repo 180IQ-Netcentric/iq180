@@ -13,8 +13,12 @@ import ErrorAlert from '../../components/alerts/ErrorAlert'
 import { useHistory } from 'react-router'
 import { RoundEnd } from './components/RoundEnd'
 import { GameEnd } from './components/GameEnd'
+import { ResetTvRounded } from '@mui/icons-material'
 
 const Game = () => {
+  const { user } = useContext(UserContext)
+  const history = useHistory()
+
   const OPERATION_SIGNS = ['+', '-', '×', '÷']
   const [numberOptions, setNumberOptions] = useState([1, 2, 3, 4, 5])
   const [selectedNumberKey, setSelectedNumberKey] = useState<number | null>(
@@ -32,9 +36,6 @@ const Game = () => {
   const [showRoundEnd, setShowRoundEnd] = useState(false)
   const [gameRunning, setGameRunning] = useState(true)
 
-  const { user } = useContext(UserContext)
-  const history = useHistory()
-
   // The scores of the players during the game will be tracked using these states locally
   const [player1, setPlayer1] = useState<PlayerGameInfo>({
     username: user?.username ?? 'You',
@@ -44,6 +45,10 @@ const Game = () => {
     username: '',
     score: 0,
   })
+
+  const shouldShowGame = () => gameRunning && !showRoundEnd
+  const shouldShowRoundEnd = () => showRoundEnd
+  const shouldShowGameEnd = () => showRoundEnd && false // use isLastRound when socket is available
 
   const calculateResult = (num1: number, num2: number, operator: string) => {
     switch (operator) {
@@ -71,8 +76,12 @@ const Game = () => {
     const filteredNum = numberOptions.filter((num) => {
       return !selectedOperands.includes(num)
     })
-    console.log('filteredNum', filteredNum, currentResult)
-    setNumberOptions([currentResult, ...filteredNum])
+    if (currentResult) setNumberOptions([currentResult, ...filteredNum])
+  }
+
+  const resetRound = () => {
+    setShowRoundEnd(true)
+    clearInputs()
   }
 
   const leaveGame = () => {
@@ -149,10 +158,10 @@ const Game = () => {
             <div className='play-area'>
               <div className='game-display'>
                 {/* Logically display the corrent component based on the states */}
-                {gameRunning && !showRoundEnd && (
+                {shouldShowGame() && (
                   <div>
                     <div className='question-container'>
-                      <CountDownTimer />
+                      <CountDownTimer onComplete={resetRound} />
                       <h3>{`Target Number: ${targetNumber}`}</h3>
                     </div>
                     <div className='working-container'>
@@ -170,7 +179,7 @@ const Game = () => {
                     )}
                   </div>
                 )}
-                {showRoundEnd && (
+                {shouldShowRoundEnd() && (
                   <RoundEnd
                     player1={'Pointzaa'}
                     player2={'Notezaa'}
@@ -178,7 +187,14 @@ const Game = () => {
                     player2Time={36}
                   />
                 )}
-                {/* <GameEnd player1={'Pointzaa'} player2={'Notezaa'} player1Score={3} player2Score={2}/> */}
+                {shouldShowGameEnd() && (
+                  <GameEnd
+                    player1={'Pointzaa'}
+                    player2={'Notezaa'}
+                    player1Score={3}
+                    player2Score={2}
+                  />
+                )}
               </div>
               <div className='game-buttons-container'>
                 <div className='operations-container'>
