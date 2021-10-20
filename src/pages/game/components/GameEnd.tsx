@@ -1,4 +1,5 @@
 import React from 'react'
+
 type Props = {
   player1: string
   player2: string
@@ -7,6 +8,7 @@ type Props = {
 }
 export const GameEnd = (props: Props) => {
   const { player1, player2, player1Score, player2Score } = props
+
   return (
     <div className='game-end'>
       <span style={{ fontSize: '24px' }}>Final Score</span>
@@ -18,12 +20,13 @@ export const GameEnd = (props: Props) => {
         <div className='player-name'>{player2}</div>
         <div className='score-value'>{player2Score}</div>
       </div>
-      <div>
-        <div className='show-winner' style={{ fontSize: '24px' }}>
-          Game Winner 🏆
-        </div>
-        <div className='show-winner' style={{ fontSize: '36px' }}>
-          {player1Score > player2Score ? player1 : player2}
+      <hr />
+      <div className='show-winner'>
+        <div>
+          <div style={{ fontSize: '24px' }}>Game Winner 🏆</div>
+          <div style={{ fontSize: '36px' }}>
+            {player1Score > player2Score ? player1 : player2}
+          </div>
         </div>
       </div>
     </div>

@@ -47,7 +47,7 @@ const Game = () => {
   })
 
   const shouldShowGame = () => gameRunning && !showRoundEnd
-  const shouldShowRoundEnd = () => showRoundEnd
+  const shouldShowRoundEnd = () => showRoundEnd && !shouldShowGameEnd()
   const shouldShowGameEnd = () => showRoundEnd && false // use isLastRound when socket is available
 
   const calculateResult = (num1: number, num2: number, operator: string) => {
@@ -79,9 +79,13 @@ const Game = () => {
     if (currentResult) setNumberOptions([currentResult, ...filteredNum])
   }
 
-  const resetRound = () => {
+  const endRound = () => {
     setShowRoundEnd(true)
     clearInputs()
+  }
+
+  const resetRound = () => {
+    setShowRoundEnd(false)
   }
 
   const leaveGame = () => {
@@ -157,11 +161,10 @@ const Game = () => {
             </div>
             <div className='play-area'>
               <div className='game-display'>
-                {/* Logically display the corrent component based on the states */}
                 {shouldShowGame() && (
                   <div>
                     <div className='question-container'>
-                      <CountDownTimer onComplete={resetRound} />
+                      <CountDownTimer onComplete={endRound} />
                       <h3>{`Target Number: ${targetNumber}`}</h3>
                     </div>
                     <div className='working-container'>
@@ -196,75 +199,97 @@ const Game = () => {
                   />
                 )}
               </div>
-              <div className='game-buttons-container'>
-                <div className='operations-container'>
-                  <Stack
-                    direction='row'
-                    justifyContent='space-between'
-                    spacing={1}
-                    className='button-row'
-                  >
-                    {numberOptions.map((num, index) => (
-                      <RigidButton
-                        disabled={
-                          (!selectedOperator &&
-                            !(selectedOperands[0] === null)) ||
-                          index === selectedNumberKey
-                        }
-                        key={index}
-                        onClick={() => {
-                          if (selectedOperands[0] === null) {
-                            setSelectedNumberKey(index)
-                            setSelectedOperands([num, null])
-                          } else {
-                            setSelectedOperands([selectedOperands[0], num])
-                          }
+              <div className='option-display'>
+                {shouldShowGame() && (
+                  <div className='game-buttons-container'>
+                    <div className='operations-container'>
+                      <Stack
+                        direction='row'
+                        justifyContent='space-between'
+                        spacing={1}
+                        className='button-row'
+                      >
+                        {numberOptions.map((num, index) => (
+                          <RigidButton
+                            disabled={
+                              (!selectedOperator &&
+                                !(selectedOperands[0] === null)) ||
+                              index === selectedNumberKey
+                            }
+                            key={index}
+                            onClick={() => {
+                              if (selectedOperands[0] === null) {
+                                setSelectedNumberKey(index)
+                                setSelectedOperands([num, null])
+                              } else {
+                                setSelectedOperands([selectedOperands[0], num])
+                              }
+                            }}
+                          >
+                            {num}
+                          </RigidButton>
+                        ))}
+                      </Stack>
+                      <Stack
+                        direction='row'
+                        justifyContent='space-between'
+                        spacing={1}
+                        className='button-row'
+                      >
+                        {OPERATION_SIGNS.map((operation, index) => (
+                          <OperationButton
+                            key={index}
+                            onClick={() => setSelectedOperator(operation)}
+                          >
+                            {operation}
+                          </OperationButton>
+                        ))}
+                      </Stack>
+                    </div>
+                    <div className='controls-container'>
+                      <Button
+                        variant='contained'
+                        sx={{
+                          backgroundColor: 'primary',
+                          height: '48px',
+                          width: '100%',
                         }}
+                        className='button-row'
                       >
-                        {num}
-                      </RigidButton>
-                    ))}
-                  </Stack>
-                  <Stack
-                    direction='row'
-                    justifyContent='space-between'
-                    spacing={1}
-                    className='button-row'
-                  >
-                    {OPERATION_SIGNS.map((operation, index) => (
-                      <OperationButton
-                        key={index}
-                        onClick={() => setSelectedOperator(operation)}
+                        Reset
+                      </Button>
+                      <Button
+                        variant='contained'
+                        sx={{
+                          backgroundColor: '#D14835',
+                          height: '48px',
+                          width: '100%',
+                        }}
+                        onClick={() => setShowleaveGameAlert(true)}
                       >
-                        {operation}
-                      </OperationButton>
-                    ))}
-                  </Stack>
-                </div>
-                <div className='controls-container'>
-                  <Button
-                    variant='contained'
-                    sx={{
-                      backgroundColor: 'primary',
-                      height: '48px',
-                      width: '100%',
-                    }}
-                    className='button-row'
-                  >
-                    Reset
-                  </Button>
-                  <Button
-                    variant='contained'
-                    sx={{
-                      backgroundColor: '#D14835',
-                      height: '48px',
-                      width: '100%',
-                    }}
-                    onClick={() => setShowleaveGameAlert(true)}
-                  >
-                    Leave Game
-                  </Button>
-                </div>
+                        Leave Game
+                      </Button>
+                    </div>
+                  </div>
+                )}
+                {shouldShowRoundEnd() && (
+                  <div>
+                    <div className='round-end-options-container'>
+                      <Button
+                        variant='contained'
+                        sx={{
+                          backgroundColor: 'primary',
+                          height: '48px',
+                          width: '100%',
+                        }}
+                        className='button-row'
+                        onClick={resetRound}
+                      >
+                        Reset
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

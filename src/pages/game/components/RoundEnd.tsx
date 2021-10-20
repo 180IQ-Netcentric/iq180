@@ -20,12 +20,13 @@ export const RoundEnd = (props: Props) => {
         <div className='player-name'>{player2}</div>
         <div className='score-value'>{player2Time}</div>
       </div>
-      <div>
-        <div className='show-winner' style={{ fontSize: '24px' }}>
-          Winner
-        </div>
-        <div className='show-winner' style={{ fontSize: '36px' }}>
-          {player1Time > player2Time ? player1 : player2}
+      <hr />
+      <div className='show-winner'>
+        <div>
+          <div style={{ fontSize: '24px' }}>Winner</div>
+          <div style={{ fontSize: '36px' }}>
+            {player1Time > player2Time ? player1 : player2}
+          </div>
         </div>
       </div>
     </div>

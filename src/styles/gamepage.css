@@ -41,12 +41,18 @@
   background-color: #EFEFEF;
   border-radius: 16px;
   height: 560px;
+  display: grid;
 }
 .game-display{
   background-color: white;
   border-radius: 16px;
   height: 320px;
   margin: 20px;
+}
+
+.option-display {
+  display: flex;
+  justify-content: center;
 }
 
 .game-buttons-container {
@@ -258,13 +264,20 @@
 
 /* css for RoundEnd conponent */
 .round-end{
-  background-color:grey;
+  padding: 32px;
+  height: 100%;
+}
+
+.round-end-options-container {
+  width: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .game-result{
   display: flex;
   justify-content: space-between;
-      
 }
 .player-name{
   grid-area: player-name;
@@ -275,11 +288,14 @@
 }
 .show-winner{
   display: flex;
-  /* flex-direction: column; */
   align-items: center;
   justify-content: center;
+  text-align: center;
+  margin-top: 48px;
 }
 /* css for GameEnd conponent */
 .game-end{
-  background-color:rgb(255, 190, 190);
+  padding: 32px;
+  height: 100%;
 }
+
