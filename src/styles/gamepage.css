@@ -241,6 +241,9 @@
   width: 36px;
   background-color: #DDDDDD;
   border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .countdown-timer {
@@ -251,4 +254,32 @@
   display: flex;
   justify-content: space-between;
   padding: 16px;
+}
+
+/* css for RoundEnd conponent */
+.round-end{
+  background-color:grey;
+}
+
+.game-result{
+  display: flex;
+  justify-content: space-between;
+      
+}
+.player-name{
+  grid-area: player-name;
+}
+
+.player-time{
+  grid-area: player-time;
+}
+.show-winner{
+  display: flex;
+  /* flex-direction: column; */
+  align-items: center;
+  justify-content: center;
+}
+/* css for GameEnd conponent */
+.game-end{
+  background-color:rgb(255, 190, 190);
 }

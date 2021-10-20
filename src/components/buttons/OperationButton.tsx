@@ -1,20 +1,28 @@
 import React, { useContext } from 'react'
 import { Button } from '@mui/material'
-
+import useSound from 'use-sound'
+import { GameSettingsContext } from '../../contexts/gameSettingsContext'
+import clickSfx from '../../assets/audio/click.mp3'
 interface Props {
-  toggleCallback?: (value?: any) => void
+  onClick?: (value?: any) => void
   children: any
 }
 
 const OperationButton = (props: Props) => {
-  const { toggleCallback } = props
+  const { onClick } = props
+  const [play] = useSound(clickSfx)
+  const { soundEffectOn } = useContext(GameSettingsContext)
+
   return (
     <Button
       disableElevation
       variant='contained'
       color='primary'
       className='operation-button'
-      onClick={() => toggleCallback}
+      onClick={() => {
+        if (soundEffectOn) play()
+        if (onClick) onClick()
+      }}
       sx={{ minWidth: '60px', width: '60px' }}
     >
       {props.children}

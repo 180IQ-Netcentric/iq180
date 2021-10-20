@@ -1,9 +1,11 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { client } from '../config/axiosConfig'
 import { GameSettingsContext } from '../contexts/gameSettingsContext'
 import { Theme, ThemeContext } from '../contexts/themeContext'
 import { UserContext } from '../contexts/userContext'
 import { UserInfo } from '../dto/Authentication.dto'
+import socketIOClient from 'socket.io-client'
+const ENDPOINT = 'http://localhost:3001'
 
 const Wrapper = ({ children }: any) => {
   const {
@@ -20,6 +22,15 @@ const Wrapper = ({ children }: any) => {
     client.get('/userinfo').then((res) => {
       const user: UserInfo = res.data
       setUser(user)
+    })
+  }, [])
+
+  const [response, setResponse] = useState('')
+
+  useEffect(() => {
+    const socket = socketIOClient(ENDPOINT)
+    socket.on('connected', (data) => {
+      setResponse(data)
     })
   }, [])
 

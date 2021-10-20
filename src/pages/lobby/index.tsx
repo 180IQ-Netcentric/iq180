@@ -106,6 +106,7 @@ const Lobby = () => {
               size='large'
               sx={{ borderRadius: '15px' }}
               className='game-start-button game-start-button-match'
+              onClick={() => history.push('/game')}
             >
               Start!
             </Button>

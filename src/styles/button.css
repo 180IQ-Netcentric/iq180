@@ -33,3 +33,7 @@
 .css-jibmk2-MuiStack-root {
   overflow-x: scroll;
 }
+
+.css-jibmk2-MuiStack-root::-webkit-scrollbar {
+  display: none;
+}
