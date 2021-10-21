@@ -7,6 +7,9 @@ import BouncingArrow from '../../components/common/BouncingArrow'
 import Scoreboard from '../../components/scoreboard/Scoreboard'
 import { Theme, ThemeContext } from '../../contexts/themeContext'
 import { useHistory } from 'react-router'
+import Tips from '../../components/tips/Tips'
+
+
 
 const Home = () => {
   const { theme: appTheme } = useContext(ThemeContext)
@@ -43,7 +46,8 @@ const Home = () => {
                 appTheme === Theme.DARK ? '-dark' : ''
               }`}
             >
-              <h2>Tips</h2>
+              <h2>Tips 📚</h2>
+              <Tips />
             </div>
           </div>
         </div>

@@ -52,9 +52,11 @@ export default function Tips() {
           height: 50,
           pl: 2,
           bgcolor: 'background.default',
+          borderRadius: '12px',
+          width: '100%'
         }}
       >
-        <Typography>{steps[activeStep].label}</Typography>
+        <Typography sx={{fontWeight: 'bold'}}>{steps[activeStep].label}</Typography>
       </Paper>
       <Box sx={{ height: 140, maxWidth: 400, width: '100%', p: 2 }}>
         {steps[activeStep].description}
