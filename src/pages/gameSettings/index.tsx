@@ -172,8 +172,7 @@ const GameSettings = ({ onClose }: any) => {
         </div>
         <hr />
         <div>
-          <h4>Langauge {t('0')}</h4>
-
+          <h4>Langauge</h4>
           <div className='settings-toggle-language'>
             {languages.map((language) => (
               <div key={language} style={{ marginRight: '20px' }}>
