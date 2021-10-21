@@ -79,6 +79,16 @@
       "scoreboard tutorial"
 }
 
+.tips-box {
+  overflow-y: scroll;
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+      scrollbar-width: none; 
+}
+
+.tips-box::-webkit-scrollbar {
+  display: none;  /* Safari and Chrome */
+}
+
 @media only screen and (max-width: 900px)  {
   .game-cover {
     padding-top: 200px;
