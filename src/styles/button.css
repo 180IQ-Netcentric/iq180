@@ -3,7 +3,7 @@
 }
 
 .Mui-selected.MuiToggleButton-secondary {
-  background-color: #F56F54 !important;
+  background-color: #f56f54 !important;
   color: black !important;
 }
 
@@ -20,8 +20,12 @@
 
 .button-row {
   margin-bottom: 12px !important;
-  /* width: 100%; */
-  justify-content: space-between;
+  justify-content: center !important;
+}
+
+.button-row-space-between {
+  margin-bottom: 12px !important;
+  justify-content: space-between !important;
 }
 
 .rigid-button {

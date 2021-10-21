@@ -5,16 +5,13 @@
   grid-template-columns: 300px 1fr;
   column-gap: 12px;
   grid-template-rows: auto;
-  grid-template-areas: 
-    "scoreboard play-area";
+  grid-template-areas: 'scoreboard play-area';
 }
-
-
 
 .scoreboard {
   grid-area: scoreboard;
-  width : 300px;
-  
+  width: 300px;
+
   margin-top: -20px;
   position: relative;
 }
@@ -23,13 +20,13 @@
   max-width: 100% !important;
   width: 100% !important;
   height: 560px !important;
-  -ms-overflow-style: none;  /* Internet Explorer 10+ */
-    scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
 }
 
 .scoreboard-container-small::-webkit-scrollbar {
   max-width: 320px;
-  display: none;  /* Safari and Chrome */
+  display: none; /* Safari and Chrome */
 }
 
 .scoreboard-container-small .css-p0t0kz-MuiTableContainer-root {
@@ -38,12 +35,12 @@
 
 .play-area {
   grid-area: play-area;
-  background-color: #EFEFEF;
+  background-color: #efefef;
   border-radius: 16px;
   height: 560px;
   display: grid;
 }
-.game-display{
+.game-display {
   background-color: white;
   border-radius: 16px;
   height: 320px;
@@ -64,8 +61,7 @@
   column-gap: 12px;
   row-gap: 12px;
   grid-template-rows: auto;
-  grid-template-areas: 
-    "operations-container controls-container"    
+  grid-template-areas: 'operations-container controls-container';
 }
 
 .operations-container {
@@ -90,9 +86,9 @@
     grid-template-columns: 1fr;
     row-gap: 12px;
     grid-template-rows: auto;
-    grid-template-areas: 
-      "play-area"
-      "scoreboard";
+    grid-template-areas:
+      'play-area'
+      'scoreboard';
   }
 
   .play-area {
@@ -106,8 +102,8 @@
     /* max-width: 100% !important; */
     /* width: 100% !important; */
     height: 100% !important;
-    -ms-overflow-style: none;  /* Internet Explorer 10+ */
-      scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+    scrollbar-width: none; /* Firefox */
   }
 
   .css-p0t0kz-MuiTableContainer-root {
@@ -127,17 +123,15 @@
     column-gap: 12px;
     row-gap: 12px;
     grid-template-rows: auto;
-    grid-template-areas: 
-      "operations-container"
-      " controls-container";    
+    grid-template-areas:
+      'operations-container'
+      ' controls-container';
   }
 
   .play-area {
     height: 700px;
   }
-
 }
-
 
 /* Player Score */
 
@@ -145,7 +139,7 @@
   height: 48px;
   width: 48px;
   margin-right: 8px;
-  background-color: #D14835;
+  background-color: #d14835;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -158,7 +152,7 @@
   height: 64px;
   margin: 0 0 24px;
   padding: 8px;
-  background-color: #F3C18E;
+  background-color: #f3c18e;
   display: flex;
   border-radius: 32px 0 0 32px;
   position: relative;
@@ -180,7 +174,7 @@
   height: 48px;
   width: 48px;
   margin-left: 8px;
-  background-color: #D14835;
+  background-color: #d14835;
   border-radius: 50%;
   justify-content: center;
   align-items: center;
@@ -192,7 +186,7 @@
   height: 64px;
   margin: 0 0 24px;
   padding: 8px;
-  background-color: #F3C18E;
+  background-color: #f3c18e;
   display: flex;
   border-radius: 0 32px 32px 0;
   display: flex;
@@ -211,14 +205,17 @@
   font-weight: bold;
 }
 
+.player-score-name {
+  font-size: 20px;
+}
+
 .player-score-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 4px;
   row-gap: 12px;
   grid-template-rows: auto;
-  grid-template-areas: 
-    "player-1-name player-2-name"    
+  grid-template-areas: 'player-1-name player-2-name';
 }
 
 /* Game dislpay styles */
@@ -235,7 +232,7 @@
 .number-slot {
   height: 56px;
   width: 56px;
-  background-color: #DDDDDD;
+  background-color: #dddddd;
   border-radius: 8px;
   display: flex;
   justify-content: center;
@@ -245,7 +242,7 @@
 .operator-slot {
   height: 36px;
   width: 36px;
-  background-color: #DDDDDD;
+  background-color: #dddddd;
   border-radius: 8px;
   display: flex;
   justify-content: center;
@@ -253,7 +250,6 @@
 }
 
 .countdown-timer {
-
 }
 
 .question-container {
@@ -262,8 +258,18 @@
   padding: 16px;
 }
 
+.correct-status {
+  color: #57cd27;
+  text-align: center;
+}
+
+.wrong-status {
+  color: #c84e4e;
+  text-align: center;
+}
+
 /* css for RoundEnd conponent */
-.round-end{
+.round-end {
   padding: 32px;
   height: 100%;
 }
@@ -275,27 +281,41 @@
   align-items: center;
 }
 
-.game-result{
+.game-result {
   display: flex;
   justify-content: space-between;
 }
-.player-name{
+.player-name {
   grid-area: player-name;
 }
 
-.player-time{
+.player-time {
   grid-area: player-time;
 }
-.show-winner{
+.show-winner {
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   margin-top: 48px;
 }
+
 /* css for GameEnd conponent */
-.game-end{
+.game-end {
   padding: 32px;
   height: 100%;
 }
 
+@media screen and (max-width: 600px) {
+  .player-score-name {
+    display: none;
+  }
+}
+
+/* css for Solution conponent */
+.show-solution {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+}

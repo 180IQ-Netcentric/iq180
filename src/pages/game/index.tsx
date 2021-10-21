@@ -14,12 +14,15 @@ import { useHistory } from 'react-router'
 import { RoundEnd } from './components/RoundEnd'
 import { GameEnd } from './components/GameEnd'
 import { ResetTvRounded } from '@mui/icons-material'
+import withUserGuard from '../../guards/user.guard'
+import Solution from './components/Solution'
 
 const Game = () => {
   const { user } = useContext(UserContext)
   const history = useHistory()
 
   const OPERATION_SIGNS = ['+', '-', '×', '÷']
+  const dummyQuestion = [[1, 2, 3, 4, 5], 15]
   const [numberOptions, setNumberOptions] = useState([1, 2, 3, 4, 5])
   const [selectedNumberKey, setSelectedNumberKey] = useState<number | null>(
     null
@@ -48,7 +51,7 @@ const Game = () => {
 
   const shouldShowGame = () => gameRunning && !showRoundEnd
   const shouldShowRoundEnd = () => showRoundEnd && !shouldShowGameEnd()
-  const shouldShowGameEnd = () => showRoundEnd && false // use isLastRound when socket is available
+  const shouldShowGameEnd = () => showRoundEnd && true // use isLastRound when socket is available
 
   const calculateResult = (num1: number, num2: number, operator: string) => {
     switch (operator) {
@@ -86,6 +89,14 @@ const Game = () => {
 
   const resetRound = () => {
     setShowRoundEnd(false)
+    clearInputs()
+    setNumberOptions(dummyQuestion[0])
+  }
+
+  const resetGame = () => {
+    clearInputs()
+    resetRound()
+    setShowGameEnd(false)
   }
 
   const leaveGame = () => {
@@ -164,7 +175,7 @@ const Game = () => {
                 {shouldShowGame() && (
                   <div>
                     <div className='question-container'>
-                      <CountDownTimer onComplete={endRound} />
+                      <CountDownTimer onComplete={null/*endRound */} />
                       <h3>{`Target Number: ${targetNumber}`}</h3>
                     </div>
                     <div className='working-container'>
@@ -175,7 +186,7 @@ const Game = () => {
                     </div>
                     {showCorrectStatus && (
                       <div>
-                        <h2>
+                        <h2 className={`${targetNumber === currentResult ? 'correct' : 'wrong'}-status`}>
                           {targetNumber === currentResult ? 'CORRECT' : 'WRONG'}
                         </h2>
                       </div>
@@ -198,6 +209,10 @@ const Game = () => {
                     player2Score={2}
                   />
                 )}
+              </div>
+              <div>
+                <Solution>
+                </Solution>
               </div>
               <div className='option-display'>
                 {shouldShowGame() && (
@@ -234,7 +249,7 @@ const Game = () => {
                         direction='row'
                         justifyContent='space-between'
                         spacing={1}
-                        className='button-row'
+                        className='button-row-space-between'
                       >
                         {OPERATION_SIGNS.map((operation, index) => (
                           <OperationButton
@@ -253,8 +268,9 @@ const Game = () => {
                           backgroundColor: 'primary',
                           height: '48px',
                           width: '100%',
+                          marginBottom: '12px'
                         }}
-                        className='button-row'
+                        onClick={resetRound}
                       >
                         Reset
                       </Button>
@@ -290,6 +306,33 @@ const Game = () => {
                     </div>
                   </div>
                 )}
+                {shouldShowGameEnd() && (
+                  <div className='controls-container'>
+                    <Button
+                      variant='contained'
+                      sx={{
+                        backgroundColor: 'primary',
+                        height: '48px',
+                        width: '100%',
+                      }}
+                      className='button-row'
+                      onClick={resetGame}
+                    >
+                      Reset
+                    </Button>
+                    <Button
+                      variant='contained'
+                      sx={{
+                        backgroundColor: '#D14835',
+                        height: '48px',
+                        width: '100%',
+                      }}
+                      onClick={() => setShowleaveGameAlert(true)}
+                    >
+                      Leave Game
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -299,4 +342,4 @@ const Game = () => {
   )
 }
 
-export default Game
+export default withUserGuard(Game)
