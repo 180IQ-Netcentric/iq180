@@ -53,12 +53,17 @@ export default function Tips() {
           pl: 2,
           bgcolor: 'background.default',
           borderRadius: '12px',
-          width: '100%'
+          width: '100%',
         }}
       >
-        <Typography sx={{fontWeight: 'bold'}}>{steps[activeStep].label}</Typography>
+        <Typography sx={{ fontWeight: 'bold' }}>
+          {steps[activeStep].label}
+        </Typography>
       </Paper>
-      <Box sx={{ height: 140, maxWidth: 400, width: '100%', p: 2 }}>
+      <Box
+        sx={{ height: 140, maxWidth: '100%', width: '100%', p: 2 }}
+        className='tips-box'
+      >
         {steps[activeStep].description}
       </Box>
       <MobileStepper
@@ -66,7 +71,7 @@ export default function Tips() {
         steps={maxSteps}
         position='static'
         activeStep={activeStep}
-        sx={{borderRadius: '12px'}}
+        sx={{ borderRadius: '12px' }}
         nextButton={
           <Button
             size='small'
