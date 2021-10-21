@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft'
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight'
+import { Margin } from '@mui/icons-material'
 
 const steps = [
   {
@@ -49,9 +50,9 @@ export default function Tips() {
         sx={{
           display: 'flex',
           alignItems: 'center',
-          height: 50,
+          height: 40,
           pl: 2,
-          bgcolor: 'background.default',
+          bgcolor: 'transparent',
           borderRadius: '12px',
           width: '100%',
         }}
@@ -63,15 +64,17 @@ export default function Tips() {
       <Box
         sx={{ height: 140, maxWidth: '100%', width: '100%', p: 2 }}
         className='tips-box'
+        // marginTop= '-12px'
       >
         {steps[activeStep].description}
       </Box>
       <MobileStepper
+        className='tips-selector'
         variant='text'
         steps={maxSteps}
         position='static'
         activeStep={activeStep}
-        sx={{ borderRadius: '12px' }}
+        sx={{ borderRadius: '12px', height: 40}}
         nextButton={
           <Button
             size='small'
