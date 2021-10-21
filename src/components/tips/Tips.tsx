@@ -43,7 +43,7 @@ export default function Tips() {
   }
 
   return (
-    <Box sx={{ maxWidth: 450, flexGrow: 1 }}>
+    <Box sx={{ maxWidth: '100%', flexGrow: 1 }}>
       <Paper
         square
         elevation={0}
