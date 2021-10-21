@@ -1,5 +1,8 @@
-import React from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { CountdownCircleTimer } from 'react-countdown-circle-timer'
+import useSound from 'use-sound'
+import timeWarning from '../../../assets/audio/timeWarning.mp3'
+import { GameSettingsContext } from '../../../contexts/gameSettingsContext'
 
 type Props = {
   onComplete: (value: number) => void
@@ -7,12 +10,16 @@ type Props = {
 
 const CountDownTimer = (props: Props) => {
   const { onComplete } = props
+  const [play] = useSound(timeWarning)
+  let canPlaySound = true
+  const { soundEffectOn } = useContext(GameSettingsContext)
 
+  
   return (
     <div className='countdown-timer'>
       <CountdownCircleTimer
         isPlaying
-        duration={10}
+        duration={15}
         size={80}
         colors={[
           ['#004777', 0.33],
@@ -21,7 +28,13 @@ const CountDownTimer = (props: Props) => {
         ]}
         onComplete={onComplete}
       >
-        {({ remainingTime }) => remainingTime}
+        {({ remainingTime }) => {
+          if (remainingTime === 10) {
+            if (soundEffectOn && canPlaySound) play()
+            canPlaySound = false
+          }
+          return remainingTime
+        }}
       </CountdownCircleTimer>
     </div>
   )

@@ -5,6 +5,7 @@ import GameContainer from '../../components/containers/GameContainer'
 import PlayerInfoCard from '../../components/cards/PlayerInfoCard'
 import { UserContext } from '../../contexts/userContext'
 import { useHistory } from 'react-router'
+import withUserGuard from '../../guards/user.guard'
 
 const Lobby = () => {
   const DIGITS_COUNT_OPTION = [2, 3, 4, 5]
@@ -117,4 +118,4 @@ const Lobby = () => {
   )
 }
 
-export default Lobby
+export default withUserGuard(Lobby)
