@@ -8,7 +8,6 @@ import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
 import TableSortLabel from '@mui/material/TableSortLabel'
 import Paper from '@mui/material/Paper'
-import { visuallyHidden } from '@mui/utils'
 import { client } from '../../config/axiosConfig'
 import { Theme, ThemeContext } from '../../contexts/themeContext'
 import { AuthenticationErrorMessage, scoreboardError } from '../../utils/errors'
@@ -155,7 +154,12 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   )
 }
 
-export default function Scoreboard() {
+type Props = {
+  small?: boolean
+}
+
+export default function Scoreboard(props: Props) {
+  const { small } = props
   const [order, setOrder] = useState<Order>('asc')
   const [orderBy, setOrderBy] = useState<keyof Data>('score')
   const [selected, setSelected] = useState<readonly string[]>([])
@@ -269,7 +273,9 @@ export default function Scoreboard() {
     <div
       className={`scoreboard-container${
         appTheme === Theme.DARK ? '-dark' : ''
-      } scoreboard-home`}
+      } scoreboard-container${
+        small ? '-small' : ''
+      } scoreboard-home disable-scrollbars`}
     >
       {user && error && (
         <ErrorAlert
@@ -280,7 +286,12 @@ export default function Scoreboard() {
           primaryAction={() => setShowError(false)}
         />
       )}
-      <h2 className='section-title'>Scoreboard 🏆</h2>
+      <h2
+        className='section-title'
+        style={{ paddingTop: small ? '24px' : 'inherit' }}
+      >
+        Scoreboard 🏆
+      </h2>
       {rows.length < 1 && (
         <div className='no-score'>Please sign in to view the scoreboard</div>
       )}

@@ -9,6 +9,7 @@ interface Props {
   matcher: any
   toggleCallback: (value?: any) => void
   children: any
+  color?: 'primary' | 'secondary'
 }
 
 const GameToggleButton = (props: Props) => {
@@ -26,7 +27,7 @@ const GameToggleButton = (props: Props) => {
         props.toggleCallback(props.item)
         if (soundEffectOn) play()
       }}
-      color='secondary'
+      color={props.color ?? 'secondary'}
       sx={{
         height: '64px',
         width: '64px',

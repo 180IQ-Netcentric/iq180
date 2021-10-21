@@ -1,33 +1,35 @@
 import React, { useContext } from 'react'
 import { Button } from '@mui/material'
 import useSound from 'use-sound'
-import { GameSettingsContext } from '../../contexts/gameSettingsContext'
 import clickSfx from '../../assets/audio/click.mp3'
+import { GameSettingsContext } from '../../contexts/gameSettingsContext'
 interface Props {
   onClick?: (value?: any) => void
+  disabled: boolean
   children: any
 }
 
-const OperationButton = (props: Props) => {
-  const { onClick } = props
+const RigidButton = (props: Props) => {
+  const { onClick, disabled } = props
   const [play] = useSound(clickSfx)
   const { soundEffectOn } = useContext(GameSettingsContext)
-
   return (
     <Button
       disableElevation
+      disabled={disabled}
       variant='contained'
-      color='primary'
-      className='operation-button'
+      color='secondary'
+      className='rigid-button'
+      size='small'
       onClick={() => {
         if (soundEffectOn) play()
         if (onClick) onClick()
       }}
-      sx={{ minWidth: '60px', width: '60px' }}
+      sx={{ height: '48px', minWidth: '20px !important', width: '48px' }}
     >
       {props.children}
     </Button>
   )
 }
 
-export default OperationButton
+export default RigidButton
