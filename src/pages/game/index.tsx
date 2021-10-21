@@ -16,6 +16,9 @@ import { GameEnd } from './components/GameEnd'
 import { ResetTvRounded } from '@mui/icons-material'
 import withUserGuard from '../../guards/user.guard'
 import Solution from './components/Solution'
+import useSound from 'use-sound'
+import timeEnd from '../../assets/audio/timeEnd.mp3'
+import timeEndWrong from '../../assets/audio/timeEndWrong.mp3'
 
 const Game = () => {
   const { user } = useContext(UserContext)
@@ -38,6 +41,7 @@ const Game = () => {
   const [showCorrectStatus, setShowCorrectStatus] = useState(false)
   const [showRoundEnd, setShowRoundEnd] = useState(false)
   const [gameRunning, setGameRunning] = useState(true)
+  const [isRoundWinner, setRoundWinner] = useState(true) // dummy data, wait for socket
 
   // The scores of the players during the game will be tracked using these states locally
   const [player1, setPlayer1] = useState<PlayerGameInfo>({
@@ -51,7 +55,11 @@ const Game = () => {
 
   const shouldShowGame = () => gameRunning && !showRoundEnd
   const shouldShowRoundEnd = () => showRoundEnd && !shouldShowGameEnd()
-  const shouldShowGameEnd = () => showRoundEnd && true // use isLastRound when socket is available
+  const shouldShowGameEnd = () => showRoundEnd && false // use isLastRound when socket is available
+  const isCorrectSolution = () => targetNumber === currentResult
+
+  const [playWinSfx] = useSound(timeEnd)
+  const [playLoseSfx] = useSound(timeEndWrong)
 
   const calculateResult = (num1: number, num2: number, operator: string) => {
     switch (operator) {
@@ -79,11 +87,14 @@ const Game = () => {
     const filteredNum = numberOptions.filter((num) => {
       return !selectedOperands.includes(num)
     })
-    if (currentResult) setNumberOptions([currentResult, ...filteredNum])
+    if (currentResult !== null) setNumberOptions([currentResult, ...filteredNum])
   }
 
   const endRound = () => {
     setShowRoundEnd(true)
+    setRoundWinner(isCorrectSolution())
+    if (isCorrectSolution()) playWinSfx()
+    else playLoseSfx()
     clearInputs()
   }
 
@@ -96,7 +107,7 @@ const Game = () => {
   const resetGame = () => {
     clearInputs()
     resetRound()
-    setShowGameEnd(false)
+    setShowRoundEnd(false)
   }
 
   const leaveGame = () => {
@@ -135,8 +146,11 @@ const Game = () => {
         selectedOperator
       )
       setCurrentResult(result)
+      setRoundWinner(isCorrectSolution())
       if (numberOptions.length <= 2) {
         setShowCorrectStatus(true)
+        if (result === targetNumber) playWinSfx()
+        else playLoseSfx()
         setTimeout(() => {
           setShowRoundEnd(true)
         }, 1000)
@@ -175,7 +189,7 @@ const Game = () => {
                 {shouldShowGame() && (
                   <div>
                     <div className='question-container'>
-                      <CountDownTimer onComplete={null/*endRound */} />
+                      <CountDownTimer onComplete={endRound} />
                       <h3>{`Target Number: ${targetNumber}`}</h3>
                     </div>
                     <div className='working-container'>
@@ -209,10 +223,6 @@ const Game = () => {
                     player2Score={2}
                   />
                 )}
-              </div>
-              <div>
-                <Solution>
-                </Solution>
               </div>
               <div className='option-display'>
                 {shouldShowGame() && (
@@ -288,24 +298,26 @@ const Game = () => {
                     </div>
                   </div>
                 )}
-                {shouldShowRoundEnd() && (
-                  <div>
-                    <div className='round-end-options-container'>
+                {shouldShowRoundEnd() && 
+                  <div className='round-end-options-container'>
+                    {isRoundWinner ? (
                       <Button
                         variant='contained'
                         sx={{
                           backgroundColor: 'primary',
                           height: '48px',
-                          width: '100%',
+                          width: '100%'
                         }}
                         className='button-row'
                         onClick={resetRound}
                       >
-                        Reset
+                        Reset round
                       </Button>
-                    </div>
+                    ) : (
+                      <Solution />
+                    )}
                   </div>
-                )}
+                }
                 {shouldShowGameEnd() && (
                   <div className='controls-container'>
                     <Button
@@ -318,7 +330,7 @@ const Game = () => {
                       className='button-row'
                       onClick={resetGame}
                     >
-                      Reset
+                      play again
                     </Button>
                     <Button
                       variant='contained'

@@ -39,6 +39,11 @@
   border-radius: 16px;
   height: 560px;
   display: grid;
+  grid-template-rows: 4fr 4fr;
+  column-gap: 12px;
+  grid-template-areas:
+    'game-display'
+    'option-display';
 }
 .game-display {
   background-color: white;
@@ -48,6 +53,7 @@
 }
 
 .option-display {
+  grid-area: option-display;
   display: flex;
   justify-content: center;
 }
@@ -315,7 +321,7 @@
 /* css for Solution conponent */
 .show-solution {
   display: flex;
-  flex-direction: column;
-  /* justify-content: center; */
+  text-align: center;
   align-items: center;
+  justify-content: center;
 }
