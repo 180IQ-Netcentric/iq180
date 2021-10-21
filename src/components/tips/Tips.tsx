@@ -57,7 +57,7 @@ export default function Tips() {
           width: '100%',
         }}
       >
-        <Typography sx={{ fontWeight: 'bold' }}>
+        <Typography sx={{ fontWeight: 'bold', fontSize: '16px' }}>
           {steps[activeStep].label}
         </Typography>
       </Paper>
