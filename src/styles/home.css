@@ -1,5 +1,5 @@
 .home-content-container {
-  position:relative;
+  position: relative;
   width: 100%;
 }
 
@@ -50,13 +50,12 @@
   padding: 0px;
 }
 
-
 .tutorial-container {
   grid-area: tutorial;
   color: #000;
   height: 328px;
   width: 100%;
-  background-color: #F3F3F3;
+  background-color: #f3f3f3;
   border-radius: 15px;
   padding: 0 12px;
 }
@@ -72,51 +71,52 @@
 
 .home-options-container {
   display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 12px;
-    grid-template-rows: auto;
-    grid-template-areas: 
-      "scoreboard tutorial"
+  grid-template-columns: 1fr 1fr;
+  column-gap: 12px;
+  grid-template-rows: auto;
+  grid-template-areas: 'scoreboard tutorial';
 }
 
 .tips-box {
   overflow-y: scroll;
-  -ms-overflow-style: none;  /* Internet Explorer 10+ */
-      scrollbar-width: none; 
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none;
 }
 
 .tips-box::-webkit-scrollbar {
-  display: none;  /* Safari and Chrome */
+  display: none; /* Safari and Chrome */
+}
+.tips-selector {
+  margin-top: 26px;
 }
 
-@media only screen and (max-width: 900px)  {
+@media only screen and (max-width: 900px) {
   .game-cover {
     padding-top: 200px;
   }
   .home-options-container {
     display: grid;
-      grid-template-columns: 100%;
-      row-gap: 12px;
-      grid-template-rows: auto;
-      grid-template-areas: 
-        "scoreboard"
-        "tutorial";
+    grid-template-columns: 100%;
+    row-gap: 12px;
+    grid-template-rows: auto;
+    grid-template-areas:
+      'scoreboard'
+      'tutorial';
   }
 }
 
-
-@media only screen and (max-width: 600px)  {
+@media only screen and (max-width: 600px) {
   .home-content-container {
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: auto;
-    grid-template-areas: 
-      "info"
-      "img";
+    grid-template-areas:
+      'info'
+      'img';
   }
 
   .game-description {
-    position:static;
+    position: static;
     max-width: 100%;
     margin: 0;
   }
@@ -137,16 +137,16 @@
 
   .home-options-container {
     display: grid;
-      grid-template-columns: 100%;
-      row-gap: 12px;
-      grid-template-rows: auto;
-      grid-template-areas: 
-        "scoreboard"
-        "tutorial";
+    grid-template-columns: 100%;
+    row-gap: 12px;
+    grid-template-rows: auto;
+    grid-template-areas:
+      'scoreboard'
+      'tutorial';
   }
 }
 
-@media only screen and (max-width: 500px)  {
+@media only screen and (max-width: 500px) {
   .scoreboard-container {
     max-width: calc(100vw - 70px);
   }
