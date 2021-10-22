@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Button, Switch } from '@mui/material'
 import GameToggleButton from '../../components/buttons/GameToggleButton'
 import GameContainer from '../../components/containers/GameContainer'
@@ -6,6 +6,7 @@ import PlayerInfoCard from '../../components/cards/PlayerInfoCard'
 import { UserContext } from '../../contexts/userContext'
 import { useHistory } from 'react-router'
 import withUserGuard from '../../guards/user.guard'
+import { SocketContext } from '../../contexts/gameContext'
 
 const Lobby = () => {
   const DIGITS_COUNT_OPTION = [2, 3, 4, 5]
@@ -16,7 +17,12 @@ const Lobby = () => {
   const [timeLimit, setTimeLimit] = useState('60 s')
   const [isClassic, setClassic] = useState(true)
   const { user } = useContext(UserContext)
+  const { setSocketOpen } = useContext(SocketContext)
   const history = useHistory()
+
+  useEffect(() => {
+    setSocketOpen(true)
+  }, [])
 
   return (
     <GameContainer>

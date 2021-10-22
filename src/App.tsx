@@ -19,6 +19,8 @@ import { ThemeContext } from './contexts/themeContext'
 import Lobby from './pages/lobby'
 import { I18nextProvider } from 'react-i18next'
 import i18n from './locales/i18n'
+import SocketContextProvider from './contexts/gameContext'
+import Socket from './components/Socket'
 
 function App() {
   const prefersDarkMode =
@@ -60,24 +62,28 @@ function App() {
           <ThemeProvider theme={theme}>
             <GameSettingsContextProvider>
               <I18nextProvider i18n={i18n}>
-                <Wrapper>
-                  <CssBaseline />
-                  <MenuAppBar />
-                  <Music />
-                  <div style={{ marginTop: '90px' }}>
-                    <div className='page-background'>
-                      <Switch>
-                        <Route path='/' component={Home} exact />
-                        <Route path='/signin' component={SignIn} exact />
-                        <Route path='/signup' component={SignUp} exact />
-                        <Route path='/game' component={Game} exact />
-                        <Route path='/lobby' component={Lobby} exact />
-                        <Route path='/404' component={Page404} />
-                        <Redirect from='*' to='/404' />
-                      </Switch>
-                    </div>
-                  </div>
-                </Wrapper>
+                <SocketContextProvider>
+                  <Wrapper>
+                    <Socket>
+                      <CssBaseline />
+                      <MenuAppBar />
+                      <Music />
+                      <div style={{ marginTop: '90px' }}>
+                        <div className='page-background'>
+                          <Switch>
+                            <Route path='/' component={Home} exact />
+                            <Route path='/signin' component={SignIn} exact />
+                            <Route path='/signup' component={SignUp} exact />
+                            <Route path='/game' component={Game} exact />
+                            <Route path='/lobby' component={Lobby} exact />
+                            <Route path='/404' component={Page404} />
+                            <Redirect from='*' to='/404' />
+                          </Switch>
+                        </div>
+                      </div>
+                    </Socket>
+                  </Wrapper>
+                </SocketContextProvider>
               </I18nextProvider>
             </GameSettingsContextProvider>
           </ThemeProvider>
