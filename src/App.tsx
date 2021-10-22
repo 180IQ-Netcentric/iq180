@@ -19,7 +19,7 @@ import { ThemeContext } from './contexts/themeContext'
 import Lobby from './pages/lobby'
 import { I18nextProvider } from 'react-i18next'
 import i18n from './locales/i18n'
-import SocketContextProvider from './contexts/gameContext'
+import SocketContextProvider from './contexts/socketContext'
 import Socket from './components/Socket'
 
 function App() {
