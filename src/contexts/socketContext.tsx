@@ -1,4 +1,6 @@
 import React, { createContext, useState } from 'react'
+import { Socket } from 'socket.io-client'
+import { UserInfo } from '../dto/Authentication.dto'
 
 export interface Settings {
   digit: number
@@ -46,6 +48,8 @@ export interface EndRound {
 }
 
 export interface SocketConstruct {
+  socket: Socket | undefined
+  setSocket: (value: Socket | undefined) => void
   socketOpen: boolean
   setSocketOpen: (value: boolean) => void
   settings: Settings | undefined
@@ -61,13 +65,44 @@ export interface SocketConstruct {
 export const SocketContext = createContext({} as SocketConstruct)
 
 const SocketContextProvider = ({ ...props }) => {
+  const [socket, setSocket] = useState<Socket>()
   const [socketOpen, setSocketOpen] = useState<boolean>(false)
   const [settings, setSettings] = useState<Settings>()
   const [playerInfos, setPlayerInfos] = useState<PlayerInfos>()
   const [gameInfo, setGameInfo] = useState<GameInfo>()
   const [winnerUsername, setWinnerUsername] = useState<string>()
 
+  const joinRoom = (userInfo: UserInfo) => {
+    if (socket) socket.emit('joinRoom', userInfo)
+  }
+
+  const updateSettings = (settings: Settings) => {
+    if (socket) socket.emit('updateSetting', settings)
+  }
+
+  const startGame = () => {
+    if (socket) socket.emit('playerStartGame')
+  }
+
+  const nextTurn = (nextTurnInfo: NextTurn) => {
+    if (socket) socket.emit('nextTurn', nextTurnInfo)
+  }
+
+  const endRound = (endRoundInfo: EndRound) => {
+    if (socket) socket.emit('endRound', endRoundInfo)
+  }
+
+  const nextRound = () => {
+    if (socket) socket.emit('nextRound')
+  }
+
+  const disconnectSocket = (username: string) => {
+    if (socket) socket.emit('disconnect', username)
+  }
+
   const value = {
+    socket,
+    setSocket,
     socketOpen,
     setSocketOpen,
     settings,
@@ -78,6 +113,13 @@ const SocketContextProvider = ({ ...props }) => {
     setGameInfo,
     winnerUsername,
     setWinnerUsername,
+    joinRoom,
+    updateSettings,
+    startGame,
+    nextTurn,
+    endRound,
+    nextRound,
+    disconnectSocket,
   }
   return <SocketContext.Provider value={value} {...props} />
 }

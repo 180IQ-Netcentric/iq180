@@ -1,46 +1,13 @@
 import React, { useContext, useEffect } from 'react'
+import { useLocation } from 'react-router'
 import socketIOClient from 'socket.io-client'
 import {
-  EndRound,
   GameInfo,
-  NextTurn,
   PlayerInfos,
   Settings,
   SocketContext,
-} from '../contexts/gameContext'
-import { UserInfo } from '../dto/Authentication.dto'
-
-const socket = socketIOClient(
-  `${import.meta.env.VITE_APP_API_URL}` ?? 'http://localhost:3001'
-)
-
-export const joinRoom = (userInfo: UserInfo) => {
-  socket.emit('joinRoom', userInfo)
-}
-
-export const updateSettings = (settings: Settings) => {
-  socket.emit('updateSetting', settings)
-}
-
-export const startGame = () => {
-  socket.emit('playerStartGame')
-}
-
-export const nextTurn = (nextTurnInfo: NextTurn) => {
-  socket.emit('nextTurn', nextTurnInfo)
-}
-
-export const endRound = (endRoundInfo: EndRound) => {
-  socket.emit('endRound', endRoundInfo)
-}
-
-export const nextRound = () => {
-  socket.emit('nextRound')
-}
-
-export const disconnectSocket = (username: string) => {
-  socket.emit('disconnect', username)
-}
+} from '../contexts/socketContext'
+import { UserContext } from '../contexts/userContext'
 
 const Socket = ({ children }: any) => {
   const {
@@ -50,9 +17,32 @@ const Socket = ({ children }: any) => {
     setGameInfo,
     setWinnerUsername,
   } = useContext(SocketContext)
+  const location = useLocation()
+  const inSocketPages = () => {
+    return (
+      window.location.pathname === '/lobby' ||
+      window.location.pathname === '/game'
+    )
+  }
+
+  const { socket, setSocket } = useContext(SocketContext)
+  const { user } = useContext(UserContext)
 
   useEffect(() => {
-    if (!socketOpen) return
+    if (!inSocketPages()) {
+      socket?.emit('disconnectUser', user)
+      if (socket) socket.disconnect()
+      setSocket(undefined)
+    }
+
+    if (!socketOpen || !inSocketPages()) return
+    if (!socket) {
+      const newSocket = socketIOClient(
+        `${import.meta.env.VITE_APP_API_URL}` ?? 'http://localhost:3001'
+      )
+      setSocket(newSocket)
+    }
+    if (!socket) return
 
     socket.on('updatePlayerList', (playerInfos: PlayerInfos) => {
       setPlayerInfos(playerInfos)
@@ -88,7 +78,7 @@ const Socket = ({ children }: any) => {
       // If not waiting na
       // Don’t care na
     })
-  }, [socketOpen])
+  }, [socketOpen, location])
 
   return <>{children}</>
 }

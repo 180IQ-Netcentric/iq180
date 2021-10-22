@@ -6,7 +6,7 @@ import PlayerInfoCard from '../../components/cards/PlayerInfoCard'
 import { UserContext } from '../../contexts/userContext'
 import { useHistory } from 'react-router'
 import withUserGuard from '../../guards/user.guard'
-import { SocketContext } from '../../contexts/gameContext'
+import { SocketContext } from '../../contexts/socketContext'
 
 const Lobby = () => {
   const DIGITS_COUNT_OPTION = [2, 3, 4, 5]
