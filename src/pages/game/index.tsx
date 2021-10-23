@@ -5,7 +5,6 @@ import { Button, Stack } from '@mui/material'
 import OperationButton from '../../components/buttons/OperationButton'
 import RigidButton from '../../components/buttons/RigidButton'
 import { UserContext } from '../../contexts/userContext'
-import { PlayerGameInfo } from '../../dto/Authentication.dto'
 import PlayerScores from './components/PlayerScores'
 import { randomNameClient } from '../../config/axiosConfig'
 import CountDownTimer from './components/GameCountdown'
@@ -19,13 +18,20 @@ import Solution from './components/Solution'
 import useSound from 'use-sound'
 import timeEnd from '../../assets/audio/timeEnd.mp3'
 import timeEndWrong from '../../assets/audio/timeEndWrong.mp3'
+import {
+  PlayerGameInfo,
+  PlayerInfo,
+  SocketContext,
+} from '../../contexts/socketContext'
+import { playerInfoToPlayerGameInfo } from '../../utils/playerInfoToPlayerGameInfo'
 
 const Game = () => {
-  const { user } = useContext(UserContext)
+  const { gameInfo, playerInfos } = useContext(SocketContext)
   const history = useHistory()
+  const defaultPlayer = { username: '', score: 0, timeUsed: 0 }
 
   const OPERATION_SIGNS = ['+', '-', '×', '÷']
-  const dummyQuestion = [[1, 2, 3, 4, 5], 15]
+  const dummyQuestion = [1, 2, 3, 4, 5]
   const [numberOptions, setNumberOptions] = useState([1, 2, 3, 4, 5])
   const [selectedNumberKey, setSelectedNumberKey] = useState<number | null>(
     null
@@ -44,14 +50,8 @@ const Game = () => {
   const [isRoundWinner, setRoundWinner] = useState(true) // dummy data, wait for socket
 
   // The scores of the players during the game will be tracked using these states locally
-  const [player1, setPlayer1] = useState<PlayerGameInfo>({
-    username: user?.username ?? 'You',
-    score: 0,
-  })
-  const [player2, setPlayer2] = useState<PlayerGameInfo>({
-    username: '',
-    score: 0,
-  })
+  const [player1, setPlayer1] = useState<PlayerGameInfo>(defaultPlayer)
+  const [player2, setPlayer2] = useState<PlayerGameInfo>(defaultPlayer)
 
   const shouldShowGame = () => gameRunning && !showRoundEnd
   const shouldShowRoundEnd = () => showRoundEnd && !shouldShowGameEnd()
@@ -87,7 +87,8 @@ const Game = () => {
     const filteredNum = numberOptions.filter((num) => {
       return !selectedOperands.includes(num)
     })
-    if (currentResult !== null) setNumberOptions([currentResult, ...filteredNum])
+    if (currentResult !== null)
+      setNumberOptions([currentResult, ...filteredNum])
   }
 
   const endRound = () => {
@@ -101,7 +102,7 @@ const Game = () => {
   const resetRound = () => {
     setShowRoundEnd(false)
     clearInputs()
-    setNumberOptions(dummyQuestion[0])
+    setNumberOptions(dummyQuestion)
   }
 
   const resetGame = () => {
@@ -118,19 +119,22 @@ const Game = () => {
   }
 
   useEffect(() => {
-    setPlayer1({
-      username: user?.username ?? 'You',
-      score: 0,
-    })
-    randomNameClient
-      .get('/Name?nameType=firstname&quantity=2')
-      .then(({ data }) => {
-        if (!player2?.username)
-          setPlayer2({ username: `Bot ${data[1]}`, score: 0 })
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+    if (!gameInfo) history.replace('/')
+
+    // TODO: Figure out the types later
+    if (playerInfos && playerInfos[0])
+      setPlayer1(playerInfoToPlayerGameInfo(playerInfos[0]))
+    if (playerInfos && playerInfos[1])
+      setPlayer2(playerInfoToPlayerGameInfo(playerInfos[1]))
+    // randomNameClient
+    //   .get('/Name?nameType=firstname&quantity=2')
+    //   .then(({ data }) => {
+    //     if (!player2?.username)
+    //       setPlayer2({ username: `Bot ${data[1]}`, score: 0 })
+    //   })
+    //   .catch((err) => {
+    //     console.log(err)
+    //   })
   }, [])
 
   useEffect(() => {
@@ -200,7 +204,11 @@ const Game = () => {
                     </div>
                     {showCorrectStatus && (
                       <div>
-                        <h2 className={`${targetNumber === currentResult ? 'correct' : 'wrong'}-status`}>
+                        <h2
+                          className={`${
+                            targetNumber === currentResult ? 'correct' : 'wrong'
+                          }-status`}
+                        >
                           {targetNumber === currentResult ? 'CORRECT' : 'WRONG'}
                         </h2>
                       </div>
@@ -278,7 +286,7 @@ const Game = () => {
                           backgroundColor: 'primary',
                           height: '48px',
                           width: '100%',
-                          marginBottom: '12px'
+                          marginBottom: '12px',
                         }}
                         onClick={resetRound}
                       >
@@ -298,7 +306,7 @@ const Game = () => {
                     </div>
                   </div>
                 )}
-                {shouldShowRoundEnd() && 
+                {shouldShowRoundEnd() && (
                   <div className='round-end-options-container'>
                     {isRoundWinner ? (
                       <Button
@@ -306,7 +314,7 @@ const Game = () => {
                         sx={{
                           backgroundColor: 'primary',
                           height: '48px',
-                          width: '100%'
+                          width: '100%',
                         }}
                         className='button-row'
                         onClick={resetRound}
@@ -317,7 +325,7 @@ const Game = () => {
                       <Solution />
                     )}
                   </div>
-                }
+                )}
                 {shouldShowGameEnd() && (
                   <div className='controls-container'>
                     <Button

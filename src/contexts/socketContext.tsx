@@ -1,3 +1,4 @@
+import { type } from 'os'
 import React, { createContext, useState } from 'react'
 import { Socket } from 'socket.io-client'
 import { UserInfo } from '../dto/Authentication.dto'
@@ -9,7 +10,8 @@ export interface Settings {
   isClassicMode: boolean
 }
 
-export interface PlayerInfos {
+export type PlayerInfos = PlayerInfo[]
+export interface PlayerInfo {
   username: string
   win: number
   lose: number
@@ -60,6 +62,13 @@ export interface SocketConstruct {
   setGameInfo: (value: GameInfo) => void
   winnerUsername: string | undefined
   setWinnerUsername: (value: string) => void
+  joinRoom: (value: UserInfo) => void
+  updateSettings: (value: Settings) => void
+  startGame: () => void
+  nextTurn: (value: NextTurn) => void
+  endRound: (value: EndRound) => void
+  nextRound: () => void
+  disconnectSocket: (value: string) => void
 }
 
 export const SocketContext = createContext({} as SocketConstruct)
@@ -73,7 +82,11 @@ const SocketContextProvider = ({ ...props }) => {
   const [winnerUsername, setWinnerUsername] = useState<string>()
 
   const joinRoom = (userInfo: UserInfo) => {
-    if (socket) socket.emit('joinRoom', userInfo)
+    console.log(socket)
+    if (socket) {
+      socket.emit('joinRoom', userInfo)
+      console.log('ran')
+    }
   }
 
   const updateSettings = (settings: Settings) => {

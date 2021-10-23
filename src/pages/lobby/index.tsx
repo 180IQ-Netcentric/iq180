@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Button, Switch } from '@mui/material'
 import GameToggleButton from '../../components/buttons/GameToggleButton'
 import GameContainer from '../../components/containers/GameContainer'
@@ -7,29 +7,69 @@ import { UserContext } from '../../contexts/userContext'
 import { useHistory } from 'react-router'
 import withUserGuard from '../../guards/user.guard'
 import { SocketContext } from '../../contexts/socketContext'
+import socketIOClient from 'socket.io-client'
+import { userToUserInfo } from '../../utils/userToUserInfo'
 
 const Lobby = () => {
-  const DIGITS_COUNT_OPTION = [2, 3, 4, 5]
-  const [selectedDigitsCount, setSelectedDigitsCount] = useState(5)
-  const ROUNDS_COUNT_OPTION = [1, 3, 5, 7]
-  const [selectedRoundsCount, setSelectedRoundsCount] = useState(3)
-  const TIME_LMIT_OPTION = ['30 s', '60 s', '90 s', '120 s']
-  const [timeLimit, setTimeLimit] = useState('60 s')
-  const [isClassic, setClassic] = useState(true)
   const { user } = useContext(UserContext)
   const { setSocketOpen } = useContext(SocketContext)
+  const { joinRoom } = useContext(SocketContext)
+  const {
+    socket,
+    setSocket,
+    settings,
+    setSettings,
+    updateSettings,
+    playerInfos,
+    startGame,
+  } = useContext(SocketContext)
   const history = useHistory()
 
+  const DIGITS_COUNT_OPTION = [2, 3, 4, 5]
+  // const [selectedDigitsCount, setSelectedDigitsCount] = useState(settings?.digit ?? 5)
+  const ROUNDS_COUNT_OPTION = [1, 3, 5, 7]
+  // const [selectedRoundsCount, setSelectedRoundsCount] = useState(settings?.round ?? 3)
+  const TIME_LMIT_OPTION = [30, 60, 90, 120]
+
+  const onSettingsChange = (change: any) => {
+    if (settings) {
+      const newSettings = { ...settings, ...change }
+      setSettings(newSettings)
+      updateSettings(newSettings)
+    }
+  }
+
+  const leaveLobby = () => {
+    history.push('/')
+    socket?.emit('disconnectUser', user)
+  }
+
+  const beginGame = () => {
+    history.push('/')
+    startGame()
+  }
+
   useEffect(() => {
-    setSocketOpen(true)
+    if (!socket) {
+      const newSocket = socketIOClient(
+        `${import.meta.env.VITE_APP_API_URL}` ?? 'http://localhost:3001'
+      )
+      setSocket(newSocket)
+      setSocketOpen(true)
+    }
   }, [])
+
+  useEffect(() => {
+    if (!socket) return
+    if (user) joinRoom(userToUserInfo(user))
+  }, [socket])
 
   return (
     <GameContainer>
       <div className='game-padding'>
         <div className='settings-header'>
           <h1>Match Settings</h1>
-          <Button onClick={() => history.push('/')}>Leave Lobby</Button>
+          <Button onClick={leaveLobby}>Leave Lobby</Button>
         </div>
         <hr />
         <div className='match-container'>
@@ -41,10 +81,8 @@ const Lobby = () => {
                   <GameToggleButton
                     key={digit}
                     item={digit}
-                    matcher={selectedDigitsCount}
-                    toggleCallback={(num) => {
-                      setSelectedDigitsCount(num)
-                    }}
+                    matcher={settings?.digit ?? 5}
+                    toggleCallback={(num) => onSettingsChange({ digit: num })}
                   >
                     {digit}
                   </GameToggleButton>
@@ -57,10 +95,8 @@ const Lobby = () => {
                   <GameToggleButton
                     key={round}
                     item={round}
-                    matcher={selectedRoundsCount}
-                    toggleCallback={(num) => {
-                      setSelectedRoundsCount(num)
-                    }}
+                    matcher={settings?.round ?? 3}
+                    toggleCallback={(num) => onSettingsChange({ round: num })}
                   >
                     {round}
                   </GameToggleButton>
@@ -73,12 +109,12 @@ const Lobby = () => {
                   <GameToggleButton
                     key={limit}
                     item={limit}
-                    matcher={timeLimit}
-                    toggleCallback={(time) => {
-                      setTimeLimit(time)
-                    }}
+                    matcher={settings?.timeLimit}
+                    toggleCallback={(time) =>
+                      onSettingsChange({ timeLimit: time })
+                    }
                   >
-                    {limit}
+                    {`${limit} s`}
                   </GameToggleButton>
                 ))}
               </div>
@@ -86,16 +122,24 @@ const Lobby = () => {
               <div className='settings-item'>
                 <span>VS Mode</span>
                 <Switch
-                  checked={!isClassic}
-                  onChange={() => setClassic(!isClassic)}
+                  checked={!settings?.isClassicMode}
+                  onChange={() =>
+                    onSettingsChange({
+                      isClassicMode: !settings?.isClassicMode,
+                    })
+                  }
                   inputProps={{ 'aria-label': 'controlled' }}
                 />
               </div>
               <div className='settings-item'>
                 <span>Classic</span>
                 <Switch
-                  checked={isClassic}
-                  onChange={() => setClassic(!isClassic)}
+                  checked={settings?.isClassicMode}
+                  onChange={() =>
+                    onSettingsChange({
+                      isClassicMode: !settings?.isClassicMode,
+                    })
+                  }
                   inputProps={{ 'aria-label': 'controlled' }}
                 />
               </div>
@@ -103,17 +147,25 @@ const Lobby = () => {
           </div>
           <div className='player-info-container'>
             <div className='player-info'>
-              {user && <PlayerInfoCard player={user} />}
+              {user && (
+                <PlayerInfoCard
+                  player={playerInfos ? playerInfos[0] : undefined}
+                />
+              )}
             </div>
             <div className='player-info'>
-              {user && <PlayerInfoCard player={user} />}
+              {user && (
+                <PlayerInfoCard
+                  player={playerInfos ? playerInfos[1] : undefined}
+                />
+              )}
             </div>
             <Button
               variant='contained'
               size='large'
               sx={{ borderRadius: '15px' }}
               className='game-start-button game-start-button-match'
-              onClick={() => history.push('/game')}
+              onClick={beginGame}
             >
               Start!
             </Button>
