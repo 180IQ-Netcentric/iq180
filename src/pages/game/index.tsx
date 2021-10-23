@@ -26,7 +26,10 @@ import {
 import { playerInfoToPlayerGameInfo } from '../../utils/playerInfoToPlayerGameInfo'
 
 const Game = () => {
-  const { gameInfo, playerInfos } = useContext(SocketContext)
+  const { socket, gameInfo, playerInfos, nextTurn, startGame, settings } =
+    useContext(SocketContext)
+  const { user } = useContext(UserContext)
+
   const history = useHistory()
   const defaultPlayer = { username: '', score: 0, timeUsed: 0 }
 
@@ -46,14 +49,17 @@ const Game = () => {
   const [targetNumber, setTargetNumber] = useState(15)
   const [showCorrectStatus, setShowCorrectStatus] = useState(false)
   const [showRoundEnd, setShowRoundEnd] = useState(false)
-  const [gameRunning, setGameRunning] = useState(true)
+  const [isMyTurn, setIsMyTurn] = useState(false)
   const [isRoundWinner, setRoundWinner] = useState(true) // dummy data, wait for socket
 
   // The scores of the players during the game will be tracked using these states locally
   const [player1, setPlayer1] = useState<PlayerGameInfo>(defaultPlayer)
   const [player2, setPlayer2] = useState<PlayerGameInfo>(defaultPlayer)
 
-  const shouldShowGame = () => !showRoundEnd // gameRunning &&
+  const [roundTime, setRoundTime] = useState<number[]>([])
+  const [timeUsed, setTimeUsed] = useState<number>()
+
+  const shouldShowGame = () => isMyTurn && !showRoundEnd //  &&
   const shouldShowRoundEnd = () => showRoundEnd && !shouldShowGameEnd()
   const shouldShowGameEnd = () => showRoundEnd && false // use isLastRound when socket is available
   const isCorrectSolution = () => targetNumber === currentResult
@@ -91,7 +97,7 @@ const Game = () => {
       setNumberOptions([currentResult, ...filteredNum])
   }
 
-  const endRound = () => {
+  const endRound = (val: any) => {
     setShowRoundEnd(true)
     setRoundWinner(isCorrectSolution())
     if (isCorrectSolution()) playWinSfx()
@@ -119,6 +125,23 @@ const Game = () => {
   }
 
   useEffect(() => {
+    if (!socket) return
+    console.log('eh', user?.username, gameInfo?.firstPlayer)
+    setIsMyTurn(user?.username === gameInfo?.firstPlayer)
+
+    startGame()
+
+    socket.on('startNextTurn', () => {
+      if (user?.username !== gameInfo?.firstPlayer) {
+        setIsMyTurn(!(user?.username === gameInfo?.firstPlayer))
+        setTimeout(() => {
+          resetRound()
+        }, 1000)
+      }
+    })
+  }, [])
+
+  useEffect(() => {
     if (!gameInfo) history.replace('/')
 
     // TODO: Figure out the types later
@@ -138,6 +161,13 @@ const Game = () => {
   }, [])
 
   useEffect(() => {
+    if (isMyTurn && !showRoundEnd) {
+      const now = new Date()
+      roundTime[0] = now.getTime()
+    }
+  }, [isMyTurn, showRoundEnd])
+
+  useEffect(() => {
     // auto calculates when the numbers and operators are input
     if (
       selectedOperator &&
@@ -152,12 +182,33 @@ const Game = () => {
       setCurrentResult(result)
       setRoundWinner(isCorrectSolution())
       if (numberOptions.length <= 2) {
+        // displays the answer correctness
         setShowCorrectStatus(true)
-        if (result === targetNumber) playWinSfx()
-        else playLoseSfx()
-        setTimeout(() => {
-          setShowRoundEnd(true)
-        }, 1000)
+
+        // case correct answer
+        if (result === targetNumber) {
+          playWinSfx()
+          const now = new Date()
+          roundTime[1] = now.getTime()
+          const timeDiff = Math.floor((roundTime[1] - roundTime[0]) / 1000)
+          setTimeUsed(timeDiff)
+          console.log('used ', timeDiff)
+          if (currentResult)
+            nextTurn({ username: user?.username ?? '', timeUsed: timeDiff })
+
+          setTimeout(() => {
+            setShowRoundEnd(true)
+          }, 1000)
+        }
+
+        // case wrong answer
+        else {
+          playLoseSfx()
+
+          setTimeout(() => {
+            clearInputs()
+          }, 1000)
+        }
       }
       setTimeout(() => {
         if (currentResult !== null) {
@@ -193,7 +244,10 @@ const Game = () => {
                 {shouldShowGame() && (
                   <div>
                     <div className='question-container'>
-                      <CountDownTimer onComplete={endRound} />
+                      <CountDownTimer
+                        onComplete={endRound}
+                        duration={settings?.timeLimit ?? 60}
+                      />
                       <h3>{`Target Number: ${targetNumber}`}</h3>
                     </div>
                     <div className='working-container'>
@@ -272,9 +326,7 @@ const Game = () => {
                         {OPERATION_SIGNS.map((operation, index) => (
                           <OperationButton
                             key={index}
-                            onClick={(operation) =>
-                              setSelectedOperator(operation)
-                            }
+                            onClick={() => setSelectedOperator(operation)}
                           >
                             {operation}
                           </OperationButton>

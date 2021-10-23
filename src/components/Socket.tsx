@@ -10,16 +10,13 @@ import {
 } from '../contexts/socketContext'
 import { UserContext } from '../contexts/userContext'
 
-const newSocket = socketIOClient(
-  `${import.meta.env.VITE_APP_API_URL}` ?? 'http://localhost:3001'
-)
-
 const Socket = ({ children }: any) => {
   const {
     socketOpen,
     setSocketOpen,
     setSettings,
     setPlayerInfos,
+    gameInfo,
     setGameInfo,
     setWinnerUsername,
   } = useContext(SocketContext)
@@ -36,8 +33,20 @@ const Socket = ({ children }: any) => {
   const history = useHistory()
 
   useEffect(() => {
-    const socket = newSocket
-    setSocket(socket)
+    if (gameInfo && !inSocketPages()) {
+      socket?.emit('disconnectUser', user)
+      // socket?.disconnect()
+    }
+
+    if (!socket) {
+      const newSocket = socketIOClient(
+        `${import.meta.env.VITE_APP_API_URL}` ?? 'http://localhost:3001'
+      )
+      setSocket(newSocket)
+    }
+
+    if (!socket) return
+
     // client-side
     socket.on('connect', () => {
       // socket connection established
@@ -55,7 +64,7 @@ const Socket = ({ children }: any) => {
 
     socket.on('startRound', (gameInfo: GameInfo) => {
       setGameInfo(gameInfo)
-      if (history.location.pathname !== '/game') history.replace('/game')
+      if (history.location.pathname !== '/game') history.push('/game')
       // If your username is firstPlayer then u start playing game
       // If not waiting na
       // Don’t care
@@ -80,7 +89,7 @@ const Socket = ({ children }: any) => {
       // If not waiting na
       // Don’t care na
     })
-  }, [socketOpen, location])
+  }, [location, socket])
 
   return <>{children}</>
 }

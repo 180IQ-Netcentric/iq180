@@ -6,20 +6,20 @@ import { GameSettingsContext } from '../../../contexts/gameSettingsContext'
 
 type Props = {
   onComplete: (value: number) => void
+  duration: number
 }
 
 const CountDownTimer = (props: Props) => {
-  const { onComplete } = props
+  const { onComplete, duration } = props
   const [play] = useSound(timeWarning)
   let canPlaySound = true
   const { soundEffectOn } = useContext(GameSettingsContext)
 
-  
   return (
     <div className='countdown-timer'>
       <CountdownCircleTimer
         isPlaying
-        duration={15}
+        duration={duration}
         size={80}
         colors={[
           ['#004777', 0.33],

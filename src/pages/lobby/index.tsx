@@ -46,26 +46,14 @@ const Lobby = () => {
 
   const beginGame = () => {
     history.push('/game')
-    startGame()
   }
-
-  // useEffect(() => {
-  //   if (!socket) {
-  //     const newSocket = socketIOClient(
-  //       `${import.meta.env.VITE_APP_API_URL}` ?? 'http://localhost:3001'
-  //     )
-  //     setSocket(newSocket)
-  //     setSocketOpen(true)
-  //   }
-  // }, [])
 
   useEffect(() => {
     if (!socket) return
     if (socket && user) {
       joinRoom({ ...userToUserInfo(user, socket.id) })
-      console.log({ ...userToUserInfo(user, socket.id) })
     }
-  }, [])
+  }, [socket])
 
   return (
     <GameContainer>
