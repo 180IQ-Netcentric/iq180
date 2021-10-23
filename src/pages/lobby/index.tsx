@@ -45,24 +45,27 @@ const Lobby = () => {
   }
 
   const beginGame = () => {
-    history.push('/')
+    history.push('/game')
     startGame()
   }
 
-  useEffect(() => {
-    if (!socket) {
-      const newSocket = socketIOClient(
-        `${import.meta.env.VITE_APP_API_URL}` ?? 'http://localhost:3001'
-      )
-      setSocket(newSocket)
-      setSocketOpen(true)
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (!socket) {
+  //     const newSocket = socketIOClient(
+  //       `${import.meta.env.VITE_APP_API_URL}` ?? 'http://localhost:3001'
+  //     )
+  //     setSocket(newSocket)
+  //     setSocketOpen(true)
+  //   }
+  // }, [])
 
   useEffect(() => {
     if (!socket) return
-    if (user) joinRoom(userToUserInfo(user))
-  }, [socket])
+    if (socket && user) {
+      joinRoom({ ...userToUserInfo(user, socket.id) })
+      console.log({ ...userToUserInfo(user, socket.id) })
+    }
+  }, [])
 
   return (
     <GameContainer>
@@ -122,7 +125,7 @@ const Lobby = () => {
               <div className='settings-item'>
                 <span>VS Mode</span>
                 <Switch
-                  checked={!settings?.isClassicMode}
+                  checked={!settings?.isClassicMode ?? false}
                   onChange={() =>
                     onSettingsChange({
                       isClassicMode: !settings?.isClassicMode,
@@ -134,7 +137,7 @@ const Lobby = () => {
               <div className='settings-item'>
                 <span>Classic</span>
                 <Switch
-                  checked={settings?.isClassicMode}
+                  checked={settings?.isClassicMode ?? false}
                   onChange={() =>
                     onSettingsChange({
                       isClassicMode: !settings?.isClassicMode,

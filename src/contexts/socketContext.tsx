@@ -1,4 +1,3 @@
-import { type } from 'os'
 import React, { createContext, useState } from 'react'
 import { Socket } from 'socket.io-client'
 import { UserInfo } from '../dto/Authentication.dto'
@@ -12,6 +11,7 @@ export interface Settings {
 
 export type PlayerInfos = PlayerInfo[]
 export interface PlayerInfo {
+  id: string
   username: string
   win: number
   lose: number
@@ -82,10 +82,9 @@ const SocketContextProvider = ({ ...props }) => {
   const [winnerUsername, setWinnerUsername] = useState<string>()
 
   const joinRoom = (userInfo: UserInfo) => {
-    console.log(socket)
     if (socket) {
+      console.log('joinRoom', userInfo)
       socket.emit('joinRoom', userInfo)
-      console.log('ran')
     }
   }
 
