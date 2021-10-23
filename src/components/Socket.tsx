@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import { useHistory, useLocation } from 'react-router'
+import socketIOClient from 'socket.io-client'
 
 import {
   GameInfo,
@@ -9,9 +10,14 @@ import {
 } from '../contexts/socketContext'
 import { UserContext } from '../contexts/userContext'
 
+const newSocket = socketIOClient(
+  `${import.meta.env.VITE_APP_API_URL}` ?? 'http://localhost:3001'
+)
+
 const Socket = ({ children }: any) => {
   const {
     socketOpen,
+    setSocketOpen,
     setSettings,
     setPlayerInfos,
     setGameInfo,
@@ -30,26 +36,20 @@ const Socket = ({ children }: any) => {
   const history = useHistory()
 
   useEffect(() => {
-    if (!inSocketPages()) {
-      socket?.emit('disconnectUser', user)
-      if (socket) socket.disconnect()
-      setSocket(undefined)
-    }
-
-    if (!socketOpen || !inSocketPages()) return
-    // if (!socket) {
-    //   const newSocket = socketIOClient(
-    //     `${import.meta.env.VITE_APP_API_URL}` ?? 'http://localhost:3001'
-    //   )
-    //   setSocket(newSocket)
-    // }
-    if (!socket) return
+    const socket = newSocket
+    setSocket(socket)
+    // client-side
+    socket.on('connect', () => {
+      // socket connection established
+    })
 
     socket.on('updatePlayerList', (playerInfos: PlayerInfos) => {
+      console.log('updatePlayerList', playerInfos)
       setPlayerInfos(playerInfos)
     })
 
     socket.on('updateSetting', (settings: Settings) => {
+      console.log('settings', settings)
       setSettings(settings)
     })
 

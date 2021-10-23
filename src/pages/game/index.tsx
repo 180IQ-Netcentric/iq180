@@ -53,7 +53,7 @@ const Game = () => {
   const [player1, setPlayer1] = useState<PlayerGameInfo>(defaultPlayer)
   const [player2, setPlayer2] = useState<PlayerGameInfo>(defaultPlayer)
 
-  const shouldShowGame = () => gameRunning && !showRoundEnd
+  const shouldShowGame = () => !showRoundEnd // gameRunning &&
   const shouldShowRoundEnd = () => showRoundEnd && !shouldShowGameEnd()
   const shouldShowGameEnd = () => showRoundEnd && false // use isLastRound when socket is available
   const isCorrectSolution = () => targetNumber === currentResult
@@ -272,7 +272,9 @@ const Game = () => {
                         {OPERATION_SIGNS.map((operation, index) => (
                           <OperationButton
                             key={index}
-                            onClick={() => setSelectedOperator(operation)}
+                            onClick={(operation) =>
+                              setSelectedOperator(operation)
+                            }
                           >
                             {operation}
                           </OperationButton>
