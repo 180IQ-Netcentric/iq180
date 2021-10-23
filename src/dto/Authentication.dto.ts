@@ -21,8 +21,3 @@ export interface SignUpResponse extends UserInfo {
   isUser: boolean
   jwt: string
 }
-
-export interface PlayerGameInfo {
-  username: string
-  score: number
-}

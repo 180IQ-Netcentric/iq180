@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react'
-import { useLocation } from 'react-router'
-import socketIOClient from 'socket.io-client'
+import { useHistory, useLocation } from 'react-router'
+
 import {
   GameInfo,
   PlayerInfos,
@@ -27,6 +27,7 @@ const Socket = ({ children }: any) => {
 
   const { socket, setSocket } = useContext(SocketContext)
   const { user } = useContext(UserContext)
+  const history = useHistory()
 
   useEffect(() => {
     if (!inSocketPages()) {
@@ -36,12 +37,12 @@ const Socket = ({ children }: any) => {
     }
 
     if (!socketOpen || !inSocketPages()) return
-    if (!socket) {
-      const newSocket = socketIOClient(
-        `${import.meta.env.VITE_APP_API_URL}` ?? 'http://localhost:3001'
-      )
-      setSocket(newSocket)
-    }
+    // if (!socket) {
+    //   const newSocket = socketIOClient(
+    //     `${import.meta.env.VITE_APP_API_URL}` ?? 'http://localhost:3001'
+    //   )
+    //   setSocket(newSocket)
+    // }
     if (!socket) return
 
     socket.on('updatePlayerList', (playerInfos: PlayerInfos) => {
@@ -54,6 +55,7 @@ const Socket = ({ children }: any) => {
 
     socket.on('startRound', (gameInfo: GameInfo) => {
       setGameInfo(gameInfo)
+      if (history.location.pathname !== '/game') history.replace('/game')
       // If your username is firstPlayer then u start playing game
       // If not waiting na
       // Don’t care

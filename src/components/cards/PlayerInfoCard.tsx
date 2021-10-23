@@ -2,10 +2,11 @@ import React from 'react'
 import { UserInfo, User } from '../../dto/Authentication.dto'
 
 type Props = {
-  player: UserInfo | User
+  player: UserInfo | User | undefined
 }
 
 const PlayerInfoCard = ({ player }: Props) => {
+  if (!player) return <p>Waiting for an opponent to connect...</p>
   return (
     <div className='player-card'>
       <div className='player-card-header'>
