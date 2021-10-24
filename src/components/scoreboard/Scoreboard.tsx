@@ -137,7 +137,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             <TableSortLabel
               active={orderBy === headCell.id && headCell.id !== 'rank'}
               direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={() => createSortHandler(headCell.id)}
+              onClick={createSortHandler(headCell.id)}
               // hideSortIcon={headCell.id === 'rank'}
               sx={{
                 textAlign: 'left',

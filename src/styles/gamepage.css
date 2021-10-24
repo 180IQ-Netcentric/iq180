@@ -45,8 +45,19 @@
     'game-display'
     'option-display';
 }
+
+.play-area-dark {
+  background-color: #2e2e2e;
+}
 .game-display {
   background-color: white;
+  border-radius: 16px;
+  height: 320px;
+  margin: 20px;
+}
+
+.game-display-dark {
+  background-color: #3a3a3a;
   border-radius: 16px;
   height: 320px;
   margin: 20px;
@@ -216,6 +227,7 @@
 }
 
 .player-score-container {
+  color: #000;
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 4px;
@@ -324,4 +336,15 @@
   text-align: center;
   align-items: center;
   justify-content: center;
+}
+
+/* css for waiting screen */
+
+.waiting-screen-container {
+  padding: 0 16px;
+}
+
+.waiting-screen-container h4 {
+  margin: 16px 0 4px 0;
+  color: #F56F54;
 }
