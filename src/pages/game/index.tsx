@@ -11,7 +11,6 @@ import ErrorAlert from '../../components/alerts/ErrorAlert'
 import { useHistory } from 'react-router'
 import { RoundEnd } from './components/RoundEnd'
 import { GameEnd } from './components/GameEnd'
-import { ResetTvRounded } from '@mui/icons-material'
 import withUserGuard from '../../guards/user.guard'
 import Solution from './components/Solution'
 import useSound from 'use-sound'
@@ -24,6 +23,9 @@ import {
   SocketContext,
 } from '../../contexts/socketContext'
 import { playerInfoToPlayerGameInfo } from '../../utils/playerInfoToPlayerGameInfo'
+import { client } from '../../config/axiosConfig'
+import WaitingScreen from './components/WaitingScreen'
+import { Theme, ThemeContext } from '../../contexts/themeContext'
 
 type Views = 'GAME' | 'WAITING' | 'ROUND_END' | 'GAME_END'
 
@@ -41,6 +43,7 @@ const Game = () => {
     setWinnerUsername,
   } = useContext(SocketContext)
   const { user } = useContext(UserContext)
+  const { theme: appTheme } = useContext(ThemeContext)
 
   const history = useHistory()
   const defaultPlayer = { username: '', score: 0, timeUsed: 0 }
@@ -60,9 +63,7 @@ const Game = () => {
   const [showLeaveGameAlert, setShowleaveGameAlert] = useState(false)
   const [targetNumber, setTargetNumber] = useState(15)
   const [showCorrectStatus, setShowCorrectStatus] = useState(false)
-  const [showRoundEnd, setShowRoundEnd] = useState(false)
-  const [isMyTurn, setIsMyTurn] = useState(false)
-  const [isRoundWinner, setRoundWinner] = useState(true) // dummy data, wait for socket
+  const [isRoundWinner, setRoundWinner] = useState(true)
 
   // The scores of the players during the game will be tracked using these states locally
   const [player1, setPlayer1] = useState<PlayerGameInfo>(defaultPlayer)
@@ -71,10 +72,6 @@ const Game = () => {
   const [roundTime, setRoundTime] = useState<number[]>([0, 0])
 
   const [view, setView] = useState<Views>('WAITING')
-  const shouldShowGame = () => isMyTurn && !shouldShowRoundEnd()
-  const shouldShowWaitingScreen = () => !isMyTurn && !showRoundEnd
-  const shouldShowRoundEnd = () => showRoundEnd && !shouldShowGameEnd()
-  const shouldShowGameEnd = () => showRoundEnd && false // use isLastRound when socket is available
   const isCorrectSolution = () => targetNumber === currentResult
 
   const [playWinSfx] = useSound(timeEnd)
@@ -131,41 +128,34 @@ const Game = () => {
 
   const endPlayerRound = () => {
     setTimeout(() => {
-      setView('ROUND_END') // setShowRoundEnd(true)
       setRoundWinner(isCorrectSolution())
       if (isCorrectSolution()) playWinSfx()
       else playLoseSfx()
       clearInputs()
+      if (user && gameInfo && user.username === gameInfo.firstPlayer) {
+        nextTurn({
+          username: user?.username,
+          timeUsed: settings?.timeLimit ?? 999,
+        })
+        setView('WAITING')
+      } else if (user && gameInfo && user.username !== gameInfo.firstPlayer) {
+        endRound({
+          username: user?.username,
+          timeUsed: settings?.timeLimit ?? 999,
+        })
+        setView('ROUND_END')
+      }
     }, 1000)
   }
 
   const resetRound = () => {
     // clearInputs()
     // change question to the current round's
-    if (gameInfo) {
-      const currentQuestion = gameInfo.questions[gameInfo.currentRound - 1]
-      setNumberOptions(currentQuestion.number)
-      console.log('currentQuestion', currentQuestion)
-      const newTarget = (): number => {
-        let intermediate = currentQuestion.number[0]
-        for (let i = 0; i < currentQuestion.operator.length; i++) {
-          intermediate = calculateResult(
-            intermediate,
-            currentQuestion.number[i + 1],
-            OPERATION_SIGNS[currentQuestion.operator[i]]
-          )
-        }
-        return intermediate
-      }
-      setTargetNumber(newTarget())
-    }
   }
 
-  const resetGame = () => {
-    clearInputs()
-    resetRound()
-    setShowRoundEnd(false)
-    setView('WAITING')
+  const playAgain = () => {
+    setGameInfo(undefined)
+    history.push('/lobby')
   }
 
   const leaveGame = () => {
@@ -185,10 +175,11 @@ const Game = () => {
       setTimeout(() => {
         console.log(user?.username, info?.firstPlayer)
         resetRound()
-        if (user?.username !== info?.firstPlayer) setView('GAME')
-        else setView('WAITING')
-        const now = new Date()
-        setRoundTime([now.getTime(), roundTime[1]])
+        if (user?.username !== info?.firstPlayer) {
+          const now = new Date()
+          setRoundTime([now.getTime(), roundTime[1]])
+          setView('GAME')
+        } else setView('WAITING')
       }, 1000)
     })
 
@@ -208,6 +199,16 @@ const Game = () => {
       }, 1000)
       if (user?.username === gameInfo?.firstPlayer) setView('GAME')
       else setView('WAITING')
+    })
+
+    socket.on('endGame', (info: GameInfo) => {
+      console.log('endGame', info)
+      setGameInfo(info)
+      setView('GAME_END')
+      // update score if you're the first player
+      if (user?.username === gameInfo?.firstPlayer) {
+        client.post('/win')
+      }
     })
 
     socket.on('announceWinner', (username: string) => {
@@ -295,7 +296,9 @@ const Game = () => {
           ) {
             endRound({ username: user.username, timeUsed: timeDiff })
           }
-          setView('WAITING')
+          setTimeout(() => {
+            if (gameInfo?.currentRound !== settings?.round) setView('WAITING')
+          }, 1000)
         }
 
         // case wrong answer
@@ -338,8 +341,14 @@ const Game = () => {
                 <Scoreboard small={true} />
               </div>
             </div>
-            <div className='play-area'>
-              <div className='game-display'>
+            <div
+              className={`play-area${appTheme === Theme.DARK ? '-dark' : ''}`}
+            >
+              <div
+                className={`game-display${
+                  appTheme === Theme.DARK ? '-dark' : ''
+                }`}
+              >
                 {
                   /*shouldShowGame() */ view === 'GAME' && (
                     <div>
@@ -374,130 +383,61 @@ const Game = () => {
                     </div>
                   )
                 }
-                {
-                  /*shouldShowWaitingScreen()*/ view === 'WAITING' && (
-                    <div>please wait</div>
-                  )
-                }
-                {
-                  /*shouldShowRoundEnd() */ view === 'ROUND_END' && (
-                    <RoundEnd player1={player1} player2={player2} />
-                  )
-                }
-                {
-                  /* shouldShowGameEnd() */ view === 'GAME_END' && (
-                    <GameEnd
-                      player1={'Pointzaa'}
-                      player2={'Notezaa'}
-                      player1Score={3}
-                      player2Score={2}
-                    />
-                  )
-                }
+                {view === 'WAITING' && <WaitingScreen />}
+                {view === 'ROUND_END' && (
+                  <RoundEnd player1={player1} player2={player2} />
+                )}
+                {view === 'GAME_END' && (
+                  <GameEnd player1={player1} player2={player2} />
+                )}
               </div>
               <div className='option-display'>
-                {
-                  /*shouldShowGame() */ view === 'GAME' && (
-                    <div className='game-buttons-container'>
-                      <div className='operations-container'>
-                        <Stack
-                          direction='row'
-                          justifyContent='space-between'
-                          spacing={1}
-                          className='button-row'
-                        >
-                          {numberOptions.map((num, index) => (
-                            <RigidButton
-                              disabled={
-                                (!selectedOperator &&
-                                  !(selectedOperands[0] === null)) ||
-                                index === selectedNumberKey
+                {view === 'GAME' && (
+                  <div className='game-buttons-container'>
+                    <div className='operations-container'>
+                      <Stack
+                        direction='row'
+                        justifyContent='space-between'
+                        spacing={1}
+                        className='button-row'
+                      >
+                        {numberOptions.map((num, index) => (
+                          <RigidButton
+                            disabled={
+                              (!selectedOperator &&
+                                !(selectedOperands[0] === null)) ||
+                              index === selectedNumberKey
+                            }
+                            key={index}
+                            onClick={() => {
+                              if (selectedOperands[0] === null) {
+                                setSelectedNumberKey(index)
+                                setSelectedOperands([num, null])
+                              } else {
+                                setSelectedOperands([selectedOperands[0], num])
                               }
-                              key={index}
-                              onClick={() => {
-                                if (selectedOperands[0] === null) {
-                                  setSelectedNumberKey(index)
-                                  setSelectedOperands([num, null])
-                                } else {
-                                  setSelectedOperands([
-                                    selectedOperands[0],
-                                    num,
-                                  ])
-                                }
-                              }}
-                            >
-                              {num}
-                            </RigidButton>
-                          ))}
-                        </Stack>
-                        <Stack
-                          direction='row'
-                          justifyContent='space-between'
-                          spacing={1}
-                          className='button-row-space-between'
-                        >
-                          {OPERATION_SIGNS.map((operation, index) => (
-                            <OperationButton
-                              key={index}
-                              onClick={() => setSelectedOperator(operation)}
-                            >
-                              {operation}
-                            </OperationButton>
-                          ))}
-                        </Stack>
-                      </div>
-                      <div className='controls-container'>
-                        <Button
-                          variant='contained'
-                          sx={{
-                            backgroundColor: 'primary',
-                            height: '48px',
-                            width: '100%',
-                            marginBottom: '12px',
-                          }}
-                          onClick={resetButtons}
-                        >
-                          Reset
-                        </Button>
-                        <Button
-                          variant='contained'
-                          sx={{
-                            backgroundColor: '#D14835',
-                            height: '48px',
-                            width: '100%',
-                          }}
-                          onClick={() => setShowleaveGameAlert(true)}
-                        >
-                          Leave Game
-                        </Button>
-                      </div>
+                            }}
+                          >
+                            {num}
+                          </RigidButton>
+                        ))}
+                      </Stack>
+                      <Stack
+                        direction='row'
+                        justifyContent='space-between'
+                        spacing={1}
+                        className='button-row-space-between'
+                      >
+                        {OPERATION_SIGNS.map((operation, index) => (
+                          <OperationButton
+                            key={index}
+                            onClick={() => setSelectedOperator(operation)}
+                          >
+                            {operation}
+                          </OperationButton>
+                        ))}
+                      </Stack>
                     </div>
-                  )
-                }
-                {
-                  /*shouldShowRoundEnd() */ view === 'ROUND_END' && (
-                    <div className='round-end-options-container'>
-                      {isRoundWinner ? (
-                        <Button
-                          variant='contained'
-                          sx={{
-                            backgroundColor: 'primary',
-                            height: '48px',
-                            width: '100%',
-                          }}
-                          className='button-row'
-                          onClick={startNextRound}
-                        >
-                          Next round
-                        </Button>
-                      ) : (
-                        <Solution />
-                      )}
-                    </div>
-                  )
-                }
-                {
-                  /* shouldShowGameEnd() */ view === 'GAME_END' && (
                     <div className='controls-container'>
                       <Button
                         variant='contained'
@@ -505,11 +445,11 @@ const Game = () => {
                           backgroundColor: 'primary',
                           height: '48px',
                           width: '100%',
+                          marginBottom: '12px',
                         }}
-                        className='button-row'
-                        onClick={resetGame}
+                        onClick={resetButtons}
                       >
-                        play again
+                        Reset
                       </Button>
                       <Button
                         variant='contained'
@@ -523,8 +463,55 @@ const Game = () => {
                         Leave Game
                       </Button>
                     </div>
-                  )
-                }
+                  </div>
+                )}
+                {view === 'ROUND_END' && (
+                  <div className='round-end-options-container'>
+                    {isRoundWinner ? (
+                      <Button
+                        variant='contained'
+                        sx={{
+                          backgroundColor: 'primary',
+                          height: '48px',
+                          width: '100%',
+                        }}
+                        className='button-row'
+                        onClick={startNextRound}
+                      >
+                        Next round
+                      </Button>
+                    ) : (
+                      <Solution startNextRound={startNextRound} />
+                    )}
+                  </div>
+                )}
+                {view === 'GAME_END' && (
+                  <div className='controls-container'>
+                    <Button
+                      variant='contained'
+                      sx={{
+                        backgroundColor: 'primary',
+                        height: '48px',
+                        width: '100%',
+                      }}
+                      className='button-row'
+                      onClick={playAgain}
+                    >
+                      play again
+                    </Button>
+                    <Button
+                      variant='contained'
+                      sx={{
+                        backgroundColor: '#D14835',
+                        height: '48px',
+                        width: '100%',
+                      }}
+                      onClick={() => setShowleaveGameAlert(true)}
+                    >
+                      Leave Game
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
           </div>

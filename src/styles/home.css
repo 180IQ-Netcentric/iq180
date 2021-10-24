@@ -34,7 +34,7 @@
 
 .scoreboard-container {
   grid-area: scoreboard;
-  color: #000;
+  /* color: #000; */
   max-width: inherit;
   background-color: #ffe2b8;
   border-radius: 15px;
