@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -137,8 +137,8 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             <TableSortLabel
               active={orderBy === headCell.id && headCell.id !== 'rank'}
               direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
-              hideSortIcon={headCell.id === 'rank'}
+              onClick={() => createSortHandler(headCell.id)}
+              // hideSortIcon={headCell.id === 'rank'}
               sx={{
                 textAlign: 'left',
                 justifyContent: 'left',
@@ -155,7 +155,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 }
 
 type Props = {
-  small?: boolean
+  small: boolean
 }
 
 export default function Scoreboard(props: Props) {
@@ -243,31 +243,36 @@ export default function Scoreboard(props: Props) {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0
 
-  const getScoreboard = () => {
-    client
-      .get('/scoreboard')
-      .then((res) => {
-        const scores: Data[] = res.data
-        const formattedScore = scores.map((info) => {
-          return createData(
-            info.username,
-            info.rank,
-            info.win,
-            info.lose,
-            info.score
-          )
-        })
-        setRows(formattedScore)
-      })
-      .catch((err) => {
-        setError(err.response.data)
-        setShowError(true)
-      })
-  }
-
   useEffect(() => {
+    let unmounted = false
+    const getScoreboard = () => {
+      client
+        .get('/scoreboard')
+        .then((res) => {
+          if (!unmounted) {
+            const scores: Data[] = res.data
+            const formattedScore = scores.map((info) => {
+              return createData(
+                info.username,
+                info.rank,
+                info.win,
+                info.lose,
+                info.score
+              )
+            })
+            setRows(formattedScore)
+          }
+        })
+        .catch((err) => {
+          setError(err.response.data)
+          setShowError(true)
+        })
+    }
     getScoreboard()
-  }, [])
+    return () => {
+      unmounted = true
+    }
+  }, [client])
 
   return (
     <div

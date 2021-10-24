@@ -22,6 +22,7 @@ const Lobby = () => {
     updateSettings,
     playerInfos,
     startGame,
+    setGameInfo,
   } = useContext(SocketContext)
   const history = useHistory()
 
@@ -51,6 +52,7 @@ const Lobby = () => {
   useEffect(() => {
     if (!socket) return
     if (socket && user) {
+      setGameInfo(undefined)
       joinRoom({ ...userToUserInfo(user, socket.id) })
     }
   }, [socket])

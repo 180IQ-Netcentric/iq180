@@ -35,6 +35,8 @@ const Socket = ({ children }: any) => {
   useEffect(() => {
     if (gameInfo && !inSocketPages()) {
       socket?.emit('disconnectUser', user)
+      setGameInfo(undefined)
+      setPlayerInfos([])
       // socket?.disconnect()
     }
 
@@ -63,7 +65,7 @@ const Socket = ({ children }: any) => {
     })
 
     socket.on('startRound', (gameInfo: GameInfo) => {
-      setGameInfo(gameInfo)
+      // setGameInfo(gameInfo)
       if (history.location.pathname !== '/game') history.push('/game')
       // If your username is firstPlayer then u start playing game
       // If not waiting na
@@ -79,15 +81,21 @@ const Socket = ({ children }: any) => {
       setGameInfo(gameInfo)
     })
 
-    socket.on('announceWinner', (username: string) => {
-      setWinnerUsername(username)
-    })
+    // socket.on('announceWinner', (username: string) => {
+    //   // setWinnerUsername(username)
+    //   // move to game index
+    // })
 
-    socket.on('startRound', (gameInfo: GameInfo) => {
+    // socket.on('startRound', (gameInfo: GameInfo) => {
+    //   setGameInfo(gameInfo)
+    //   // If your username is firstPlayer then u start playing game
+    //   // If not waiting na
+    //   // Don’t care na
+    // })
+
+    socket.on('updateGameInfo', (gameInfo: GameInfo) => {
+      console.log('on updateGameInfo', gameInfo)
       setGameInfo(gameInfo)
-      // If your username is firstPlayer then u start playing game
-      // If not waiting na
-      // Don’t care na
     })
   }, [location, socket])
 
