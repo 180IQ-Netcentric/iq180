@@ -9,8 +9,6 @@ import { Theme, ThemeContext } from '../../contexts/themeContext'
 import { useHistory } from 'react-router'
 import Tips from '../../components/tips/Tips'
 
-
-
 const Home = () => {
   const { theme: appTheme } = useContext(ThemeContext)
   const history = useHistory()
@@ -40,7 +38,7 @@ const Home = () => {
           </div>
           <BouncingArrow />
           <div className='home-options-container'>
-            <Scoreboard />
+            <Scoreboard small={false} />
             <div
               className={`tutorial-container${
                 appTheme === Theme.DARK ? '-dark' : ''

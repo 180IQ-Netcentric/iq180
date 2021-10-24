@@ -1,5 +1,5 @@
 import React from 'react'
-import { PlayerGameInfo, User, UserInfo } from '../../../dto/Authentication.dto'
+import { PlayerGameInfo } from '../../../contexts/socketContext'
 
 type Props = {
   player1: PlayerGameInfo
@@ -8,6 +8,7 @@ type Props = {
 
 const PlayerScores = (props: Props) => {
   const { player1, player2 } = props
+  // if (!player1 || !player2) return
   return (
     <div className='playerScore'>
       <div className='player-score-container'>
