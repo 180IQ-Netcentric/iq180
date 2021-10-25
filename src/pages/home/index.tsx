@@ -8,8 +8,10 @@ import Scoreboard from '../../components/scoreboard/Scoreboard'
 import { Theme, ThemeContext } from '../../contexts/themeContext'
 import { useHistory } from 'react-router'
 import Tips from '../../components/tips/Tips'
+import { useTranslation } from 'react-i18next'
 
 const Home = () => {
+  const { t } = useTranslation()
   const { theme: appTheme } = useContext(ThemeContext)
   const history = useHistory()
 
@@ -21,11 +23,10 @@ const Home = () => {
             <img src={CoverImg} alt='IQ180 Cover' />
           </div>
           <div className='game-description'>
-            <h1>Battle your brains out! 🧠</h1>
-            <h4>Join xxx players online right now</h4>
+            <h1>{t('7')} 🧠</h1>
+            <h4>{t('8')}</h4>
             <p>
-              IQ180 is a game that is ... Lorem ipsum dolor sit amet,
-              consectetur adipiscing elit, sed do eiusmod tempor incididunt
+            {t('9')}
             </p>
             <Button
               variant='contained'
@@ -33,7 +34,7 @@ const Home = () => {
               sx={{ width: '100%', borderRadius: '15px' }}
               onClick={() => history.push('/lobby')}
             >
-              Play
+              {t('10')}
             </Button>
           </div>
           <BouncingArrow />
@@ -44,7 +45,7 @@ const Home = () => {
                 appTheme === Theme.DARK ? '-dark' : ''
               }`}
             >
-              <h2>Tips 📚</h2>
+              <h2>{t('17')}</h2>
               <Tips />
             </div>
           </div>

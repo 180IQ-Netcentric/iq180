@@ -26,10 +26,12 @@ import { playerInfoToPlayerGameInfo } from '../../utils/playerInfoToPlayerGameIn
 import { client } from '../../config/axiosConfig'
 import WaitingScreen from './components/WaitingScreen'
 import { Theme, ThemeContext } from '../../contexts/themeContext'
+import { useTranslation } from 'react-i18next'
 
 type Views = 'GAME' | 'WAITING' | 'ROUND_END' | 'GAME_END'
 
 const Game = () => {
+  const { t } = useTranslation()
   const {
     socket,
     gameInfo,
