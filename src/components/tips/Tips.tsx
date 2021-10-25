@@ -8,6 +8,7 @@ import Button from '@mui/material/Button'
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft'
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight'
 import { Margin } from '@mui/icons-material'
+import { useTranslation } from 'react-i18next'
 
 const steps = [
   {
@@ -30,6 +31,7 @@ const steps = [
 ]
 
 export default function Tips() {
+  const { t } = useTranslation()
   const theme = useTheme()
   const [activeStep, setActiveStep] = React.useState(0)
   const maxSteps = steps.length
@@ -81,7 +83,7 @@ export default function Tips() {
             onClick={handleNext}
             disabled={activeStep === maxSteps - 1}
           >
-            Next
+            {t('67')}
             {theme.direction === 'rtl' ? (
               <KeyboardArrowLeft />
             ) : (
@@ -96,7 +98,7 @@ export default function Tips() {
             ) : (
               <KeyboardArrowLeft />
             )}
-            Back
+            {t('68')}
           </Button>
         }
       />
