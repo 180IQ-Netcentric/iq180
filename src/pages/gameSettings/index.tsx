@@ -82,7 +82,7 @@ const GameSettings = ({ onClose }: any) => {
       )}
       <div className='home-content-container settings-container'>
         <div className='settings-header'>
-          <h1>Game Settings</h1>
+          <h1>{t('18')}</h1>
           <IconButton
             size='large'
             edge='end'
@@ -95,7 +95,7 @@ const GameSettings = ({ onClose }: any) => {
           </IconButton>
         </div>
         <hr />
-        <h2>Username</h2>
+        <h2>{t('1')}</h2>
         <div>
           <RoundedTextField
             required
@@ -106,13 +106,13 @@ const GameSettings = ({ onClose }: any) => {
             sx={{ width: '100%', maxWidth: '300px', margin: '0 15px 15px 0' }}
           />
           <RoundedSecondaryButton onClick={updateUserName}>
-            Save
+          {t('19')}
           </RoundedSecondaryButton>
         </div>
         <hr />
-        <h2>Audio</h2>
+        <h2>{t('20')}</h2>
         <div className='settings-item'>
-          <span>Music</span>
+          <span>{t('21')}</span>
           <Switch
             checked={musicOn}
             onChange={() => toggleMusic(!musicOn)}
@@ -120,7 +120,7 @@ const GameSettings = ({ onClose }: any) => {
           />
         </div>
         <div className='settings-item'>
-          <h4>Sound Effects</h4>
+          <h4>{t('23')}</h4>
           <Switch
             checked={soundEffectOn}
             onChange={() => toggleSoundEffect(!soundEffectOn)}
@@ -128,7 +128,7 @@ const GameSettings = ({ onClose }: any) => {
           />
         </div>
         <div>
-          <h4>Music Tracks</h4>
+          <h4>{t('22')}</h4>
           <div className='settings-toggle-item'>
             {musicTracks.map((track) => (
               <GameToggleButton
@@ -142,7 +142,7 @@ const GameSettings = ({ onClose }: any) => {
             ))}
           </div>
         </div>
-        <h2>Background</h2>
+        <h2>{t('24')}</h2>
         <div>
           <div className='settings-toggle-item'>
             {backgrounds.map((background) => (
@@ -160,7 +160,7 @@ const GameSettings = ({ onClose }: any) => {
             ))}
           </div>
           <div className='settings-item'>
-            <h4>Dark Mode</h4>
+            <h4>{t('25')}</h4>
             <Switch
               checked={theme === Theme.DARK}
               onChange={() =>
@@ -172,7 +172,7 @@ const GameSettings = ({ onClose }: any) => {
         </div>
         <hr />
         <div>
-          <h4>Langauge</h4>
+          <h4>{t('26')}</h4>
           <div className='settings-toggle-language'>
             {languages.map((language) => (
               <div key={language} style={{ marginRight: '20px' }}>
