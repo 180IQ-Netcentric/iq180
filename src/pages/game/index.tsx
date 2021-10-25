@@ -446,7 +446,7 @@ const Game = () => {
                         }}
                         onClick={resetButtons}
                       >
-                        Reset
+                        {t('38')}
                       </Button>
                       <Button
                         variant='contained'
@@ -457,7 +457,7 @@ const Game = () => {
                         }}
                         onClick={() => setShowleaveGameAlert(true)}
                       >
-                        Leave Game
+                        {t('39')}
                       </Button>
                     </div>
                   </div>
@@ -475,7 +475,7 @@ const Game = () => {
                         className='button-row'
                         onClick={startNextRound}
                       >
-                        Next round
+                        {t('60')}
                       </Button>
                     ) : (
                       <Solution startNextRound={startNextRound} />
@@ -494,7 +494,7 @@ const Game = () => {
                       className='button-row'
                       onClick={playAgain}
                     >
-                      play again
+                      t{('49')}
                     </Button>
                     <Button
                       variant='contained'
@@ -505,7 +505,7 @@ const Game = () => {
                       }}
                       onClick={() => setShowleaveGameAlert(true)}
                     >
-                      Leave Game
+                      t{('48')}
                     </Button>
                   </div>
                 )}
