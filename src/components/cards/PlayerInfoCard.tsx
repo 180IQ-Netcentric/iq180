@@ -1,4 +1,5 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { UserInfo, User } from '../../dto/Authentication.dto'
 
 type Props = {
@@ -6,7 +7,8 @@ type Props = {
 }
 
 const PlayerInfoCard = ({ player }: Props) => {
-  if (!player) return <p>Waiting for an opponent to connect...</p>
+  const { t } = useTranslation()
+  if (!player) return <p>{t('64')}</p>
   return (
     <div className='player-card'>
       <div className='player-card-header'>

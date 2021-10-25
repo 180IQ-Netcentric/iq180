@@ -42,11 +42,11 @@
     "40": "Correct",
     "41": "Wrong",
     "42": "Time Elapsed",
-    "43": "Round Winner",
+    "43": "(Round) Winner",
     "44": "Ready",
     "45": "Solution",
     "46": "Please wait for the host to start...",
-    "47": "Match Winner",
+    "47": "Match(Game) Winner",
     "48": "Leave Game",
     "49": "Play Again",
     "50": "An error has occured",
@@ -59,7 +59,10 @@
     "57": "Sign Up",
     "58": "Already have an account?",
     "59": "Sign in now!",
-    "60": "Next round"
-
-
+    "60": "Next round",
+    "61": "OK",
+    "62": "Something went wrong.",
+    "63": "Please try again.",
+    "64": "Waiting for an opponent to connect...",
+    "65": "Sign Out"
 }
