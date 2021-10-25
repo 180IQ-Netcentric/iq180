@@ -9,8 +9,10 @@ import withUserGuard from '../../guards/user.guard'
 import { SocketContext } from '../../contexts/socketContext'
 import socketIOClient from 'socket.io-client'
 import { userToUserInfo } from '../../utils/userToUserInfo'
+import { useTranslation } from 'react-i18next'
 
 const Lobby = () => {
+  const { t } = useTranslation()
   const { user } = useContext(UserContext)
   const { setSocketOpen } = useContext(SocketContext)
   const { joinRoom } = useContext(SocketContext)
@@ -61,13 +63,13 @@ const Lobby = () => {
     <GameContainer>
       <div className='game-padding'>
         <div className='settings-header'>
-          <h1>Match Settings</h1>
-          <Button onClick={leaveLobby}>Leave Lobby</Button>
+          <h1>{t('30')}</h1>
+          <Button onClick={leaveLobby}>{t('56')}</Button>
         </div>
         <hr />
         <div className='match-container'>
           <div className='match-settings'>
-            <h3>Number of Digits</h3>
+            <h3>{t('31')}</h3>
             <div>
               <div className='settings-toggle-item'>
                 {DIGITS_COUNT_OPTION.map((digit) => (
@@ -82,7 +84,7 @@ const Lobby = () => {
                 ))}
               </div>
 
-              <h3>Number of Round</h3>
+              <h3>{t('32')}</h3>
               <div className='settings-toggle-item'>
                 {ROUNDS_COUNT_OPTION.map((round) => (
                   <GameToggleButton
@@ -96,7 +98,7 @@ const Lobby = () => {
                 ))}
               </div>
 
-              <h3>Time limit</h3>
+              <h3>{t('33')}</h3>
               <div className='settings-toggle-item'>
                 {TIME_LMIT_OPTION.map((limit) => (
                   <GameToggleButton
@@ -113,7 +115,7 @@ const Lobby = () => {
               </div>
               <div className='empty-space' />
               <div className='settings-item'>
-                <span>VS Mode</span>
+                <span>{t('34')}</span> 
                 <Switch
                   checked={!settings?.isClassicMode ?? false}
                   onChange={() =>
@@ -125,7 +127,7 @@ const Lobby = () => {
                 />
               </div>
               <div className='settings-item'>
-                <span>Classic</span>
+                <span>{t('35')}</span>
                 <Switch
                   checked={settings?.isClassicMode ?? false}
                   onChange={() =>
@@ -160,7 +162,7 @@ const Lobby = () => {
               className='game-start-button game-start-button-match'
               onClick={beginGame}
             >
-              Start!
+              {t('36')}
             </Button>
           </div>
         </div>

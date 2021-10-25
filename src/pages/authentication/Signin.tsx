@@ -14,8 +14,10 @@ import { UserContext } from '../../contexts/userContext'
 import { AuthContext } from '../../contexts/authContext'
 import ErrorAlert from '../../components/alerts/ErrorAlert'
 import { AuthenticationErrorMessage, signInError } from '../../utils/errors'
+import { useTranslation } from 'react-i18next'
 
 const SignIn = () => {
+  const { t } = useTranslation()
   const {
     control,
     handleSubmit,
@@ -81,7 +83,7 @@ const SignIn = () => {
       <GameContainer>
         <div className='authentication-container'>
           <div className='form-container'>
-            <h1>Sign In</h1>
+            <h1>{t('0')}</h1>
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className='form-text-field'>
                 <Controller
@@ -138,13 +140,13 @@ const SignIn = () => {
                 sx={{ width: '100%', height: '50px', borderRadius: '15px' }}
                 type='submit'
               >
-                Sign In
+                {t('0')}
               </Button>
             </form>
             <p>
-              No account? &nbsp;
+            {t('4')} &nbsp;
               <Link to='/signup' className='signup-text'>
-                Sign up now!
+              {t('5')}
               </Link>
             </p>
           </div>

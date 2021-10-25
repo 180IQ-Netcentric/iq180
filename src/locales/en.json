@@ -3,7 +3,7 @@
     "1": "Username",
     "2": "Password",
     "3": "Forgot password",
-    "4": "No account",
+    "4": "No account?",
     "5": "Sign up now!",
     "6": "Repeat password",
     "7": "Battle your brains out!",
@@ -31,7 +31,7 @@
     "29": "CN",
     "30": "Match Settings",
     "31": "Number of Digits",
-    "32": "No. of round",
+    "32": "Number of round",
     "33": "Time Limit ",
     "34": "VS mode",
     "35": "Classic",
@@ -42,11 +42,11 @@
     "40": "Correct",
     "41": "Wrong",
     "42": "Time Elapsed",
-    "43": "(Round) Winner",
+    "43": "Round Winner",
     "44": "Ready",
     "45": "Solution",
     "46": "Please wait for the host to start...",
-    "47": "Game(Match) Winner",
+    "47": "Match Winner",
     "48": "Leave Game",
     "49": "Play Again",
     "50": "An error has occured",
@@ -54,5 +54,11 @@
     "52": "Confirm Exit",
     "53": "Are you sure you want to leave the game?",
     "54": "Cancel",
-    "55": "Leave"
+    "55": "Leave",
+    "56": "Leave Lobby",
+    "57": "Sign Up",
+    "58": "Already have an account?",
+    "59": "Sign in now!"
+
+
 }
