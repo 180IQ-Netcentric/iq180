@@ -1,5 +1,6 @@
 import { Button } from '@mui/material'
 import React, { useContext } from 'react'
+import { useTranslation } from 'react-i18next'
 import { SocketContext } from '../../../contexts/socketContext'
 
 type Props = {
@@ -7,6 +8,7 @@ type Props = {
 }
 
 export default function Solution(props: Props) {
+  const { t } = useTranslation()
   const { startNextRound } = props
   const OPERATION_SIGNS = ['+', '-', '×', '÷']
   const { gameInfo } = useContext(SocketContext)
@@ -30,7 +32,7 @@ export default function Solution(props: Props) {
   return (
     <div className='show-solution'>
       <div>
-        <div style={{ fontSize: '24px' }}>Solution</div>
+        <div style={{ fontSize: '24px' }}>{t('45')}</div>
         <div style={{ fontSize: '32px', fontWeight: 'bold' }}>
           <span>{formattedSolution()}</span>
         </div>
@@ -44,7 +46,7 @@ export default function Solution(props: Props) {
           className='button-row'
           onClick={startNextRound}
         >
-          Next round
+          {t('60')}
         </Button>
       </div>
     </div>
