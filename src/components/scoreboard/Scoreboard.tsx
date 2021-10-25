@@ -13,6 +13,7 @@ import { Theme, ThemeContext } from '../../contexts/themeContext'
 import { AuthenticationErrorMessage, scoreboardError } from '../../utils/errors'
 import ErrorAlert from '../alerts/ErrorAlert'
 import { UserContext } from '../../contexts/userContext'
+import { useTranslation } from 'react-i18next'
 interface Data {
   rank: number
   username: string
@@ -159,6 +160,7 @@ type Props = {
 }
 
 export default function Scoreboard(props: Props) {
+  const { t } = useTranslation()
   const { small } = props
   const [order, setOrder] = useState<Order>('asc')
   const [orderBy, setOrderBy] = useState<keyof Data>('score')
@@ -295,10 +297,10 @@ export default function Scoreboard(props: Props) {
         className='section-title'
         style={{ paddingTop: small ? '24px' : 'inherit' }}
       >
-        Scoreboard 🏆
+        {t('11')}
       </h2>
       {rows.length < 1 && (
-        <div className='no-score'>Please sign in to view the scoreboard</div>
+        <div className='no-score'>{t('66')}</div>
       )}
       {rows.length > 0 && (
         <Paper elevation={0} sx={{ backgroundColor: 'transparent' }}>
