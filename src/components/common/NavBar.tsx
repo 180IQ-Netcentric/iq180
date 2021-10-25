@@ -17,8 +17,10 @@ import { setCookie } from '../..//utils/cookie'
 import { UserContext } from '../../contexts/userContext'
 import { AuthContext } from '../../contexts/authContext'
 import { useHistory } from 'react-router'
+import { useTranslation } from 'react-i18next'
 
 export default function MenuAppBar() {
+  const { t } = useTranslation()
   const { showSettings } = useContext(GameSettingsContext)
   const { clearUser } = useContext(UserContext)
   const { isUser, setToken } = useContext(AuthContext)
@@ -89,7 +91,7 @@ export default function MenuAppBar() {
                   id='authentication-button'
                   ref={anchor}
                 >
-                  {isUser ? 'Sign Out' : 'Sign In'}
+                  {isUser ? t('65') : t('0')}
                 </Button>
               </div>
             </Toolbar>

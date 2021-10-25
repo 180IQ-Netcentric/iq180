@@ -5,6 +5,7 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   open: boolean
@@ -12,6 +13,7 @@ type Props = {
 }
 
 const GenericErrorAlert = (props: Props) => {
+  const { t } = useTranslation()
   const { open, setOpen } = props
   const handleClose = () => {
     setOpen(false)
@@ -25,15 +27,15 @@ const GenericErrorAlert = (props: Props) => {
       aria-labelledby='alert-dialog-title'
       aria-describedby='alert-dialog-description'
     >
-      <DialogTitle id='alert-dialog-title'>Something went wrong.</DialogTitle>
+      <DialogTitle id='alert-dialog-title'>{t('62')}</DialogTitle>
       <DialogContent>
         <DialogContentText id='alert-dialog-description'>
-          Please try again.
+        {t('63')}
         </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} autoFocus>
-          OK
+        {t('61')}
         </Button>
       </DialogActions>
     </Dialog>
