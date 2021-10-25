@@ -14,6 +14,7 @@ import { AuthenticationErrorMessage, scoreboardError } from '../../utils/errors'
 import ErrorAlert from '../alerts/ErrorAlert'
 import { UserContext } from '../../contexts/userContext'
 import { useTranslation } from 'react-i18next'
+import i18n from '../../locales/i18n'
 interface Data {
   rank: number
   username: string
@@ -75,31 +76,31 @@ const headCells: readonly HeadCell[] = [
     id: 'rank',
     numeric: true,
     disablePadding: true,
-    label: 'Rank',
+    label: i18n.t('12'),
   },
   {
     id: 'username',
     numeric: false,
     disablePadding: false,
-    label: 'Username',
+    label: i18n.t('1'),
   },
   {
     id: 'win',
     numeric: true,
     disablePadding: false,
-    label: 'Win',
+    label: i18n.t('14'),
   },
   {
     id: 'lose',
     numeric: true,
     disablePadding: false,
-    label: 'Lose',
+    label: i18n.t('15'),
   },
   {
     id: 'score',
     numeric: true,
     disablePadding: false,
-    label: 'Score',
+    label: i18n.t('16'),
   },
 ]
 
