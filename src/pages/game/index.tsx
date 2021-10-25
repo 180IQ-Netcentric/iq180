@@ -173,9 +173,7 @@ const Game = () => {
     startGame()
 
     socket.on('startNextTurn', (info: GameInfo) => {
-      console.log('startNextTurn')
       setTimeout(() => {
-        console.log(user?.username, info?.firstPlayer)
         resetRound()
         if (user?.username !== info?.firstPlayer) {
           const now = new Date()
@@ -186,36 +184,38 @@ const Game = () => {
     })
 
     socket.on('startRound', (gameInfo: GameInfo) => {
-      console.log('startRound')
-      console.log('with gameinfo', gameInfo)
       setQuestions(gameInfo.questions)
       setGameInfo(gameInfo)
-      // If your username is firstPlayer then u start playing game
-      // If not waiting na
-      // Don’t care na
 
       setTimeout(() => {
         const now = new Date()
         setRoundTime([now.getTime(), roundTime[1]])
         resetRound()
       }, 1000)
+
+      // If your username is firstPlayer then u start playing game
+      // If not waiting na
+      // Don’t care na
       if (user?.username === gameInfo?.firstPlayer) setView('GAME')
       else setView('WAITING')
     })
 
     socket.on('endGame', (info: GameInfo) => {
-      console.log('endGame', info)
       setGameInfo(info)
       setView('GAME_END')
-      // update score if you're the first player
-      console.log('gu win', user?.username, info?.firstPlayer)
-      if (user?.username === info?.firstPlayer) {
-        client.put('/win')
-      }
+
+      // update score win if you win
+      // update score lose if you lose
+      const thisPlayer =
+        info.player1.username === user?.username ? info.player1 : info.player2
+      const opponent =
+        info.player1.username === user?.username ? info.player2 : info.player1
+      if (thisPlayer.score > opponent.score) client.put('/win')
+      else if (thisPlayer.score < opponent.score) client.put('/lose')
     })
 
-    socket.on('announceWinner', (username: string) => {
-      console.log('announceWinner')
+    socket.on('announceWinner', ({ gameInfo, username }) => {
+      setGameInfo(gameInfo)
       setWinnerUsername(username)
       setTimeout(() => {
         setView('ROUND_END')
@@ -225,9 +225,6 @@ const Game = () => {
 
   // guard unauthorized user and set player info
   useEffect(() => {
-    // if (!gameInfo) history.replace('/')
-
-    // TODO: Figure out the types later
     if (playerInfos && playerInfos[0])
       setPlayer1(playerInfoToPlayerGameInfo(playerInfos[0]))
     if (playerInfos && playerInfos[1])
@@ -236,11 +233,8 @@ const Game = () => {
 
   useEffect(() => {
     if (gameInfo) {
-      const now = new Date()
-      // roundTime[0] = now.getTime()
       const currentQuestion = gameInfo.questions[gameInfo.currentRound - 1]
       setNumberOptions(currentQuestion.number)
-      console.log('currentQuestion', currentQuestion)
       const newTarget = (): number => {
         let intermediate = currentQuestion.number[0]
         for (let i = 0; i < currentQuestion.operator.length; i++) {
@@ -286,11 +280,6 @@ const Game = () => {
             currentResult !== null &&
             user?.username === gameInfo?.firstPlayer
           ) {
-            console.log(roundTime)
-            console.log('next turn with ', {
-              username: user.username,
-              timeUsed: timeDiff,
-            })
             nextTurn({ username: user.username, timeUsed: timeDiff })
           } else if (
             user &&
@@ -494,7 +483,7 @@ const Game = () => {
                       className='button-row'
                       onClick={playAgain}
                     >
-                      t{('49')}
+                      t{'49'}
                     </Button>
                     <Button
                       variant='contained'
@@ -505,7 +494,7 @@ const Game = () => {
                       }}
                       onClick={() => setShowleaveGameAlert(true)}
                     >
-                      t{('48')}
+                      t{'48'}
                     </Button>
                   </div>
                 )}
