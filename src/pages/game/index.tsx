@@ -206,8 +206,9 @@ const Game = () => {
       setGameInfo(info)
       setView('GAME_END')
       // update score if you're the first player
-      if (user?.username === gameInfo?.firstPlayer) {
-        client.post('/win')
+      console.log('gu win', user?.username, info?.firstPlayer)
+      if (user?.username === info?.firstPlayer) {
+        client.put('/win')
       }
     })
 
@@ -349,40 +350,34 @@ const Game = () => {
                   appTheme === Theme.DARK ? '-dark' : ''
                 }`}
               >
-                {
-                  /*shouldShowGame() */ view === 'GAME' && (
-                    <div>
-                      <div className='question-container'>
-                        <CountDownTimer
-                          onComplete={endPlayerRound}
-                          duration={settings?.timeLimit ?? 60}
-                        />
-                        <h3>{`Target Number: ${targetNumber}`}</h3>
-                      </div>
-                      <div className='working-container'>
-                        <div className='number-slot'>{selectedOperands[0]}</div>
-                        <div className='operator-slot'>{selectedOperator}</div>
-                        <div className='number-slot'>{selectedOperands[1]}</div>
-                        =<div className='number-slot'>{currentResult}</div>
-                      </div>
-                      {showCorrectStatus && (
-                        <div>
-                          <h2
-                            className={`${
-                              targetNumber === currentResult
-                                ? 'correct'
-                                : 'wrong'
-                            }-status`}
-                          >
-                            {targetNumber === currentResult
-                              ? 'CORRECT'
-                              : 'WRONG'}
-                          </h2>
-                        </div>
-                      )}
+                {view === 'GAME' && (
+                  <div>
+                    <div className='question-container'>
+                      <CountDownTimer
+                        onComplete={endPlayerRound}
+                        duration={settings?.timeLimit ?? 60}
+                      />
+                      <h3>{`Target Number: ${targetNumber}`}</h3>
                     </div>
-                  )
-                }
+                    <div className='working-container'>
+                      <div className='number-slot'>{selectedOperands[0]}</div>
+                      <div className='operator-slot'>{selectedOperator}</div>
+                      <div className='number-slot'>{selectedOperands[1]}</div>=
+                      <div className='number-slot'>{currentResult}</div>
+                    </div>
+                    {showCorrectStatus && (
+                      <div>
+                        <h2
+                          className={`${
+                            targetNumber === currentResult ? 'correct' : 'wrong'
+                          }-status`}
+                        >
+                          {targetNumber === currentResult ? 'CORRECT' : 'WRONG'}
+                        </h2>
+                      </div>
+                    )}
+                  </div>
+                )}
                 {view === 'WAITING' && <WaitingScreen />}
                 {view === 'ROUND_END' && (
                   <RoundEnd player1={player1} player2={player2} />
