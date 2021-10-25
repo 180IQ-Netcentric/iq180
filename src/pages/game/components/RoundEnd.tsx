@@ -5,8 +5,10 @@ import { PlayerGameInfo, SocketContext } from '../../../contexts/socketContext'
 type Props = {
   player1: PlayerGameInfo
   player2: PlayerGameInfo
+  winnerUsername?: string
 }
 export const RoundEnd = (props: Props) => {
+  const { winnerUsername } = props
   const { t } = useTranslation()
   const { gameInfo } = useContext(SocketContext)
 
@@ -18,6 +20,25 @@ export const RoundEnd = (props: Props) => {
     else if (player1.timeUsed < player2.timeUsed) return player1.username
     else return player2.username
   }
+
+  if (!gameInfo.setting.isClassicMode)
+    return (
+      <div className='round-end'>
+        <div className='show-winner'>
+          <div>
+            {!winnerUsername && (
+              <div style={{ fontSize: '36px' }}>{t('70')}</div>
+            )}
+            {winnerUsername && (
+              <div>
+                <div style={{ fontSize: '24px' }}>{t('43')}</div>
+                <div style={{ fontSize: '36px' }}>{winnerUsername}</div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    )
 
   return (
     <div className='round-end'>

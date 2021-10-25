@@ -270,6 +270,14 @@
 .countdown-timer {
 }
 
+.ready-timer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
 .question-container {
   display: flex;
   justify-content: space-between;

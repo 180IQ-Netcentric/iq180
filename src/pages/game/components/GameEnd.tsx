@@ -1,23 +1,24 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PlayerGameInfo, SocketContext } from '../../../contexts/socketContext'
 
-type Props = {
-  player1: PlayerGameInfo
-  player2: PlayerGameInfo
-}
-export const GameEnd = (props: Props) => {
+export const GameEnd = () => {
   const { t } = useTranslation()
   const { gameInfo } = useContext(SocketContext)
 
   if (!gameInfo) return null
   const { player1, player2 } = gameInfo
+  const [winner, setWinner] = useState<string | null>('')
 
   const winnerName = (player1: PlayerGameInfo, player2: PlayerGameInfo) => {
-    if (player1.score === player2.score) return null
-    else if (player1.score > player2.score) return player1.username
-    else return player2.username
+    if (player1.score === player2.score) setWinner(null)
+    else if (player1.score > player2.score) setWinner(player1.username)
+    else setWinner(player2.username)
   }
+
+  useEffect(() => {
+    winnerName(player1, player2)
+  }, [player1, player2])
 
   return (
     <div className='round-end'>
@@ -33,15 +34,11 @@ export const GameEnd = (props: Props) => {
       <hr />
       <div className='show-winner'>
         <div>
-          {winnerName(player1, player2) === null && (
-            <div style={{ fontSize: '36px' }}>{t('70')}</div>
-          )}
-          {winnerName(player1, player2) !== null && (
+          {winner === null && <div style={{ fontSize: '36px' }}>{t('70')}</div>}
+          {winner !== null && (
             <div>
-              <div style={{ fontSize: '24px' }}>{t('70')}</div>
-              <div style={{ fontSize: '36px' }}>
-                {winnerName(player1, player2)}
-              </div>
+              <div style={{ fontSize: '24px' }}>{t('71')}</div>
+              <div style={{ fontSize: '36px' }}>{winner}</div>
             </div>
           )}
         </div>

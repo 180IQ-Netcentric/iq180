@@ -7,31 +7,25 @@ import { UserContext } from '../../contexts/userContext'
 import { useHistory } from 'react-router'
 import withUserGuard from '../../guards/user.guard'
 import { SocketContext } from '../../contexts/socketContext'
-import socketIOClient from 'socket.io-client'
 import { userToUserInfo } from '../../utils/userToUserInfo'
 import { useTranslation } from 'react-i18next'
 
 const Lobby = () => {
   const { t } = useTranslation()
   const { user } = useContext(UserContext)
-  const { setSocketOpen } = useContext(SocketContext)
   const { joinRoom } = useContext(SocketContext)
   const {
     socket,
-    setSocket,
     settings,
     setSettings,
     updateSettings,
     playerInfos,
-    startGame,
     setGameInfo,
   } = useContext(SocketContext)
   const history = useHistory()
 
   const DIGITS_COUNT_OPTION = [2, 3, 4, 5]
-  // const [selectedDigitsCount, setSelectedDigitsCount] = useState(settings?.digit ?? 5)
   const ROUNDS_COUNT_OPTION = [1, 3, 5, 7]
-  // const [selectedRoundsCount, setSelectedRoundsCount] = useState(settings?.round ?? 3)
   const TIME_LMIT_OPTION = [30, 60, 90, 120]
 
   const onSettingsChange = (change: any) => {
@@ -115,7 +109,7 @@ const Lobby = () => {
               </div>
               <div className='empty-space' />
               <div className='settings-item'>
-                <span>{t('34')}</span> 
+                <span>{t('34')}</span>
                 <Switch
                   checked={!settings?.isClassicMode ?? false}
                   onChange={() =>
@@ -160,6 +154,7 @@ const Lobby = () => {
               size='large'
               sx={{ borderRadius: '15px' }}
               className='game-start-button game-start-button-match'
+              disabled={playerInfos && playerInfos.length < 2}
               onClick={beginGame}
             >
               {t('36')}

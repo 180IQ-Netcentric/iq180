@@ -27,8 +27,9 @@ import { client } from '../../config/axiosConfig'
 import WaitingScreen from './components/WaitingScreen'
 import { Theme, ThemeContext } from '../../contexts/themeContext'
 import { useTranslation } from 'react-i18next'
+import ReadyCountdown from './components/ReadyCountdown'
 
-type Views = 'GAME' | 'WAITING' | 'ROUND_END' | 'GAME_END'
+type Views = 'READY' | 'GAME' | 'WAITING' | 'ROUND_END' | 'GAME_END'
 
 const Game = () => {
   const { t } = useTranslation()
@@ -42,6 +43,7 @@ const Game = () => {
     startGame,
     settings,
     endRound,
+    winnerUsername,
     setWinnerUsername,
   } = useContext(SocketContext)
   const { user } = useContext(UserContext)
@@ -129,25 +131,35 @@ const Game = () => {
   }
 
   const endPlayerRound = () => {
-    setTimeout(() => {
-      setRoundWinner(isCorrectSolution())
-      if (isCorrectSolution()) playWinSfx()
-      else playLoseSfx()
-      clearInputs()
+    if (gameInfo?.setting.isClassicMode) {
+      setTimeout(() => {
+        setRoundWinner(isCorrectSolution())
+        if (isCorrectSolution()) playWinSfx()
+        else playLoseSfx()
+        clearInputs()
+        if (user && gameInfo && user.username === gameInfo.firstPlayer) {
+          nextTurn({
+            username: user?.username,
+            timeUsed: settings?.timeLimit ?? 999,
+          })
+          setView('WAITING')
+        } else if (user && gameInfo && user.username !== gameInfo.firstPlayer) {
+          endRound({
+            username: user?.username,
+            timeUsed: settings?.timeLimit ?? 999,
+          })
+          setView('ROUND_END')
+        }
+      }, 1000)
+    } else {
       if (user && gameInfo && user.username === gameInfo.firstPlayer) {
-        nextTurn({
-          username: user?.username,
-          timeUsed: settings?.timeLimit ?? 999,
-        })
-        setView('WAITING')
-      } else if (user && gameInfo && user.username !== gameInfo.firstPlayer) {
         endRound({
-          username: user?.username,
-          timeUsed: settings?.timeLimit ?? 999,
+          username: user.username,
+          timeUsed: gameInfo.setting.timeLimit,
         })
         setView('ROUND_END')
       }
-    }, 1000)
+    }
   }
 
   const resetRound = () => {
@@ -172,32 +184,47 @@ const Game = () => {
     if (!socket) return
     startGame()
 
-    socket.on('startNextTurn', (info: GameInfo) => {
-      setTimeout(() => {
-        resetRound()
-        if (user?.username !== info?.firstPlayer) {
-          const now = new Date()
-          setRoundTime([now.getTime(), roundTime[1]])
-          setView('GAME')
-        } else setView('WAITING')
-      }, 1000)
-    })
-
     socket.on('startRound', (gameInfo: GameInfo) => {
       setQuestions(gameInfo.questions)
       setGameInfo(gameInfo)
-
+      playWinSfx()
+      setView('READY')
       setTimeout(() => {
         const now = new Date()
         setRoundTime([now.getTime(), roundTime[1]])
         resetRound()
-      }, 1000)
 
-      // If your username is firstPlayer then u start playing game
-      // If not waiting na
-      // Don’t care na
-      if (user?.username === gameInfo?.firstPlayer) setView('GAME')
-      else setView('WAITING')
+        // If your username is firstPlayer then u start playing game
+        // If not then wait
+        if (gameInfo.setting.isClassicMode) {
+          if (user?.username === gameInfo?.firstPlayer) setView('GAME')
+          else setView('WAITING')
+        } else {
+          setView('GAME')
+        }
+      }, 3000)
+    })
+
+    socket.on('startNextTurn', (info: GameInfo) => {
+      setTimeout(() => {
+        resetRound()
+        if (user?.username !== info?.firstPlayer) setView('READY')
+        if (user?.username !== info?.firstPlayer) {
+          setTimeout(() => {
+            const now = new Date()
+            setRoundTime([now.getTime(), roundTime[1]])
+            setView('GAME')
+          }, 3000)
+        } else setView('WAITING')
+      }, 1000)
+    })
+
+    socket.on('announceWinner', ({ gameInfo, winnerUsername }) => {
+      setGameInfo(gameInfo)
+      setWinnerUsername(winnerUsername)
+      setTimeout(() => {
+        setView('ROUND_END')
+      }, 1000)
     })
 
     socket.on('endGame', (info: GameInfo) => {
@@ -212,14 +239,6 @@ const Game = () => {
         info.player1.username === user?.username ? info.player2 : info.player1
       if (thisPlayer.score > opponent.score) client.put('/win')
       else if (thisPlayer.score < opponent.score) client.put('/lose')
-    })
-
-    socket.on('announceWinner', ({ gameInfo, username }) => {
-      setGameInfo(gameInfo)
-      setWinnerUsername(username)
-      setTimeout(() => {
-        setView('ROUND_END')
-      }, 1000)
     })
   }, [])
 
@@ -275,22 +294,31 @@ const Game = () => {
           setRoundTime([roundTime[0], now.getTime()])
           const timeDiff = Math.floor((roundTime[1] - roundTime[0]) / 1000)
 
-          if (
-            user &&
-            currentResult !== null &&
-            user?.username === gameInfo?.firstPlayer
-          ) {
-            nextTurn({ username: user.username, timeUsed: timeDiff })
-          } else if (
-            user &&
-            currentResult &&
-            user?.username !== gameInfo?.firstPlayer
-          ) {
-            endRound({ username: user.username, timeUsed: timeDiff })
+          if (gameInfo?.setting.isClassicMode) {
+            if (
+              user &&
+              currentResult !== null &&
+              user?.username === gameInfo?.firstPlayer
+            ) {
+              nextTurn({ username: user.username, timeUsed: timeDiff })
+            } else if (
+              user &&
+              currentResult &&
+              user?.username !== gameInfo?.firstPlayer
+            ) {
+              endRound({ username: user.username, timeUsed: timeDiff })
+            }
+            setTimeout(() => {
+              if (gameInfo?.currentRound !== settings?.round) setView('WAITING')
+            }, 1000)
+          } else {
+            if (user && timeDiff > 0)
+              endRound({ username: user.username, timeUsed: timeDiff })
+            setTimeout(() => {
+              if (gameInfo?.currentRound !== gameInfo?.setting.round)
+                setView('ROUND_END')
+            }, 1000)
           }
-          setTimeout(() => {
-            if (gameInfo?.currentRound !== settings?.round) setView('WAITING')
-          }, 1000)
         }
 
         // case wrong answer
@@ -334,13 +362,16 @@ const Game = () => {
               </div>
             </div>
             <div
-              className={`play-area${appTheme === Theme.DARK ? '-dark' : ''}`}
+              className={`play-area play-area${
+                appTheme === Theme.DARK ? '-dark' : ''
+              }`}
             >
               <div
                 className={`game-display${
                   appTheme === Theme.DARK ? '-dark' : ''
                 }`}
               >
+                {view === 'READY' && <ReadyCountdown duration={3} />}
                 {view === 'GAME' && (
                   <div>
                     <div className='question-container'>
@@ -370,12 +401,14 @@ const Game = () => {
                   </div>
                 )}
                 {view === 'WAITING' && <WaitingScreen />}
-                {view === 'ROUND_END' && (
-                  <RoundEnd player1={player1} player2={player2} />
+                {view === 'ROUND_END' && gameInfo && (
+                  <RoundEnd
+                    player1={gameInfo.player1}
+                    player2={gameInfo.player2}
+                    winnerUsername={winnerUsername}
+                  />
                 )}
-                {view === 'GAME_END' && (
-                  <GameEnd player1={player1} player2={player2} />
-                )}
+                {view === 'GAME_END' && gameInfo && <GameEnd />}
               </div>
               <div className='option-display'>
                 {view === 'GAME' && (
@@ -483,7 +516,7 @@ const Game = () => {
                       className='button-row'
                       onClick={playAgain}
                     >
-                      t{'49'}
+                      {t('49')}
                     </Button>
                     <Button
                       variant='contained'
@@ -494,7 +527,7 @@ const Game = () => {
                       }}
                       onClick={() => setShowleaveGameAlert(true)}
                     >
-                      t{'48'}
+                      {t('48')}
                     </Button>
                   </div>
                 )}
