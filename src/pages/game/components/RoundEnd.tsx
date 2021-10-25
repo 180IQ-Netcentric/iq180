@@ -1,4 +1,5 @@
 import React, { useContext } from 'react'
+import { useTranslation } from 'react-i18next'
 import { PlayerGameInfo, SocketContext } from '../../../contexts/socketContext'
 
 type Props = {
@@ -6,6 +7,7 @@ type Props = {
   player2: PlayerGameInfo
 }
 export const RoundEnd = (props: Props) => {
+  const { t } = useTranslation()
   const { gameInfo } = useContext(SocketContext)
 
   if (!gameInfo) return null
@@ -19,7 +21,7 @@ export const RoundEnd = (props: Props) => {
 
   return (
     <div className='round-end'>
-      <span style={{ fontSize: '24px' }}>Time Elapsed</span>
+      <span style={{ fontSize: '24px' }}>{t('42')}</span>
       <div className='game-result'>
         <div className='player-name'>{player1.username}</div>
         <div className='score-value'>{player1.timeUsed}</div>
@@ -32,11 +34,11 @@ export const RoundEnd = (props: Props) => {
       <div className='show-winner'>
         <div>
           {winnerName(player1, player2) === null && (
-            <div style={{ fontSize: '36px' }}>Draw</div>
+            <div style={{ fontSize: '36px' }}>{t('70')}</div>
           )}
           {winnerName(player1, player2) !== null && (
             <div>
-              <div style={{ fontSize: '24px' }}>Winner</div>
+              <div style={{ fontSize: '24px' }}>{t('43')}</div>
               <div style={{ fontSize: '36px' }}>
                 {winnerName(player1, player2)}
               </div>
