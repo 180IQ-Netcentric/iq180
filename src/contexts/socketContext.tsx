@@ -26,6 +26,7 @@ export interface PlayerGameInfo {
 
 export interface Question {
   number: number[]
+  numberShuffle: number[]
   operator: number[]
   result: number
 }

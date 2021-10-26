@@ -9,6 +9,8 @@ import withUserGuard from '../../guards/user.guard'
 import { SocketContext } from '../../contexts/socketContext'
 import { userToUserInfo } from '../../utils/userToUserInfo'
 import { useTranslation } from 'react-i18next'
+import { client } from '../../config/axiosConfig'
+import { UserInfo } from '../../dto/Authentication.dto'
 
 const Lobby = () => {
   const { t } = useTranslation()
@@ -24,7 +26,7 @@ const Lobby = () => {
   } = useContext(SocketContext)
   const history = useHistory()
 
-  const DIGITS_COUNT_OPTION = [2, 3, 4, 5]
+  const DIGITS_COUNT_OPTION = [3, 4, 5, 6]
   const ROUNDS_COUNT_OPTION = [1, 3, 5, 7]
   const TIME_LMIT_OPTION = [30, 60, 90, 120]
 
@@ -49,7 +51,10 @@ const Lobby = () => {
     if (!socket) return
     if (socket && user) {
       setGameInfo(undefined)
-      joinRoom({ ...userToUserInfo(user, socket.id) })
+      client.get('/userinfo').then((res) => {
+        const newUserInfo = res.data
+        joinRoom({ ...userToUserInfo(newUserInfo, socket.id) })
+      })
     }
   }, [socket])
 
