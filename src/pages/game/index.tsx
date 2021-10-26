@@ -181,7 +181,7 @@ const Game = () => {
     // redirect user to home
     setShowleaveGameAlert(false)
     history.push('/')
-    window.location.reload()
+    // window.location.reload()
   }
 
   // socket implementation
