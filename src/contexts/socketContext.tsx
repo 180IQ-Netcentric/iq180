@@ -78,13 +78,12 @@ const SocketContextProvider = ({ ...props }) => {
   const [socket, setSocket] = useState<Socket>()
   const [socketOpen, setSocketOpen] = useState<boolean>(false)
   const [settings, setSettings] = useState<Settings>()
-  const [playerInfos, setPlayerInfos] = useState<PlayerInfos>()
+  const [playerInfos, setPlayerInfos] = useState<PlayerInfos>([])
   const [gameInfo, setGameInfo] = useState<GameInfo>()
   const [winnerUsername, setWinnerUsername] = useState<string>()
 
   const joinRoom = (userInfo: UserInfo) => {
     if (socket) {
-      console.log('joinRoom', userInfo)
       socket.emit('joinRoom', userInfo)
     }
   }

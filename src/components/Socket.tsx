@@ -1,7 +1,5 @@
 import React, { useContext, useEffect } from 'react'
 import { useHistory, useLocation } from 'react-router'
-import socketIOClient from 'socket.io-client'
-
 import {
   GameInfo,
   PlayerInfos,
@@ -21,7 +19,7 @@ const Socket = ({ children }: any) => {
     )
   }
 
-  const { socket, setSocket } = useContext(SocketContext)
+  const { socket } = useContext(SocketContext)
   const { user } = useContext(UserContext)
   const history = useHistory()
 
@@ -32,20 +30,7 @@ const Socket = ({ children }: any) => {
       setPlayerInfos([])
     }
 
-    if (!socket) {
-      const newSocket = socketIOClient(
-        `${import.meta.env.VITE_APP_API_URL}` ?? 'http://localhost:3001',
-        { forceNew: true }
-      )
-      setSocket(newSocket)
-    }
-
     if (!socket) return
-
-    // client-side
-    socket.on('connect', () => {
-      // socket connection established
-    })
 
     socket.on('updatePlayerList', (playerInfos: PlayerInfos) => {
       setPlayerInfos(playerInfos)

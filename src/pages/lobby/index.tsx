@@ -10,7 +10,7 @@ import { SocketContext } from '../../contexts/socketContext'
 import { userToUserInfo } from '../../utils/userToUserInfo'
 import { useTranslation } from 'react-i18next'
 import { client } from '../../config/axiosConfig'
-import { UserInfo } from '../../dto/Authentication.dto'
+import socketIOClient from 'socket.io-client'
 
 const Lobby = () => {
   const { t } = useTranslation()
@@ -18,6 +18,7 @@ const Lobby = () => {
   const { joinRoom } = useContext(SocketContext)
   const {
     socket,
+    setSocket,
     settings,
     setSettings,
     updateSettings,
@@ -46,6 +47,24 @@ const Lobby = () => {
   const beginGame = () => {
     history.push('/game')
   }
+
+  useEffect(() => {
+    if (socket) socket.close()
+    const newSocket = socketIOClient(
+      `${import.meta.env.VITE_APP_API_URL}` ?? 'http://localhost:3001',
+      { forceNew: true }
+    )
+    setSocket(newSocket)
+  }, [])
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (playerInfos && playerInfos?.length < 1) {
+        history.push('/')
+        history.push('/lobby')
+      }
+    }, 500)
+  }, [playerInfos])
 
   useEffect(() => {
     if (!socket) return

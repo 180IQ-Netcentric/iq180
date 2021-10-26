@@ -44,7 +44,6 @@ export default function MenuAppBar() {
   const handleLogoClick = () => {
     history.push('/')
     if (user) socket?.emit('disconnectUser', user)
-    window.location.reload()
   }
 
   useEffect(() => {
