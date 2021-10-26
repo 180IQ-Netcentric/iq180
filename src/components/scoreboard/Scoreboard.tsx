@@ -15,6 +15,7 @@ import ErrorAlert from '../alerts/ErrorAlert'
 import { UserContext } from '../../contexts/userContext'
 import { useTranslation } from 'react-i18next'
 import i18n from '../../locales/i18n'
+import { SocketContext } from '../../contexts/socketContext'
 interface Data {
   rank: number
   username: string
@@ -172,6 +173,7 @@ export default function Scoreboard(props: Props) {
   const [error, setError] = useState<AuthenticationErrorMessage>()
   const [showError, setShowError] = useState(false)
   const { theme: appTheme } = useContext(ThemeContext)
+  const { socket } = useContext(SocketContext)
 
   function createData(
     username: string,
@@ -246,32 +248,43 @@ export default function Scoreboard(props: Props) {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0
 
+  const getScoreboard = (unmounted: boolean) => {
+    client
+      .get('/scoreboard')
+      .then((res) => {
+        if (!unmounted) {
+          const scores: Data[] = res.data
+          const formattedScore = scores.map((info) => {
+            return createData(
+              info.username,
+              info.rank,
+              info.win,
+              info.lose,
+              info.score
+            )
+          })
+          setRows(formattedScore)
+        }
+      })
+      .catch((err) => {
+        setError(err.response.data)
+        setShowError(true)
+      })
+  }
+
+  useEffect(() => {
+    if (!socket) return
+    socket.on('endGame', () => {
+      setTimeout(() => {
+        getScoreboard(false)
+      }, 1000)
+    })
+  }, [socket])
+
   useEffect(() => {
     let unmounted = false
-    const getScoreboard = () => {
-      client
-        .get('/scoreboard')
-        .then((res) => {
-          if (!unmounted) {
-            const scores: Data[] = res.data
-            const formattedScore = scores.map((info) => {
-              return createData(
-                info.username,
-                info.rank,
-                info.win,
-                info.lose,
-                info.score
-              )
-            })
-            setRows(formattedScore)
-          }
-        })
-        .catch((err) => {
-          setError(err.response.data)
-          setShowError(true)
-        })
-    }
-    getScoreboard()
+
+    getScoreboard(unmounted)
     return () => {
       unmounted = true
     }
@@ -300,9 +313,7 @@ export default function Scoreboard(props: Props) {
       >
         {t('11')}
       </h2>
-      {rows.length < 1 && (
-        <div className='no-score'>{t('66')}</div>
-      )}
+      {rows.length < 1 && <div className='no-score'>{t('66')}</div>}
       {rows.length > 0 && (
         <Paper elevation={0} sx={{ backgroundColor: 'transparent' }}>
           <TableContainer

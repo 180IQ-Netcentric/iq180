@@ -119,7 +119,8 @@ const Game = () => {
   const resetButtons = () => {
     clearInputs()
     if (!gameInfo) return
-    if (questions) setNumberOptions(questions[gameInfo.currentRound - 1].number)
+    if (questions)
+      setNumberOptions(questions[gameInfo.currentRound - 1].numberShuffle)
     resetRound()
   }
 
@@ -144,6 +145,7 @@ const Game = () => {
           })
           setView('WAITING')
         } else if (user && gameInfo && user.username !== gameInfo.firstPlayer) {
+          console.log('endround3')
           endRound({
             username: user?.username,
             timeUsed: settings?.timeLimit ?? 999,
@@ -153,6 +155,7 @@ const Game = () => {
       }, 1000)
     } else {
       if (user && gameInfo && user.username === gameInfo.firstPlayer) {
+        console.log('endround2')
         endRound({
           username: user.username,
           timeUsed: gameInfo.setting.timeLimit,
@@ -169,6 +172,7 @@ const Game = () => {
 
   const playAgain = () => {
     setGameInfo(undefined)
+    history.push('/')
     history.push('/lobby')
   }
 
@@ -177,6 +181,7 @@ const Game = () => {
     // redirect user to home
     setShowleaveGameAlert(false)
     history.push('/')
+    window.location.reload()
   }
 
   // socket implementation
@@ -187,7 +192,6 @@ const Game = () => {
     socket.on('startRound', (gameInfo: GameInfo) => {
       setQuestions(gameInfo.questions)
       setGameInfo(gameInfo)
-      playWinSfx()
       setView('READY')
       setTimeout(() => {
         const now = new Date()
@@ -242,30 +246,11 @@ const Game = () => {
     })
   }, [])
 
-  // guard unauthorized user and set player info
-  useEffect(() => {
-    if (playerInfos && playerInfos[0])
-      setPlayer1(playerInfoToPlayerGameInfo(playerInfos[0]))
-    if (playerInfos && playerInfos[1])
-      setPlayer2(playerInfoToPlayerGameInfo(playerInfos[1]))
-  }, [])
-
   useEffect(() => {
     if (gameInfo) {
       const currentQuestion = gameInfo.questions[gameInfo.currentRound - 1]
-      setNumberOptions(currentQuestion.number)
-      const newTarget = (): number => {
-        let intermediate = currentQuestion.number[0]
-        for (let i = 0; i < currentQuestion.operator.length; i++) {
-          intermediate = calculateResult(
-            intermediate,
-            currentQuestion.number[i + 1],
-            OPERATION_SIGNS[currentQuestion.operator[i]]
-          )
-        }
-        return intermediate
-      }
-      setTargetNumber(newTarget())
+      setNumberOptions(currentQuestion.numberShuffle)
+      setTargetNumber(gameInfo.questions[gameInfo.currentRound - 1].result)
     }
   }, [view])
 
@@ -306,14 +291,18 @@ const Game = () => {
               currentResult &&
               user?.username !== gameInfo?.firstPlayer
             ) {
+              console.log('endRound4')
               endRound({ username: user.username, timeUsed: timeDiff })
             }
             setTimeout(() => {
               if (gameInfo?.currentRound !== settings?.round) setView('WAITING')
             }, 1000)
           } else {
-            if (user && timeDiff > 0)
+            if (user && timeDiff > 0) {
+              console.log('endround1')
               endRound({ username: user.username, timeUsed: timeDiff })
+            }
+
             setTimeout(() => {
               if (gameInfo?.currentRound !== gameInfo?.setting.round)
                 setView('ROUND_END')

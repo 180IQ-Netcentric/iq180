@@ -18,12 +18,14 @@ import { UserContext } from '../../contexts/userContext'
 import { AuthContext } from '../../contexts/authContext'
 import { useHistory } from 'react-router'
 import { useTranslation } from 'react-i18next'
+import { SocketContext } from '../../contexts/socketContext'
 
 export default function MenuAppBar() {
   const { t } = useTranslation()
   const { showSettings } = useContext(GameSettingsContext)
-  const { clearUser } = useContext(UserContext)
+  const { user, clearUser } = useContext(UserContext)
   const { isUser, setToken } = useContext(AuthContext)
+  const { socket } = useContext(SocketContext)
   const history = useHistory()
   const anchor = useRef(null)
   const [elevation, setElevation] = useState(0)
@@ -37,6 +39,12 @@ export default function MenuAppBar() {
 
   const handleSignIn = () => {
     history.push('/signin')
+  }
+
+  const handleLogoClick = () => {
+    history.push('/')
+    if (user) socket?.emit('disconnectUser', user)
+    window.location.reload()
   }
 
   useEffect(() => {
@@ -61,7 +69,7 @@ export default function MenuAppBar() {
                 color='inherit'
                 aria-label='menu'
                 sx={{ mr: 2 }}
-                onClick={() => history.push('/')}
+                onClick={handleLogoClick}
               >
                 <SchoolIcon />
               </IconButton>

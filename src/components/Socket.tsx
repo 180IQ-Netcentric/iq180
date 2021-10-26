@@ -11,15 +11,8 @@ import {
 import { UserContext } from '../contexts/userContext'
 
 const Socket = ({ children }: any) => {
-  const {
-    socketOpen,
-    setSocketOpen,
-    setSettings,
-    setPlayerInfos,
-    gameInfo,
-    setGameInfo,
-    setWinnerUsername,
-  } = useContext(SocketContext)
+  const { setSettings, setPlayerInfos, gameInfo, setGameInfo } =
+    useContext(SocketContext)
   const location = useLocation()
   const inSocketPages = () => {
     return (
@@ -37,12 +30,12 @@ const Socket = ({ children }: any) => {
       socket?.emit('disconnectUser', user)
       setGameInfo(undefined)
       setPlayerInfos([])
-      // socket?.disconnect()
     }
 
     if (!socket) {
       const newSocket = socketIOClient(
-        `${import.meta.env.VITE_APP_API_URL}` ?? 'http://localhost:3001'
+        `${import.meta.env.VITE_APP_API_URL}` ?? 'http://localhost:3001',
+        { forceNew: true }
       )
       setSocket(newSocket)
     }
@@ -55,46 +48,30 @@ const Socket = ({ children }: any) => {
     })
 
     socket.on('updatePlayerList', (playerInfos: PlayerInfos) => {
-      console.log('updatePlayerList', playerInfos)
       setPlayerInfos(playerInfos)
+      const isInSettingsPage = history.location.pathname === '/lobby'
+      if (
+        !isInSettingsPage &&
+        playerInfos[0].username === user?.username &&
+        playerInfos.length <= 1
+      ) {
+        history.push('/lobby')
+      }
     })
 
     socket.on('updateSetting', (settings: Settings) => {
-      console.log('settings', settings)
       setSettings(settings)
     })
 
     socket.on('startRound', (gameInfo: GameInfo) => {
-      // setGameInfo(gameInfo)
       if (history.location.pathname !== '/game') history.push('/game')
-      // If your username is firstPlayer then u start playing game
-      // If not waiting na
-      // Don’t care
-    })
-
-    socket.on('startNextTurn', () => {
-      // If your username is not firstPlayer then u start playing game
-      // If yes waiting na
     })
 
     socket.on('endGame', (gameInfo: GameInfo) => {
       setGameInfo(gameInfo)
     })
 
-    // socket.on('announceWinner', (username: string) => {
-    //   // setWinnerUsername(username)
-    //   // move to game index
-    // })
-
-    // socket.on('startRound', (gameInfo: GameInfo) => {
-    //   setGameInfo(gameInfo)
-    //   // If your username is firstPlayer then u start playing game
-    //   // If not waiting na
-    //   // Don’t care na
-    // })
-
     socket.on('updateGameInfo', (gameInfo: GameInfo) => {
-      console.log('on updateGameInfo', gameInfo)
       setGameInfo(gameInfo)
     })
   }, [location, socket])
