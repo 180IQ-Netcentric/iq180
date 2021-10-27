@@ -333,8 +333,8 @@ const Game = () => {
       <ErrorAlert
         open={showLeaveGameAlert}
         setOpen={setShowleaveGameAlert}
-        title='Alert'
-        description='Are you sure you want to leave the game?'
+        title={t('73')}
+        description={t('53')}
         primaryAction={leaveGame}
         secondaryAction={() => setShowleaveGameAlert(false)}
       />
