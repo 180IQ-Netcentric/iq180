@@ -41,7 +41,7 @@ const ErrorAlert = (props: Props) => {
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        {secondaryAction && <Button onClick={secondaryAction}>Cancel</Button>}
+        {secondaryAction && <Button onClick={secondaryAction}>{t('54')}</Button>}
         <Button onClick={primaryAction} autoFocus>
         {t('61')}
         </Button>

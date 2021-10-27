@@ -71,5 +71,33 @@
     "69": "Final Score",
     "70": "Draw",
     "71": "Game Winner 🏆",
-    "72": "Please wait while your opponent is making a move..."
+    "72": "Please wait while your opponent is making a move...",
+    "73": "Alert",
+    "74": "Sign Up Error",
+    "75": "All inputs are required.",
+    "76": "This username is not available.",
+    "77": "This username has already been used",
+    "78": "An error has occured. Please try again.",
+    "79": "Sign In Error",
+    "80": "All inputs are required.",
+    "81": "Username or password may be wrong. Please try again.",
+    "82": "Sign In Error",
+    "83": "Unauthorized",
+    "84": "Only user can use this api",
+    "85": "Invalid Token",
+    "86": "The provided token is invalid",
+    "87": "Token is required",
+    "88": "A token is required for authentication",
+    "89": "Error",
+    "90": "This object id is no longer exist.",
+    "91": "All input is required.",
+    "92": "Invalid Token",
+    "93": "This username is not available",
+    "94": "Cannot change username",
+    "95": "Only user can use this api",
+    "96": "The token is not valid.",
+    "97": "A token is required for authentication"
+    
+    
+
 }
