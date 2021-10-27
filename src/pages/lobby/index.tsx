@@ -11,6 +11,7 @@ import { userToUserInfo } from '../../utils/userToUserInfo'
 import { useTranslation } from 'react-i18next'
 import { client } from '../../config/axiosConfig'
 import socketIOClient from 'socket.io-client'
+import { display } from '@mui/system'
 
 const Lobby = () => {
   const { t } = useTranslation()
@@ -158,7 +159,10 @@ const Lobby = () => {
               </div>
             </div>
           </div>
+          
           <div className='player-info-container'>
+            <div className = 'welcome-player'>welcome player</div>
+        
             <div className='player-info'>
               {user && (
                 <PlayerInfoCard
