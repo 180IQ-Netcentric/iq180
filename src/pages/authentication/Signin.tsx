@@ -93,7 +93,7 @@ const SignIn = () => {
                       value={value}
                       required
                       onChange={onChange}
-                      label='Username'
+                      label={t('1')}
                       error={Boolean(errors[fields.username.name])}
                       helperText={
                         errors[fields.username.name]
@@ -118,7 +118,7 @@ const SignIn = () => {
                       type='password'
                       required
                       onChange={onChange}
-                      label='Password'
+                      label={t('2')}
                       error={Boolean(errors[fields.password.name])}
                       helperText={
                         errors[fields.password.name]
