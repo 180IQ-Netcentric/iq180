@@ -13,17 +13,21 @@ import i18n from '../../locales/i18n'
 
 const steps = [
   {
-    label: 'How to play',
-    description: 'Use operations +,-,×,÷ to compute the given digits to obtain the result.',
+    label: i18n.t('98'),
+    description: i18n.t('99'),
   },
   {
-    label: 'Change music and background',
+    label: i18n.t('98'),
+    description: i18n.t('100'),
+  },
+  {
+    label: i18n.t('101'),
     description:
-      'If you want to change your mood, we have many music tracks and backgrounds for you to choose in the setting page.',
+    i18n.t('102'),
   },
   {
-    label: 'For more challange: VS mode',
-    description: 'In VS mode, both player solve the problem at the same time. However, the round end when one of the player got the correct answer.',
+    label: i18n.t('103'),
+    description: i18n.t('104'),
   },
 ]
 
