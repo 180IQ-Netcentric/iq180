@@ -161,7 +161,7 @@ const Lobby = () => {
           </div>
           
           <div className='player-info-container'>
-            <div className = 'welcome-player'>welcome player</div>
+            <div className = 'welcome-player'>{t('105')}</div>
         
             <div className='player-info'>
               {user && (
