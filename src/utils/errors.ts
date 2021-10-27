@@ -1,3 +1,4 @@
+import i18n from '../locales/i18n'
 export interface AuthenticationErrorMessage {
   message: string
   reason: string
@@ -7,23 +8,23 @@ export const signUpError = (reason: string) => {
   switch (reason) {
     case 'BAD_REQUEST':
       return {
-        title: 'Sign Up Error',
-        description: 'All inputs are required.',
+        title: i18n.t('74'),
+        description: i18n.t('75'),
       }
     case 'INVALID_USERNAME':
       return {
-        title: 'Sign Up Error',
-        description: 'This username is not available.',
+        title: i18n.t('74'),
+        description: i18n.t('76'),
       }
     case 'USERNAME_ALREADY_USED':
       return {
-        title: 'Sign Up Error',
-        description: 'This username has already been used',
+        title: i18n.t('74'),
+        description: i18n.t('77'),
       }
     default:
       return {
-        title: 'Sign Up Error',
-        description: 'An error has occured. Please try again.',
+        title: i18n.t('74'),
+        description: i18n.t('78'),
       }
   }
 }
@@ -32,18 +33,18 @@ export const signInError = (reason: string) => {
   switch (reason) {
     case 'BAD_REQUEST':
       return {
-        title: 'Sign In Error',
-        description: 'All inputs are required.',
+        title: i18n.t('79'),
+        description: i18n.t('80'),
       }
     case 'INCORRECT_USERNAME_OR_PASSWORD':
       return {
-        title: 'Sign In Error',
-        description: 'Username or password may be wrong. Please try again.',
+        title: i18n.t('79'),
+        description: i18n.t('81'),
       }
     default:
       return {
-        title: 'Sign In Error',
-        description: 'An error has occured. Please try again.',
+        title: i18n.t('79'),
+        description: i18n.t('78'),
       }
   }
 }
@@ -52,23 +53,23 @@ export const scoreboardError = (reason: string) => {
   switch (reason) {
     case 'Unauthorized':
       return {
-        title: 'Unauthorized',
-        description: 'Only user can use this api',
+        title: i18n.t('83'),
+        description: i18n.t('84'),
       }
     case 'INVALID_TOKEN':
       return {
-        title: 'Invalid Token',
-        description: 'The provided token is invalid',
+        title: i18n.t('85'),
+        description: i18n.t('86'),
       }
     case 'TOKEN_IS_REQUIRED':
       return {
-        title: 'Token is required',
-        description: 'A token is required for authentication',
+        title: i18n.t('87'),
+        description: i18n.t('88'),
       }
     default:
       return {
-        title: 'Error',
-        description: 'An error has occured. Please try again.',
+        title: i18n.t('89'),
+        description: i18n.t('78'),
       }
   }
 }
@@ -77,38 +78,38 @@ export const usernameError = (reason: string) => {
   switch (reason) {
     case 'BAD_REQUEST':
       return {
-        title: 'Cannot change username',
-        description: 'All input is required."',
+        title: i18n.t('94'),
+        description: i18n.t('91'),
       }
     case 'INVALID_USERNAME':
       return {
-        title: 'Invalid Token',
-        description: 'This username is not available',
+        title: i18n.t('92'),
+        description: i18n.t('93'),
       }
     case 'Unauthorized':
       return {
-        title: 'Cannot change username',
-        description: 'Only user can use this api',
+        title: i18n.t('94'),
+        description: i18n.t('95')
       }
     case 'INVALID_TOKEN':
       return {
-        title: 'Cannot change username',
-        description: 'The token is not valid.',
+        title: i18n.t('94'),
+        description: i18n.t('96')
       }
     case 'TOKEN_IS_REQUIRED':
       return {
-        title: 'Cannot change username',
-        description: 'A token is required for authentication',
+        title: i18n.t('94'),
+        description: i18n.t('97')
       }
     case 'NOT_FOUND':
       return {
-        title: 'Cannot change username',
-        description: 'This object id is no longer exist.',
+        title: i18n.t('94'),
+        description: i18n.t('90')
       }
     default:
       return {
-        title: 'Error',
-        description: 'An error has occured. Please try again.',
+        title: i18n.t('89'),
+        description: i18n.t('78'),
       }
   }
 }
