@@ -96,7 +96,14 @@
     "94": "Cannot change username",
     "95": "Only user can use this api",
     "96": "The token is not valid.",
-    "97": "A token is required for authentication"
+    "97": "A token is required for authentication",  
+    "98": "How to play",
+    "99": "Use operations +,-,×,÷ to compute the given digits to obtain the result. The fastest one to solve the question wins.",
+    "100": "During the game, if you want to start over, you can reset by pressing the reset button",
+    "101": "Change game environment",
+    "102": "If you want to change your mood, music, sound effect, language, background, and username, you can modify them in the game setting page (gear icon)",
+    "103": "For more challange: VS mode",
+    "104": "In the VS mode, both players solve the problem at the same time. The round ends when one of the players got the correct answer or the time run out."
     
     
 
