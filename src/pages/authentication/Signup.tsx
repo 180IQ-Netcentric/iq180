@@ -105,7 +105,7 @@ const SignUp = () => {
                       value={value}
                       required
                       onChange={onChange}
-                      label='Username'
+                      label={t('1')}
                       error={Boolean(errors[fields.username.name])}
                       helperText={
                         errors[fields.username.name]
@@ -130,7 +130,7 @@ const SignUp = () => {
                       type='password'
                       required
                       onChange={onChange}
-                      label='Password'
+                      label={t('2')}
                       error={Boolean(errors[fields.password.name])}
                       helperText={
                         errors[fields.password.name]
@@ -155,7 +155,7 @@ const SignUp = () => {
                       type='password'
                       required
                       onChange={onChange}
-                      label='Repeat Password'
+                      label={t('6')}
                       error={Boolean(errors[fields.repeatPassword.name])}
                       helperText={
                         errors[fields.repeatPassword.name]

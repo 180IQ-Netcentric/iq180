@@ -9,24 +9,21 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft'
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight'
 import { Margin } from '@mui/icons-material'
 import { useTranslation } from 'react-i18next'
+import i18n from '../../locales/i18n'
 
 const steps = [
   {
-    label: 'Select campaign settings',
-    description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-    `,
+    label: 'How to play',
+    description: 'Use operations +,-,×,÷ to compute the given digits to obtain the result.',
   },
   {
-    label: 'Create an ad group',
+    label: 'Change music and background',
     description:
-      'An ad group contains one or more ads which target a shared set of keywords.',
+      'If you want to change your mood, we have many music tracks and backgrounds for you to choose in the setting page.',
   },
   {
-    label: 'Create an ad',
-    description: `Try out different ad text to see what brings in the most customers,
-              and learn how to enhance your ads using features like ad extensions.
-              If you run into any problems with your ads, find out how to tell if
-              they're running and how to resolve approval issues.`,
+    label: 'For more challange: VS mode',
+    description: 'In VS mode, both player solve the problem at the same time. However, the round end when one of the player got the correct answer.',
   },
 ]
 
