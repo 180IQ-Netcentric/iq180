@@ -72,38 +72,38 @@ interface HeadCell {
   numeric: boolean
 }
 
-const headCells: readonly HeadCell[] = [
-  {
-    id: 'rank',
-    numeric: true,
-    disablePadding: true,
-    label: i18n.t('12'),
-  },
-  {
-    id: 'username',
-    numeric: false,
-    disablePadding: false,
-    label: i18n.t('1'),
-  },
-  {
-    id: 'win',
-    numeric: true,
-    disablePadding: false,
-    label: i18n.t('14'),
-  },
-  {
-    id: 'lose',
-    numeric: true,
-    disablePadding: false,
-    label: i18n.t('15'),
-  },
-  {
-    id: 'score',
-    numeric: true,
-    disablePadding: false,
-    label: i18n.t('16'),
-  },
-]
+// const headCells: readonly HeadCell[] = [
+//   {
+//     id: 'rank',
+//     numeric: true,
+//     disablePadding: true,
+//     label: i18n.t('12'),
+//   },
+//   {
+//     id: 'username',
+//     numeric: false,
+//     disablePadding: false,
+//     label: i18n.t('1'),
+//   },
+//   {
+//     id: 'win',
+//     numeric: true,
+//     disablePadding: false,
+//     label: i18n.t('14'),
+//   },
+//   {
+//     id: 'lose',
+//     numeric: true,
+//     disablePadding: false,
+//     label: i18n.t('15'),
+//   },
+//   {
+//     id: 'score',
+//     numeric: true,
+//     disablePadding: false,
+//     label: i18n.t('16'),
+//   },
+// ]
 
 interface EnhancedTableProps {
   numSelected: number
@@ -116,8 +116,40 @@ interface EnhancedTableProps {
   orderBy: string
   rowCount: number
 }
-
+const { t } = useTranslation()
 function EnhancedTableHead(props: EnhancedTableProps) {
+  const headCells: readonly HeadCell[] = [
+    {
+      id: 'rank',
+      numeric: true,
+      disablePadding: true,
+      label: t('12'),
+    },
+    {
+      id: 'username',
+      numeric: false,
+      disablePadding: false,
+      label: t('1'),
+    },
+    {
+      id: 'win',
+      numeric: true,
+      disablePadding: false,
+      label: t('14'),
+    },
+    {
+      id: 'lose',
+      numeric: true,
+      disablePadding: false,
+      label: t('15'),
+    },
+    {
+      id: 'score',
+      numeric: true,
+      disablePadding: false,
+      label: t('16'),
+    },
+  ]
   const { order, orderBy, onRequestSort } = props
   const createSortHandler =
     (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
